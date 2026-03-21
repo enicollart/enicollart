@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENICOLL</title>
+  <meta name="description" content="emily nicoll is a canadian artist, label owner and dj.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="ENICOLL">
+  <meta property="og:description" content="emily nicoll is a canadian artist, label owner and dj.">
+  <meta property="og:url" content="https://enicoll.com">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #f5f2ec;
+      --black:   #0e0e0e;
+      --mid:     rgba(14,14,14,0.45);
+      --light:   rgba(14,14,14,0.18);
+      --accent:  #e4ead4;
+      --nav-w:   220px;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-mono:  'DM Mono', 'Courier New', monospace;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--black);
+      font-family: var(--font-serif);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden; /* homepage is full-viewport */
+    }
+
+    a { color: inherit; text-decoration: none; }
+    a:hover { opacity: 0.6; }
+
+    /* ── Animated backdrop ── */
+    #backdrop-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+    #backdrop-canvas.loaded { opacity: 1; }
+
+    /* ── Layout ── */
+    .site-wrapper {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      z-index: 1;
+    }
+
+    /* ── Left nav ── */
+    nav.left-nav {
+      width: var(--nav-w);
+      flex-shrink: 0;
+      padding: 2rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow-y: auto;
+      scrollbar-width: none;
+      position: relative;
+      z-index: 10;
+    }
+    nav.left-nav::-webkit-scrollbar { display: none; }
+
+    .nav-name {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--accent);
+      border: 1px solid rgba(14,14,14,0.25);
+      display: inline-block;
+      padding: 0.3em 0.55em;
+      margin-bottom: 2.4rem;
+      line-height: 1.3;
+    }
+
+    .nav-section {
+      margin-bottom: 1.6rem;
+    }
+
+    .nav-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    nav.left-nav a {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: var(--black);
+      line-height: 1;
+      padding: 0.32em 0;
+      transition: opacity 0.15s;
+    }
+    nav.left-nav a:hover { opacity: 0.45; }
+    nav.left-nav a.active { font-weight: 400; }
+
+    .nav-ext-link {
+      display: flex;
+      align-items: center;
+      gap: 0.2em;
+    }
+    .nav-ext-link::after {
+      content: '↗';
+      font-size: 0.6rem;
+      opacity: 0.5;
+    }
+
+    .nav-divider {
+      height: 1px;
+      background: var(--light);
+      margin: 1.2rem 0;
+    }
+
+    /* ── Main content (homepage = empty, just backdrop) ── */
+    .main-content {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 2rem;
+    }
+
+    .site-tagline {
+      font-family: var(--font-serif);
+      font-size: 0.8rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--mid);
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.8s forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Mobile nav ── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 9999;
+    }
+
+    .hamburger {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(245, 242, 236, 0.88);
+      border: 1px solid var(--light);
+      padding: 0.45em 0.75em;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+
+    .mobile-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: rgba(245, 242, 236, 0.97);
+      border: 1px solid var(--light);
+      padding: 0.8rem 0;
+      min-width: 130px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .mobile-menu.open { display: block; }
+
+    .mobile-menu a {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      padding: 0.4em 1.1em;
+      color: var(--black);
+      transition: background 0.1s;
+    }
+    .mobile-menu a:hover { background: rgba(14,14,14,0.05); }
+
+    .mobile-menu-label {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      padding: 0.7em 1.1em 0.3em;
+    }
+
+    .mobile-menu-divider {
+      height: 1px;
+      background: var(--light);
+      margin: 0.5rem 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      html, body { overflow: auto; }
+      .site-wrapper { position: relative; min-height: 100vh; flex-direction: column; }
+      nav.left-nav { display: none; }
+      .mobile-nav { display: block; }
+      .main-content { min-height: 100vh; }
+      #backdrop-canvas { position: fixed; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated backdrop -->
+  <canvas id="backdrop-canvas"></canvas>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="pacific-spirit.html">pacific spirit</a>
+      <a href="album-art.html">album art</a>
+      <a href="music-videos.html">music videos</a>
+      <div class="mobile-menu-divider"></div>
+      <div class="mobile-menu-label">digital works</div>
+      <a href="whimsies.html">whimsies</a>
+      <a href="hypnotics.html">hypnotics</a>
+      <a href="spinning-flowers.html">spinning flowers</a>
+      <a href="still-image-series.html">still image series</a>
+      <a href="animations.html">animations</a>
+      <a href="resonance-reverie.html">resonance &amp; reverie</a>
+      <a href="pellucid-petals.html">pellucid petals</a>
+      <div class="mobile-menu-divider"></div>
+      <a href="information.html">information</a>
+      <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
+    </div>
+  </div>
+
+  <!-- Main layout -->
+  <div class="site-wrapper">
+
+    <!-- Left nav (desktop) -->
+    <nav class="left-nav">
+      <a href="index.html" class="nav-name">Emily Nicoll</a>
+
+      <div class="nav-section">
+        <a href="pacific-spirit.html">pacific spirit</a>
+        <a href="album-art.html">album art</a>
+        <a href="music-videos.html">music videos</a>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <div class="nav-section">
+        <span class="nav-label">digital works</span>
+        <a href="whimsies.html">whimsies</a>
+        <a href="hypnotics.html">hypnotics</a>
+        <a href="spinning-flowers.html">spinning flowers</a>
+        <a href="still-image-series.html">still image series</a>
+        <a href="animations.html">animations</a>
+        <a href="resonance-reverie.html">resonance &amp; reverie</a>
+        <a href="pellucid-petals.html">pellucid petals</a>
+      </div>
+
+      <div class="nav-divider"></div>
+
+      <div class="nav-section">
+        <a href="information.html">information</a>
+        <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+      </div>
+    </nav>
+
+    <!-- Content area -->
+    <div class="main-content">
+      <p class="site-tagline">artist &nbsp;·&nbsp; label owner &nbsp;·&nbsp; dj</p>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Slitscan-inspired canvas backdrop ──
+    const canvas = document.getElementById('backdrop-canvas');
+    const ctx    = canvas.getContext('2d');
+
+    let W, H, offscreen, offCtx, time = 0;
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      buildSource();
+    }
+
+    // Build a soft gradient source image to scan
+    function buildSource() {
+      offscreen = document.createElement('canvas');
+      offscreen.width  = W;
+      offscreen.height = H;
+      offCtx = offscreen.getContext('2d');
+
+      // Layered soft gradients that give the slitscan something interesting to work with
+      const g1 = offCtx.createRadialGradient(W * 0.3, H * 0.4, 0, W * 0.5, H * 0.5, W * 0.8);
+      g1.addColorStop(0,   'rgba(228, 234, 212, 0.9)'); // accent cream-green
+      g1.addColorStop(0.4, 'rgba(210, 220, 240, 0.6)'); // soft blue
+      g1.addColorStop(1,   'rgba(245, 242, 236, 0.1)'); // cream
+
+      offCtx.fillStyle = 'rgba(245, 242, 236, 1)';
+      offCtx.fillRect(0, 0, W, H);
+      offCtx.fillStyle = g1;
+      offCtx.fillRect(0, 0, W, H);
+
+      const g2 = offCtx.createLinearGradient(0, 0, W, H);
+      g2.addColorStop(0,   'rgba(253, 178, 249, 0.15)'); // faint pink (swatch-6 from original)
+      g2.addColorStop(0.5, 'rgba(200, 230, 255, 0.1)');
+      g2.addColorStop(1,   'rgba(228, 234, 212, 0.2)');
+      offCtx.fillStyle = g2;
+      offCtx.fillRect(0, 0, W, H);
+    }
+
+    // Slitscan: each horizontal strip is drawn from a different time-offset
+    // creating the characteristic smearing / shimmering effect
+    const STRIP_H   = 2;    // px per strip
+    const SPEED     = 0.4;  // how fast strips shift
+    const AMPLITUDE = 80;   // max horizontal shift (px)
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      const strips = Math.ceil(H / STRIP_H);
+
+      for (let i = 0; i < strips; i++) {
+        const y      = i * STRIP_H;
+        const phase  = (i / strips) * Math.PI * 6;   // spatial frequency
+        const offset = Math.sin(phase + time * SPEED) * AMPLITUDE * (i / strips);
+
+        // Source x oscillates per strip - creates the warp
+        const srcX = Math.sin(phase * 0.5 + time * SPEED * 0.7) * 30;
+
+        ctx.drawImage(
+          offscreen,
+          Math.max(0, srcX), y, W - Math.abs(srcX), STRIP_H,
+          0,                  y, W,                  STRIP_H
+        );
+
+        // Subtle color tint per strip using globalAlpha layers
+        const hue    = (i / strips * 60 + time * 8) % 360;
+        const bright = 0.5 + 0.5 * Math.sin(phase + time * SPEED);
+        ctx.fillStyle = `hsla(${hue}, 18%, 85%, ${0.04 * bright})`;
+        ctx.fillRect(0, y, W, STRIP_H);
+      }
+
+      time += 0.016;
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    canvas.classList.add('loaded');
+    draw();
+
+    // ── Mobile menu toggle ──
+    const btn  = document.getElementById('hamburger-btn');
+    const menu = document.getElementById('mobile-menu');
+
+    btn.addEventListener('click', () => menu.classList.toggle('open'));
+    document.addEventListener('click', e => {
+      if (!btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.remove('open');
+      }
+    });
+
+    // ── Active link highlighting ──
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('nav.left-nav a').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && href !== '#' && currentPath === href) {
+        a.classList.add('active');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>music videos — ENICOLL</title>
+  <meta name="description" content="emily nicoll is a canadian artist, label owner and dj.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ── Music Videos specific ── */
+
+    .mv-page-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin-bottom: 2.4rem;
+    }
+
+    /* Scrolling title ticker */
+    .mv-ticker {
+      overflow: hidden;
+      white-space: nowrap;
+      border-top: 1px solid var(--light);
+      border-bottom: 1px solid var(--light);
+      padding: 0.4em 0;
+      margin-bottom: 1.6rem;
+    }
+
+    .mv-ticker-inner {
+      display: inline-block;
+      animation: ticker 18s linear infinite;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--mid);
+    }
+
+    @keyframes ticker {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Video block */
+    .mv-block {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      margin-bottom: 4rem;
+      align-items: start;
+    }
+
+    .mv-meta {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--mid);
+      padding-top: 0.2rem;
+    }
+
+    .mv-meta b {
+      font-weight: 400;
+      color: var(--mid);
+    }
+
+    .mv-video {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--black);
+    }
+
+    .mv-video video {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* YouTube embed fallback */
+    .mv-video iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+
+    @media (max-width: 768px) {
+      .mv-block {
+        grid-template-columns: 1fr;
+      }
+      .mv-meta {
+        text-align: left;
+        order: 2;
+      }
+      .mv-video {
+        order: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="pacific-spirit.html">pacific spirit</a>
+      <a href="album-art.html">album art</a>
+      <a href="music-videos.html">music videos</a>
+      <div class="mobile-menu-divider"></div>
+      <div class="mobile-menu-label">digital works</div>
+      <a href="whimsies.html">whimsies</a>
+      <a href="hypnotics.html">hypnotics</a>
+      <a href="spinning-flowers.html">spinning flowers</a>
+      <a href="still-image-series.html">still image series</a>
+      <a href="animations.html">animations</a>
+      <a href="resonance-reverie.html">resonance &amp; reverie</a>
+      <a href="pellucid-petals.html">pellucid petals</a>
+      <div class="mobile-menu-divider"></div>
+      <a href="information.html">information</a>
+      <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
+    </div>
+  </div>
+
+  <div class="site-wrapper">
+
+    <!-- Left nav -->
+    <nav class="left-nav">
+      <a href="index.html" class="nav-name">Emily Nicoll</a>
+      <div class="nav-section">
+        <a href="pacific-spirit.html">pacific spirit</a>
+        <a href="album-art.html">album art</a>
+        <a href="music-videos.html">music videos</a>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <span class="nav-label">digital works</span>
+        <a href="whimsies.html">whimsies</a>
+        <a href="hypnotics.html">hypnotics</a>
+        <a href="spinning-flowers.html">spinning flowers</a>
+        <a href="still-image-series.html">still image series</a>
+        <a href="animations.html">animations</a>
+        <a href="resonance-reverie.html">resonance &amp; reverie</a>
+        <a href="pellucid-petals.html">pellucid petals</a>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <a href="information.html">information</a>
+        <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="main-content">
+
+      <!--
+        VIDEOS: Download from Cargo and save to videos/ folder:
+          videos/troma-pers1-21st-century.mp4
+          videos/troma-pers1-first-rituals.mp4
+          videos/747-cretaceous.mp4
+          videos/troma-pers1-chasm.mp4
+      -->
+
+      <div class="mv-page-title">music videos</div>
+
+      <!-- ── Video 1 ── -->
+      <div class="mv-ticker">
+        <span class="mv-ticker-inner">
+          Project: Troma &amp; PERS1 - 21st Century [AQR023] (Official Video) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Project: Troma &amp; PERS1 - 21st Century [AQR023] (Official Video) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>
+      </div>
+
+      <div class="mv-block">
+        <div class="mv-meta">
+          Artist: Troma &amp; PERS1<br>
+          Track Title: 21st Century<br>
+          Album Title: Ancestral Posterity<br>
+          Label: Aquaregia Records<br>
+          Catalogue: AQR023<br>
+          Format: Digital, Vinyl<br>
+          Genre: Techno, Acid<br>
+          Release date: February 2nd, 2024<br>
+          <br>
+          <b>Video by Emily Nicoll.</b>
+        </div>
+        <div class="mv-video">
+          <iframe src="https://www.youtube.com/embed/w4QKw46Gqes" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <!-- ── Video 2 ── -->
+      <div class="mv-ticker">
+        <span class="mv-ticker-inner">
+          Project: Troma &amp; PERS1 - First Rituals [AQR023] (Official Video) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Project: Troma &amp; PERS1 - First Rituals [AQR023] (Official Video) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>
+      </div>
+
+      <div class="mv-block">
+        <div class="mv-meta">
+          Artist: Troma &amp; PERS1<br>
+          Track Title: First Rituals<br>
+          Album Title: Ancestral Posterity<br>
+          Label: Aquaregia Records<br>
+          Catalogue: AQR023<br>
+          Format: Digital, Vinyl<br>
+          Genre: Techno, Acid<br>
+          Release date: February 2nd, 2024<br>
+          <br>
+          <b>Video by Emily Nicoll.</b>
+        </div>
+        <div class="mv-video">
+          <iframe src="https://www.youtube.com/embed/00mhrfYkOAc" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <!-- ── Video 3 ── -->
+      <div class="mv-ticker">
+        <span class="mv-ticker-inner">
+          Project: 747 - Cretaceous (Accelerating Through Space Mix) (Official Video) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Project: 747 - Cretaceous (Accelerating Through Space Mix) (Official Video) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>
+      </div>
+
+      <div class="mv-block">
+        <div class="mv-meta">
+          Artist: 747<br>
+          Title: Cretaceous (Accelerating Through Space Mix)<br>
+          Label: Aquaregia Records<br>
+          Catalogue: n/a<br>
+          Format: Digital<br>
+          Genre: Techno, Acid<br>
+          Release date: December 31, 2020<br>
+          <br>
+          <b>Video by Emily Nicoll.</b>
+        </div>
+        <div class="mv-video">
+          <iframe src="https://www.youtube.com/embed/Z2mdNJZLGSs" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <!-- ── Video 4 ── -->
+      <div class="mv-ticker">
+        <span class="mv-ticker-inner">
+          Project: Troma &amp; PERS1 - Chasm [AQR014] (Official Visualizer) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Project: Troma &amp; PERS1 - Chasm [AQR014] (Official Visualizer) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>
+      </div>
+
+      <div class="mv-block">
+        <div class="mv-meta">
+          Artist: Troma &amp; PERS1<br>
+          Title: Chasm<br>
+          Label: Aquaregia Records<br>
+          Catalogue: AQR014<br>
+          Format: Digital<br>
+          Genre: Techno, Acid<br>
+          Release date: March 6, 2020<br>
+          <br>
+          <b>Video by Emily Nicoll.</b>
+        </div>
+        <div class="mv-video">
+          <iframe src="https://www.youtube.com/embed/bSNuDhBx8ng" allowfullscreen></iframe>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+</body>
+</html>

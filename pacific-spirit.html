@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pacific spirit — ENICOLL</title>
+  <meta name="description" content="emily nicoll is a canadian artist, label owner and dj.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ── Pacific Spirit specific ── */
+
+    .ps-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1.6rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .ps-header h1 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    .ps-ext-link {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--black);
+    }
+    .ps-ext-link:hover { opacity: 0.55; }
+
+    /* ── Body text ── */
+    .ps-body {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--black);
+      max-width: 100%;
+    }
+    .ps-body p { margin-bottom: 1em; }
+    .ps-body a { text-decoration: underline; color: inherit; }
+    .ps-body a:hover { opacity: 0.55; }
+    .ps-body i { font-style: italic; }
+    .ps-body b { font-weight: 500; }
+
+    .ps-section-label {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-style: italic;
+      font-weight: 300;
+      margin: 2rem 0 0.5rem;
+      display: block;
+    }
+
+    .ps-h3 {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin: 2.4rem 0 0.8rem;
+    }
+
+    /* ── Image grids ── */
+    .ps-grid {
+      display: grid;
+      gap: 0.8rem;
+      margin: 1.2rem auto;
+      width: fit-content;
+    }
+    :root {
+      --ps-col: 14vw;
+    }
+
+    .ps-grid-3  { grid-template-columns: repeat(3, var(--ps-col)); }
+    .ps-grid-4  { grid-template-columns: repeat(4, var(--ps-col)); }
+    .ps-grid-5  { grid-template-columns: repeat(5, var(--ps-col)); }
+    .ps-grid-6  { grid-template-columns: repeat(6, var(--ps-col)); }
+    /* Hero grid: centered row, natural aspect ratios */
+    .ps-grid-hero {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 1.2rem 0;
+    }
+    .ps-grid-hero .ps-grid-item {
+      width: calc(25% - 0.8rem);
+      min-width: 90px;
+    }
+    .ps-grid-hero .ps-grid-item img {
+      aspect-ratio: unset;
+      object-fit: contain;
+      background: none;
+    }
+
+    .ps-grid-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .ps-grid-item img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      background: rgba(14,14,14,0.05);
+      cursor: zoom-in;
+      transition: opacity 0.15s;
+    }
+    .ps-grid-item img:hover { opacity: 0.85; }
+
+    .ps-strokes {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 1.2rem auto;
+      width: fit-content;
+    }
+    .ps-strokes img {
+      height: var(--ps-col);
+      width: auto;
+      cursor: zoom-in;
+    }
+    .ps-strokes img.square {
+      width: var(--ps-col);
+      object-fit: cover;
+    }
+    .ps-grid-item img.natural {
+      aspect-ratio: unset;
+      width: auto;
+      height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      background: none;
+      align-self: center;
+    }
+
+    /* Center images within grid cells */
+    .ps-grid {
+      align-items: center;
+    }
+    .ps-grid-item {
+      align-items: center;
+    }
+
+    .ps-grid-item .cap {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: var(--mid);
+      letter-spacing: 0.03em;
+      line-height: 1.3;
+    }
+
+    /* Vinyl jacket image (centered, ~33% width) */
+    .ps-vinyl-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 1.2rem 0;
+    }
+    .ps-vinyl-wrap img {
+      width: 33%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+    }
+
+    /* ── Audio player ── */
+    .ps-audio {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin: 1.2rem 0;
+      padding: 0.6rem 1rem;
+      border: 1px solid rgba(14,14,14,0.2);
+      border-radius: 2rem;
+      max-width: 32rem;
+      font-family: var(--font-serif);
+      font-size: 0.85rem;
+    }
+
+    .ps-audio audio {
+      flex: 1;
+      height: 28px;
+      min-width: 0;
+    }
+
+    .ps-audio-label {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      white-space: nowrap;
+      color: var(--mid);
+      flex-shrink: 0;
+    }
+
+    /* ── Button ── */
+    .ps-button {
+      display: inline-block;
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      border: 2px solid var(--black);
+      padding: 0.5em 1.1em;
+      border-radius: 0.4rem;
+      margin: 1rem 0;
+      transition: opacity 0.15s;
+    }
+    .ps-button:hover { opacity: 0.6; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .ps-grid-6 { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .ps-grid-4,
+      .ps-grid-5,
+      .ps-grid-6,
+      .ps-grid-7 { grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
+      .ps-grid-hero .ps-grid-item { width: calc(33% - 0.8rem); }
+      .ps-grid-item .cap { font-size: 8px; }
+      .ps-vinyl-wrap img { width: 70%; }
+      .ps-audio { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="pacific-spirit.html">pacific spirit</a>
+      <a href="album-art.html">album art</a>
+      <a href="music-videos.html">music videos</a>
+      <div class="mobile-menu-divider"></div>
+      <div class="mobile-menu-label">digital works</div>
+      <a href="whimsies.html">whimsies</a>
+      <a href="hypnotics.html">hypnotics</a>
+      <a href="spinning-flowers.html">spinning flowers</a>
+      <a href="still-image-series.html">still image series</a>
+      <a href="animations.html">animations</a>
+      <a href="resonance-reverie.html">resonance &amp; reverie</a>
+      <a href="pellucid-petals.html">pellucid petals</a>
+      <div class="mobile-menu-divider"></div>
+      <a href="information.html">information</a>
+      <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
+    </div>
+  </div>
+
+  <div class="site-wrapper">
+
+    <!-- Left nav -->
+    <nav class="left-nav">
+      <a href="index.html" class="nav-name">Emily Nicoll</a>
+      <div class="nav-section">
+        <a href="pacific-spirit.html">pacific spirit</a>
+        <a href="album-art.html">album art</a>
+        <a href="music-videos.html">music videos</a>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <span class="nav-label">digital works</span>
+        <a href="whimsies.html">whimsies</a>
+        <a href="hypnotics.html">hypnotics</a>
+        <a href="spinning-flowers.html">spinning flowers</a>
+        <a href="still-image-series.html">still image series</a>
+        <a href="animations.html">animations</a>
+        <a href="resonance-reverie.html">resonance &amp; reverie</a>
+        <a href="pellucid-petals.html">pellucid petals</a>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <a href="information.html">information</a>
+        <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="main-content">
+
+      <div class="ps-header">
+        <h1>pacific spirit</h1>
+        <a href="https://www.artblocks.io/collection/0x02f518c529a0002e505000795d00c500eb00534a-0"
+           target="_blank" class="ps-ext-link">view on art blocks ↗</a>
+      </div>
+
+      <!-- Hero grid (7 images, centered, natural aspect ratio) -->
+      <div class="ps-grid-hero">
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-hero-1.jpg" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-hero-2.jpg" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-hero-3.jpg" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-hero-4.jpg" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-hero-5.jpg" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-hero-6.jpg" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-hero-7.jpg" alt="" loading="lazy"></div>
+      </div>
+
+      <div class="ps-body">
+        <p style="text-align:center; font-family: var(--font-mono); font-size:0.75rem; color:var(--mid);">
+          generative art and physical vinyl jacket collection by Emily Nicoll/ENICOLL &amp; 747 on Aquaregia.
+        </p>
+<br>
+        <p>Emily Nicoll and 747 are pleased to present their first foray into code-based art in this limited series of visual works that extends the sonic world of <i>Pacific Spirit</i> into a hyper collectible form through the integration of 1/1/x digital artworks and physical vinyl records.</p>
+
+        <p>This generative artwork series, releasing on Art Blocks, was created as the cover art for <i>Pacific Spirit</i>, the new album by 747. The forthcoming record, set to release on the Aquaregia label, is a playful, acid-inflected dive into jungle breaks, and dreamy atmospheres. Known for his signature acid techno sound (as heard on <a href="https://www.youtube.com/watch?v=CpUPIfbf-1I" target="_blank"><i>Aurora Centralis</i></a>), 747 expands into more fluid territory here, while retaining his unmistakable melodic edge. The artwork mirrors that energy: free-flowing, textural, and built for variation.</p>
+
+        <p>Each visual in the series is algorithmically generated and doubles as the unique vinyl jacket for a collector's copy of the album. Scribbled lines mimic waveform motion, nodding to the audio roots of the work, while hand-drawn details and grainy overlays reference the tactile visual aesthetic of <a href="https://www.aquaregiarecords.com/" target="_blank">Aquaregia</a>, the label behind the release. Letters are scattered throughout the works — a subtle reference to the textual nature of traditional album artwork, where typography often plays a central role in framing a record's identity.</p>
+
+        <p>The colour palettes are directly inspired by locations in British Columbia that shaped the emotional and sonic tone of the record. Each is named after one of the three singles being released in anticipation of the album and the titular track: Pacific Spirit, the default palette, reflects the calm, spacious mood of Vancouver's west side and downtown, where 747 grew up. Camosun Bog brings a deep, earthy feel reminiscent of moss, wetlands, and forest undergrowth. Sea to Sky draws from coastal air and mountain vistas, capturing the hues of the iconic highway stretching toward Whistler. Second Narrows adds a more industrial energy, with muted tones evoking bridges, infrastructure, and quiet tension.</p>
+
+        <p>A playful trait called "acid" adds smiley faces to only 3.03% of artworks, a nod to the iconic 303 synth and 747's acid lineage.</p>
+
+        <p>The most common layout mode is "wave" — a compositional structure that echoes both the ocean and mountain landscapes of the Pacific Northwest. Other layouts include scatter, radial, grid, and concentric, giving each piece a distinct rhythm while maintaining a cohesive visual language. This high variation is intentional, designed to support collectibility while staying true to the project's recognisable aesthetic core.</p>
+
+        <p>Each minted artwork comes with a physical vinyl copy of <i>Pacific Spirit</i>, shipped to the collector with their collected piece printed as the cover. It's a fusion of code, sound, and physical media — expressed through the playful logic of generative art.</p>
+      </div>
+
+      <!-- Sample Outputs -->
+      <div class="ps-h3">Sample Outputs</div>
+
+      <!-- 6-col grid, 36 images -->
+      <div class="ps-grid ps-grid-6" style="margin-left: auto; margin-right: auto;">
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-01.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-02.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-03.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-04.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-05.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-06.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-07.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-08.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-09.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-10.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-11.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-12.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-13.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-14.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-15.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-16.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-17.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-18.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-19.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-20.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-21.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-22.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-23.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-24.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-25.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-26.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-27.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-28.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-29.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-30.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-31.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-32.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-33.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-34.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-35.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-sample-36.png" alt="" loading="lazy"></div>
+      </div>
+
+      <!-- Traits & Features -->
+      <div class="ps-h3">Traits &amp; Features</div>
+
+      <div class="ps-body">
+        <p>Each artwork in the Pacific Spirit collection is a unique output, created using a custom algorithm built in p5.js. The system was designed to produce high visual variation while maintaining a cohesive aesthetic that reflects the mood and themes of 747's Pacific Spirit album. Below is a breakdown of the key traits and features embedded in the generative logic:</p>
+      </div>
+
+      <!-- Palette -->
+      <span class="ps-section-label">Palette</span>
+      <div class="ps-body">
+        <p>There are four primary colour palettes in the series, each named after a single released in anticipation of the album and after the titular track. The palette selection influences both the background and the stroke colours used throughout the artwork.</p>
+        <p>Pacific Spirit – A balanced palette of tones inspired by the coastline and skyline of Vancouver. This is the most common palette (~50% occurrence).<br>
+        Camosun Bog – Earthy greens, browns, and soft neutrals drawn from the wetland area of the same name.<br>
+        Sea to Sky – Cool blues and pastel hues evoking the mountainous ocean drive from Vancouver to Whistler.<br>
+        Second Narrows – Muted, industrial tones inspired by the bridges and infrastructure along Burrard Inlet.</p>
+      </div>
+
+      <div class="ps-grid ps-grid-4" style="margin-left: auto; margin-right: auto;">
+        <div class="ps-grid-item">
+          <img src="images/pacific-spirit/ps-palette-pacific-spirit.png" alt="Palette: Pacific Spirit" loading="lazy">
+          <span class="cap">Palette: Pacific Spirit</span>
+        </div>
+        <div class="ps-grid-item">
+          <img src="images/pacific-spirit/ps-palette-camosun-bog.png" alt="Palette: Camosun Bog" loading="lazy">
+          <span class="cap">Palette: Camosun Bog</span>
+        </div>
+        <div class="ps-grid-item">
+          <img src="images/pacific-spirit/ps-palette-sea-to-sky.png" alt="Palette: Sea to Sky" loading="lazy">
+          <span class="cap">Palette: Sea to Sky</span>
+        </div>
+        <div class="ps-grid-item">
+          <img src="images/pacific-spirit/ps-palette-second-narrows.png" alt="Palette: Second Narrows" loading="lazy">
+          <span class="cap">Palette: Second Narrows</span>
+        </div>
+      </div>
+
+      <!-- Layout -->
+      <span class="ps-section-label">Layout</span>
+      <div class="ps-body">
+        <p>The artwork's structure is determined by a layout system that arranges strokes and text across the canvas. Layouts influence the rhythm, density, and overall feeling of the piece.</p>
+        <p>Wave – The most common layout (~40%), mimicking waveform motion and referencing the natural geography of the Pacific Northwest.<br>
+        Scatter – Elements are loosely distributed across the canvas in a freeform pattern.<br>
+        Radial – Circular formations radiating from a central point. The movement in the composition of this type references spinning records on a turntable.<br>
+        Grid – Evenly spaced rows and columns of strokes and letters, mimicing the linear aesthetic of audio channels in a DAW (Digital Audio Workstation).<br>
+        Concentric – Layered rings of visual elements built outward from the centre; inspired by vinyl grooves.</p>
+      </div>
+
+      <div class="ps-grid ps-grid-5" style="margin-left: auto; margin-right: auto;">
+        <div class="ps-grid-item">
+          <img src="images/pacific-spirit/ps-layout-wave.png" alt="Layout: Wave" loading="lazy">
+          <span class="cap">Layout: Wave</span>
+        </div>
+        <div class="ps-grid-item">
+          <img src="images/pacific-spirit/ps-layout-scatter.png" alt="Layout: Scatter" loading="lazy">
+          <span class="cap">Layout: Scatter</span>
+        </div>
+        <div class="ps-grid-item">
+          <img src="images/pacific-spirit/ps-layout-radial.png" alt="Layout: Radial" loading="lazy">
+          <span class="cap">Layout: Radial</span>
+        </div>
+        <div class="ps-grid-item">
+          <img src="images/pacific-spirit/ps-layout-grid.png" alt="Layout: Grid" loading="lazy">
+          <span class="cap">Layout: Grid</span>
+        </div>
+        <div class="ps-grid-item">
+          <img src="images/pacific-spirit/ps-layout-concentric.png" alt="Layout: Concentric" loading="lazy">
+          <span class="cap">Layout: Concentric</span>
+        </div>
+      </div>
+
+      <!-- Stroke Elements -->
+      <span class="ps-section-label">Stroke Elements</span>
+      <div class="ps-body">
+        <p>Each artwork is composed of numerous scribbled stroke forms, inspired by audio waveforms. Their count, density, rotation, and curvature are randomized within a range of rules tied to the selected layout. Some outputs include "micro" detail mode with smaller, denser strokes.</p>
+      </div>
+
+      <div class="ps-strokes">
+        <img src="images/pacific-spirit/ps-strokes-1.png" alt="" class="square" loading="lazy">
+        <img src="images/pacific-spirit/ps-strokes-2.jpg" alt="" loading="lazy">
+      </div>
+
+      <!-- Lettering -->
+      <span class="ps-section-label">Lettering</span>
+      <div class="ps-body">
+        <p>Each artwork includes letterforms drawn from the phrase PACIFIC SPIRIT or, in some cases (10%), 747. The letters are scribbled in a hand-drawn style, reminiscent of the Aquaregia logo and typeset, using a randomized font from a set of system fonts. Occasionally, an oversized letter is featured prominently as a semi-transparent focal element (~5% chance).</p>
+      </div>
+
+      <div class="ps-grid ps-grid-4" style="margin-left: auto; margin-right: auto;">
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-lettering-1.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-lettering-2.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-lettering-3.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-lettering-4.png" alt="" loading="lazy"></div>
+      </div>
+
+      <!-- Acid Trait -->
+      <span class="ps-section-label">Acid Trait : )</span>
+      <div class="ps-body">
+        <p>A rare trait titled 'acid' appears in 3.03% of artworks. It overlays hand-drawn smiley faces — an homage to the Roland TB-303 synthesizer and the visual iconography of acid music. Each 'acid' piece includes somewhere between 1 and 20 smiley faces, drawn with layered strokes and randomly scattered on the canvas.</p>
+      </div>
+
+      <div class="ps-grid ps-grid-3" style="margin-left: auto; margin-right: auto;">
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-acid-1.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-acid-2.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-acid-3.png" alt="" loading="lazy"></div>
+      </div>
+
+      <!-- Colour Mode Overrides -->
+      <span class="ps-section-label">Colour Mode Overrides</span>
+      <div class="ps-body">
+        <p>Some artworks override the base palette selection through special modes:<br>
+        Monochrome – A tonal gradient based on a single colour from the selected palette (~15% chance).<br>
+        Black &amp; White – A full greyscale conversion with randomized background tones (~5% chance).</p>
+      </div>
+
+      <div class="ps-grid ps-grid-5" style="margin-left: auto; margin-right: auto;">
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-01.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-02.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-03.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-04.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-05.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-06.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-07.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-08.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-09.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-colour-10.png" alt="" loading="lazy"></div>
+      </div>
+
+      <!-- Restricted Palette -->
+      <span class="ps-section-label">Restricted Palette Mode</span>
+      <div class="ps-body">
+        <p>Roughly 30% of artworks reduce their palette to just three colours, selected randomly from the full set. This limitation creates visual contrast and a more minimal look.</p>
+      </div>
+
+      <div class="ps-grid ps-grid-5" style="margin-left: auto; margin-right: auto;">
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-restricted-01.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-restricted-02.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-restricted-03.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-restricted-04.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-restricted-05.png" alt="" loading="lazy"></div>
+      </div>
+
+      <!-- Key Strokes -->
+      <span class="ps-section-label">Key Strokes</span>
+      <div class="ps-body">
+        <p>P or p — downloads a high resolution (5000×5000 px) image of the artwork.<br>
+        J or j — overlays the vinyl jacket.</p>
+      </div>
+
+      <!-- Noise Overlay -->
+      <span class="ps-section-label">Noise Overlay</span>
+      <div class="ps-body">
+        <p>Each piece includes a subtle Gaussian noise overlay applied to the entire canvas. This grain effect mimics natural texture and reinforces the analog feeling central to the label's aesthetic. Selected album covers from Aquaregia's discography below.</p>
+      </div>
+
+      <div class="ps-grid ps-grid-5" style="margin-left: auto; margin-right: auto;">
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-noise-01.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-noise-02.jpg" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-noise-03.jpg" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-noise-04.png" alt="" loading="lazy"></div>
+        <div class="ps-grid-item"><img src="images/pacific-spirit/ps-noise-05.jpg" alt="" loading="lazy"></div>
+      </div>
+
+      <!-- Availability -->
+      <div class="ps-h3">Availability</div>
+
+      <div class="ps-body">
+        <p>The works will be made available as tokenized digital assets on <a href="https://www.artblocks.io/collection/pacific-spirit-by-emily-nicoll-and-747" target="_blank">Art Blocks</a>. Minters will be eligible to receive a copy of the 2×12" vinyl record with their minted cover by mail.</p>
+
+        <p>Owners of Pacific Spirit tokens can claim their vinyl record <a href="https://www.aquaregiarecords.com/shop/pacific-spirit-ab-vinyl-claim" target="_blank">here</a>. Any unsold works up to 300 will be minted to an Aquaregia controlled wallet, and the artworks from each of those minted works will be printed and distributed to record shops globally through <a href="https://distribution.triplevision.nl/label/Aquaregia/" target="_blank">Triple Vision Record Distribution</a>, along with the rest of the Aquaregia catalogue. Any unclaimed vinyl records will be sent to record shops for distribution. The vinyl claim period is open from April 25 2025 to May 16 2025 at midnight.</p>
+
+        <p>The records will feature a frame-style jacket with a unique slide-in print which can be removed to be framed if desired.</p>
+      </div>
+
+      <!-- Vinyl jacket image -->
+      <div class="ps-vinyl-wrap">
+        <img src="images/pacific-spirit/ps-vinyl-jacket.jpg" alt="Pacific Spirit vinyl jacket" loading="lazy" style="cursor:zoom-in;">
+      </div>
+
+      <div class="ps-body">
+        <p>Follow <a href="https://x.com/RChan747" target="_blank">@rchan747</a>, <a href="https://x.com/AquaregiaRec" target="_blank">@AquaregiaRec</a> and <a href="https://x.com/ENICOLL" target="_blank">@ENICOLL</a> on X to stay informed.</p>
+
+        <p>Visit Aquaregia: <a href="https://www.aquaregiarecords.com/" target="_blank">https://www.aquaregiarecords.com/</a> | <a href="https://aquaregiarec.bandcamp.com/" target="_blank">https://aquaregiarec.bandcamp.com/</a></p>
+
+        <p>Artists/labels looking to do something similar? Visit <a href="https://repress.aquaregiarecords.com/" target="_blank">here</a>.</p>
+
+        <p>Preview the first single:</p>
+      </div>
+
+      <!-- Audio player -->
+      <!-- Download the MP3 from Cargo and save as: audio/747-second-narrows-preview.mp3 -->
+      <div class="ps-audio">
+        <span class="ps-audio-label">747 - Second Narrows</span>
+        <audio controls src="audio/747-second-narrows-preview.mp3">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+
+      <!-- CTA button -->
+      <a href="https://www.artblocks.io/collection/0x02f518c529a0002e505000795d00c500eb00534a-0"
+         target="_blank" class="ps-button">Mint / Purchase</a>
+
+    </main>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lb-close">close ✕</span>
+    <div class="lightbox-inner" id="lb-inner"></div>
+    <div class="lb-caption" id="lb-caption"></div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    // Lightbox for ps-grid images
+    const lb      = document.getElementById('lightbox');
+    const lbInner = document.getElementById('lb-inner');
+    const lbCap   = document.getElementById('lb-caption');
+    const lbClose = document.getElementById('lb-close');
+
+    document.querySelectorAll('.ps-grid-item img, .ps-vinyl-wrap img').forEach(img => {
+      img.addEventListener('click', () => {
+        lbInner.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+        const cap = img.closest('.ps-grid-item')?.querySelector('.cap')?.textContent || img.alt;
+        lbCap.textContent = cap;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    [lb, lbClose].forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target === lb || e.target === lbClose) {
+          lb.classList.remove('open');
+          lbInner.innerHTML = '';
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        lb.classList.remove('open');
+        lbInner.innerHTML = '';
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</body>
+</html>
