@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>whimsies — ENICOLL</title>
+  <meta name="description" content="emily nicoll is a canadian artist, label owner and dj.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ── Whimsies specific ── */
+
+    .w-title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.2rem;
+    }
+
+    .w-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 300;
+      color: var(--mid);
+      letter-spacing: 0.06em;
+      margin-bottom: 2rem;
+    }
+
+    .w-body {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--black);
+      max-width: 100%;
+      margin-bottom: 1em;
+    }
+    .w-body i { font-style: italic; }
+    .w-body b { font-weight: 500; }
+    .w-body a { text-decoration: underline; color: inherit; }
+    .w-body a:hover { opacity: 0.55; }
+
+    .w-h3 {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin: 2rem 0 0.6rem;
+    }
+
+    .w-notes-label {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 0.9rem;
+      font-weight: 300;
+      margin: 1.6rem 0 0.2rem;
+      display: block;
+    }
+
+    /* Image grids */
+    .w-grid {
+      display: grid;
+      gap: 0.8rem;
+      margin: 1.2rem auto;
+      width: fit-content;
+    }
+    .w-grid-2 { grid-template-columns: repeat(2, 18vw); }
+    .w-grid-3 { grid-template-columns: repeat(3, 18vw); }
+    .w-grid-4 { grid-template-columns: repeat(4, 14vw); }
+    .w-grid-5 { grid-template-columns: repeat(5, 12vw); }
+    .w-grid-6 { grid-template-columns: repeat(6, 10vw); }
+
+    .w-grid-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .w-grid-item img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      background: rgba(14,14,14,0.05);
+      cursor: zoom-in;
+      transition: opacity 0.15s;
+    }
+    .w-grid-item img:hover { opacity: 0.85; }
+
+    .w-grid-item .cap {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 300;
+      color: var(--mid);
+      letter-spacing: 0.03em;
+      line-height: 1.4;
+    }
+
+    /* Centered single image */
+    .w-center-img {
+      display: flex;
+      justify-content: center;
+      margin: 1.4rem 0;
+    }
+    .w-center-img img {
+      width: 30%;
+      height: auto;
+      display: block;
+    }
+    .w-center-img.small img { width: 26%; }
+
+    /* Mint button */
+    .w-button {
+      display: inline-block;
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      border: 2px solid var(--black);
+      padding: 0.5em 1.1em;
+      border-radius: 0.4rem;
+      margin: 0.8rem 0;
+      transition: opacity 0.15s;
+      filter: none;
+    }
+    .w-button:hover { opacity: 0.6; }
+
+    /* Bandcamp embeds */
+    .w-bandcamp {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin: 1rem 0;
+    }
+    .w-bandcamp iframe {
+      width: 100%;
+      max-width: 600px;
+      height: 42px;
+      border: none;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .w-grid-2 { grid-template-columns: repeat(2, 40vw); }
+      .w-grid-3 { grid-template-columns: repeat(3, 28vw); }
+      .w-grid-4 { grid-template-columns: repeat(2, 40vw); }
+      .w-grid-5 { grid-template-columns: repeat(2, 40vw); }
+      .w-grid-6 { grid-template-columns: repeat(3, 28vw); }
+      .w-center-img img { width: 60%; }
+      .w-center-img.small img { width: 50%; }
+      .w-grid-item .cap { font-size: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="pacific-spirit.html">pacific spirit</a>
+      <a href="album-art.html">album art</a>
+      <a href="music-videos.html">music videos</a>
+      <div class="mobile-menu-divider"></div>
+      <div class="mobile-menu-label">digital works</div>
+      <a href="whimsies.html">whimsies</a>
+      <a href="hypnotics.html">hypnotics</a>
+      <a href="spinning-flowers.html">spinning flowers</a>
+      <a href="still-image-series.html">still image series</a>
+      <a href="animations.html">animations</a>
+      <a href="resonance-reverie.html">resonance &amp; reverie</a>
+      <a href="pellucid-petals.html">pellucid petals</a>
+      <div class="mobile-menu-divider"></div>
+      <a href="information.html">information</a>
+      <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
+    </div>
+  </div>
+
+  <div class="site-wrapper">
+
+    <!-- Left nav -->
+    <nav class="left-nav">
+      <a href="index.html" class="nav-name">Emily Nicoll</a>
+      <div class="nav-section">
+        <a href="pacific-spirit.html">pacific spirit</a>
+        <a href="album-art.html">album art</a>
+        <a href="music-videos.html">music videos</a>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <span class="nav-label">digital works</span>
+        <a href="whimsies.html">whimsies</a>
+        <a href="hypnotics.html">hypnotics</a>
+        <a href="spinning-flowers.html">spinning flowers</a>
+        <a href="still-image-series.html">still image series</a>
+        <a href="animations.html">animations</a>
+        <a href="resonance-reverie.html">resonance &amp; reverie</a>
+        <a href="pellucid-petals.html">pellucid petals</a>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <a href="information.html">information</a>
+        <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="main-content">
+
+      <!--
+        IMAGES: save to images/whimsies/
+
+        Hero (3 images):
+          whimsies-hero-1.png
+          whimsies-hero-2.png
+          whimsies-hero-3.png
+
+        Inspiration (2 images):
+          aurora-centralis-ep-cover.jpg
+          veiltail-stairway-mockup.png
+
+        Center logo/image:
+          whimsies-logo.jpg  (the 30% width centered image)
+
+        Traits row (6 images):
+          traits-1.jpg through traits-6.jpg
+
+        Traits center image:
+          source-experience.jpg  (the 26% centered image)
+
+        Inspiration references (4 images):
+          helena-sarin-ref.png
+          niceaunties-ref.jpg
+          whimsies-lettuce.jpg
+          whimsies-cabbage.jpg
+      -->
+
+      <div class="w-title">whimsies</div>
+      <div class="w-subtitle">collection of 1/1/505 by ENICOLL</div>
+
+      <div class="w-body">
+        Whimsies is an exploration of the fusion between nature and human emotion by Canadian multidisciplinary artist Emily Nicoll, also known as ENICOLL. This theme comes to life through a collection of 505 unique artworks, created using artificial intelligence technologies. As Nicoll's first long-form project, Whimsies extends the visual language she has been refining over the years, both in her work as ENICOLL and through her record label, Aquaregia.
+      </div>
+
+      <!-- Hero 3-image grid -->
+      <div class="w-grid w-grid-3">
+        <div class="w-grid-item"><img src="images/whimsies/whimsies-hero-1.png" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/whimsies-hero-2.png" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/whimsies-hero-3.png" alt="" loading="lazy"></div>
+      </div>
+
+      <span class="w-notes-label">Artist's notes</span>
+
+      <div class="w-h3">Inspiration and Inception</div>
+
+      <div class="w-body">
+        The journey toward creating Whimsies began in early 2023, when I first started exploring the potential of AI tools like Stable Diffusion. My foray into the world of AI was first publicized through an artwork I had created for Aquaregia, my record label. The first work using AI that I completed, which then went on to become the cover art for 747's Veiltail/Stairway EP, was created by layering multiple artworks I had produced in Stable Diffusion, a natural progression to my already established workflow for Aquaregia.
+      </div>
+
+      <div class="w-body">
+        In both my work as ENICOLL and for Aquaregia, I've become known for a style that often centers on floral themes and aesthetics. A recurring visual approach in my pieces is a top-down view of the subject, with minimal to no background imagery — allowing the viewer to fully immerse in the focused, central figure. Repetition, layers, sacred geometry, and subtle psychedelic themes weave through much of my portfolio.
+      </div>
+
+      <div class="w-body">
+        My earliest album covers in 2015 began from photographs I had taken, and then processed digitally to create the iconic style that has become known as Aquaregia. A natural evolution to this began in 2020, where I had already been creating and minting works made with 3D software. Instead of solely relying on photos for my cover art, I started modeling subjects in Blender, and "photographing" those subjects within the program. I could then plug these unreal objects in my already established Aquaregia practice as the subjects. The final evolution was to attempt to integrate AI works into the covers.
+      </div>
+
+      <div class="w-body">
+        The sonic sensibility of 747's Veiltail/Stairway EP leans towards trance of the nineties. The bold and psychedelic covers from this era served heavily as inspiration for the cover. I also tried to mirror the theme I had captured in the artwork for 747's hit record, Aurora Centralis EP. Using Stable Diffusion to generate a variety of images, I then settled on fusing a character/idol I had created with multiple flowers I had generated, creating a layered and messy psychedelic being. Capturing emotion in the faces of the idols was something I tried tirelessly to do, and eventually achieved. The juxtaposition of using a machine to create something emotive was something I became obsessed with, which is what inevitably led me to create Whimsies, a deeper exploration into this topic. Combining emotive faces with a floral element became my motive. After meticulously generating thousands of images, I have curated what I consider the most powerful outputs into this collection with minimal post-processing.
+      </div>
+
+      <!-- Inspiration images (2-col) -->
+      <div class="w-grid w-grid-2">
+        <div class="w-grid-item">
+          <img src="images/album-art/747-aurora-centralis-ep.jpg" alt="747 - Aurora Centralis EP" loading="lazy">
+          <span class="cap">747 - Aurora Centralis EP — Digital Cover (released June 2017)</span>
+        </div>
+        <div class="w-grid-item">
+          <img src="images/whimsies/veiltail-stairway-mockup.png" alt="747 - Veiltail/Stairway EP" loading="lazy">
+          <span class="cap">747 - Veiltail/Stairway EP — 12" Vinyl Mockup (released March 2024)</span>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; margin: 1.4rem 0;">
+        <div style="width: 30%; aspect-ratio: 16/9;">
+          <iframe src="https://www.youtube.com/embed/CpUPIfbf-1I"
+                  style="width:100%; height:100%; border:none;" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="w-h3">Traits</div>
+
+      <div class="w-body">
+        As a collector of long-form tokenized digital art myself, I approached the Whimsies project with careful consideration of rarity, trait distribution, and the collector experience. Each creature possesses its own set of unique traits, ranging from the subtle to the overt. These traits are not just a technicality — they represent different emotional and aesthetic qualities present in each individual artwork.
+      </div>
+
+      <div class="w-body">
+        For me, collecting art is about forming a relationship with each piece, and I wanted to ensure that those who collect Whimsies experience the same connection. Every artwork is designed to stand alone, while also contributing to the larger narrative of the project as a whole.
+      </div>
+
+      <!-- Traits 6-image grid -->
+      <div class="w-grid w-grid-6">
+        <div class="w-grid-item"><img src="images/whimsies/traits-1.jpg" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/traits-2.jpg" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/traits-3.jpg" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/traits-4.jpg" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/traits-5.jpg" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/traits-6.jpg" alt="" loading="lazy"></div>
+      </div>
+
+      <div class="w-body">
+        There are five main traits, plus an additional category to designate special outputs. The five core traits and their possibilities are:<br><br>
+        1. Species — Ocular, Hominine, Mythic<br>
+        2. Petal Count — Hexa, Plus, Minus, Amorphous<br>
+        3. Palette — Monotone, Gold, Tinged, Acid<br>
+        4. Material — Stone, Paper, Charcoal, Fibre<br>
+        5. Realm — Flora, Pices, Insecta, Mammalia<br><br>
+        The special outputs include a combination of unique outputs I felt should be honoured individually and homages to artists and musicians who have inspired me. The Source Experience is dedicated to Robert Leiner whose 1994 track "Aqua Viva" is one of my all time favourites and for which the cover art influenced this series in the ocular category.
+      </div>
+
+      <div style="display:flex; justify-content:center; margin: 1.4rem 0;">
+        <iframe style="border: 0; width: 350px; height: 470px;"
+                src="https://bandcamp.com/EmbeddedPlayer/track=362384455/size=large/bgcol=f5f2ec/linkcol=333333/tracklist=false/transparent=true/"
+                seamless></iframe>
+      </div>
+
+      <div class="w-body">
+        Lettuce and Cabbage are nods to two of my favourite artists in the AI universe — Helena Sarin and Nice Aunties — respectively referencing Sarin's 'AI Horticulture Vignettes from the Greenhouse of the Future' collection, and to a specific output from my collection of 'Auntieverse by Niceaunties', Chapter No. 5, Auntiesocial #0482.
+      </div>
+
+      <!-- References 4-image grid -->
+      <div class="w-grid w-grid-4">
+        <div class="w-grid-item"><img src="images/whimsies/helena-sarin-ref.png" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/niceaunties-ref.jpg" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/whimsies-lettuce.jpg" alt="" loading="lazy"></div>
+        <div class="w-grid-item"><img src="images/whimsies/whimsies-cabbage.jpg" alt="" loading="lazy"></div>
+      </div>
+
+      <div class="w-h3">Availability</div>
+
+      <div class="w-body">
+        The works will be available as tokenized digital assets on the Shape blockchain, a layer two built on Ethereum. The collection can be viewed and minted through the Highlight platform linked below. Minting begins October 17th, 2024.<br><br>
+        Follow <a href="https://x.com/ENICOLL" target="_blank">@ENICOLL</a> on Twitter to stay informed.
+      </div>
+
+      <a href="https://highlight.xyz/mint/shape:0xB33F463369c1C53B2fD9260877565d5624CCDDd9"
+         target="_blank" class="w-button">Highlight ↗</a>
+
+      <div class="w-h3">Recommended Listening</div>
+
+      <div class="w-bandcamp">
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=876612971/size=small/bgcol=f5f2ec/linkcol=333333/track=2706029329/transparent=true/" seamless></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3359033119/size=small/bgcol=f5f2ec/linkcol=333333/track=3792964918/transparent=true/" seamless></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=573364447/size=small/bgcol=f5f2ec/linkcol=333333/track=890093440/transparent=true/" seamless></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3627530141/size=small/bgcol=f5f2ec/linkcol=333333/track=3873629251/transparent=true/" seamless></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1249254701/size=small/bgcol=f5f2ec/linkcol=333333/track=2127828752/transparent=true/" seamless></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1820579051/size=small/bgcol=f5f2ec/linkcol=333333/track=740251195/transparent=true/" seamless></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=48728478/size=small/bgcol=f5f2ec/linkcol=333333/track=712342699/transparent=true/" seamless></iframe>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lb-close">close ✕</span>
+    <div class="lightbox-inner" id="lb-inner"></div>
+    <div class="lb-caption" id="lb-caption"></div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const lb      = document.getElementById('lightbox');
+    const lbInner = document.getElementById('lb-inner');
+    const lbCap   = document.getElementById('lb-caption');
+    const lbClose = document.getElementById('lb-close');
+
+    document.querySelectorAll('.w-grid-item img').forEach(img => {
+      img.addEventListener('click', () => {
+        lbInner.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+        const cap = img.closest('.w-grid-item')?.querySelector('.cap')?.textContent || '';
+        lbCap.textContent = cap;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    [lb, lbClose].forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target === lb || e.target === lbClose) {
+          lb.classList.remove('open');
+          lbInner.innerHTML = '';
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        lb.classList.remove('open');
+        lbInner.innerHTML = '';
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</body>
+</html>
