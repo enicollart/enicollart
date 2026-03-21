@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hypnotics — ENICOLL</title>
+  <meta name="description" content="emily nicoll is a canadian artist, label owner and dj.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ── Hypnotics specific ── */
+
+    .hyp-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.6rem;
+    }
+
+    /* Fade slideshow */
+    .hyp-slideshow {
+      position: relative;
+      width: 100%;
+      max-width: 50rem;
+      aspect-ratio: 1 / 1;
+      margin: 0 0 1.2rem;
+      background: var(--light);
+      overflow: hidden;
+    }
+
+    .hyp-slideshow img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .hyp-slideshow img.active {
+      opacity: 1;
+    }
+
+    /* Thumbnail grid */
+    .hyp-thumbs {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1.6rem;
+      max-width: 50rem;
+    }
+
+    .hyp-thumb {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+
+    .hyp-thumb img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      background: var(--light);
+      transition: opacity 0.15s;
+      border: 1px solid transparent;
+    }
+
+    .hyp-thumb img:hover,
+    .hyp-thumb.active img {
+      opacity: 0.75;
+      border-color: rgba(14,14,14,0.3);
+    }
+
+    .hyp-thumb .cap {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      font-weight: 300;
+      color: var(--mid);
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+
+    /* Availability lines */
+    .hyp-avail {
+      font-family: var(--font-serif);
+      font-size: 0.85rem;
+      font-weight: 300;
+      line-height: 1.8;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .hyp-avail i { font-style: italic; }
+
+    .hyp-btn {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      border: 1px solid var(--black);
+      padding: 0.25em 0.7em;
+      border-radius: 2rem;
+      background: var(--black);
+      color: var(--cream);
+      transition: opacity 0.15s;
+      text-decoration: none;
+    }
+    .hyp-btn:hover { opacity: 0.65; }
+
+    /* Divider */
+    .hyp-hr {
+      border: none;
+      border-top: 1px solid var(--light);
+      margin: 1.4rem 0;
+      max-width: 50rem;
+    }
+
+    /* Body text */
+    .hyp-body {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--black);
+      max-width: 50rem;
+    }
+    .hyp-body i { font-style: italic; }
+
+    @media (max-width: 768px) {
+      .hyp-slideshow { max-width: 100%; }
+      .hyp-thumbs { max-width: 100%; grid-template-columns: repeat(4, 1fr); }
+      .hyp-body { max-width: 100%; }
+      .hyp-hr { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="pacific-spirit.html">pacific spirit</a>
+      <a href="album-art.html">album art</a>
+      <a href="music-videos.html">music videos</a>
+      <div class="mobile-menu-divider"></div>
+      <div class="mobile-menu-label">digital works</div>
+      <a href="whimsies.html">whimsies</a>
+      <a href="hypnotics.html">hypnotics</a>
+      <a href="spinning-flowers.html">spinning flowers</a>
+      <a href="still-image-series.html">still image series</a>
+      <a href="animations.html">animations</a>
+      <a href="resonance-reverie.html">resonance &amp; reverie</a>
+      <a href="pellucid-petals.html">pellucid petals</a>
+      <div class="mobile-menu-divider"></div>
+      <a href="information.html">information</a>
+      <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
+    </div>
+  </div>
+
+  <div class="site-wrapper">
+
+    <!-- Left nav -->
+    <nav class="left-nav">
+      <a href="index.html" class="nav-name">Emily Nicoll</a>
+      <div class="nav-section">
+        <a href="pacific-spirit.html">pacific spirit</a>
+        <a href="album-art.html">album art</a>
+        <a href="music-videos.html">music videos</a>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <span class="nav-label">digital works</span>
+        <a href="whimsies.html">whimsies</a>
+        <a href="hypnotics.html">hypnotics</a>
+        <a href="spinning-flowers.html">spinning flowers</a>
+        <a href="still-image-series.html">still image series</a>
+        <a href="animations.html">animations</a>
+        <a href="resonance-reverie.html">resonance &amp; reverie</a>
+        <a href="pellucid-petals.html">pellucid petals</a>
+      </div>
+      <div class="nav-divider"></div>
+      <div class="nav-section">
+        <a href="information.html">information</a>
+        <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="main-content">
+
+      <div class="hyp-title">hypnotics</div>
+
+      <!-- Fade slideshow -->
+      <div class="hyp-slideshow" id="hyp-slideshow">
+        <img src="images/hypnotics/hyp001.png" alt="HYP001" class="active">
+        <img src="images/hypnotics/hyp002.png" alt="HYP002">
+        <img src="images/hypnotics/hyp003.png" alt="HYP003">
+        <img src="images/hypnotics/hyp004.png" alt="HYP004">
+        <img src="images/hypnotics/hyp005.png" alt="HYP005">
+        <img src="images/hypnotics/hyp006.png" alt="HYP006">
+        <img src="images/hypnotics/hyp007.png" alt="HYP007">
+      </div>
+
+      <!-- Thumbnail grid -->
+      <div class="hyp-thumbs">
+        <div class="hyp-thumb active" data-index="0">
+          <img src="images/hypnotics/hyp001.png" alt="HYP001">
+          <span class="cap">HYP001</span>
+        </div>
+        <div class="hyp-thumb" data-index="1">
+          <img src="images/hypnotics/hyp002.png" alt="HYP002">
+          <span class="cap">HYP002</span>
+        </div>
+        <div class="hyp-thumb" data-index="2">
+          <img src="images/hypnotics/hyp003.png" alt="HYP003">
+          <span class="cap">HYP003</span>
+        </div>
+        <div class="hyp-thumb" data-index="3">
+          <img src="images/hypnotics/hyp004.png" alt="HYP004">
+          <span class="cap">HYP004</span>
+        </div>
+        <div class="hyp-thumb" data-index="4">
+          <img src="images/hypnotics/hyp005.png" alt="HYP005">
+          <span class="cap">HYP005</span>
+        </div>
+        <div class="hyp-thumb" data-index="5">
+          <img src="images/hypnotics/hyp006.png" alt="HYP006">
+          <span class="cap">HYP006</span>
+        </div>
+        <div class="hyp-thumb" data-index="6">
+          <img src="images/hypnotics/hyp007.png" alt="HYP007">
+          <span class="cap">HYP007</span>
+        </div>
+      </div>
+
+      <!-- Availability -->
+      <div class="hyp-avail">
+        HYP001 &nbsp;<i>tokenized digital art, ed. of 25, sold</i>
+        <a class="hyp-btn" href="https://opensea.io/assets/ethereum/0xae6e67123f6ccd0bbe82d08e06517514ebe4826f/1" target="_blank">view</a>
+      </div>
+      <div class="hyp-avail">
+        HYP002 &nbsp;<i>tokenized digital art, ed. of 25, available</i>
+        <a class="hyp-btn" href="https://app.manifold.xyz/c/hyp002" target="_blank">purchase</a>
+      </div>
+
+      <hr class="hyp-hr">
+
+      <!-- Body text -->
+      <div class="hyp-body">
+        <p><i>"Hypnotics"</i> is a series that embodies the convergence of organic and mechanical, drawing deeply from the rhythm of hypnotic techno music and my ongoing exploration of floral forms. Each piece in this black-and-white collection employs a kaleidoscopic arrangement of floral shapes, creating fractal-like patterns that evoke a cerebral and hypnotic experience. The intention is to immerse viewers in a visual journey which mirrors the entrancing and repetitive qualities of deep hypnotic techno.</p>
+
+        <p>The process began with modeling various forms in 3D software, then layering and post-processing these objects in Photoshop in a similar fashion to my approach in creating record covers. In <i>"Hypnotics,"</i> the floral theme takes center stage, softened by a grainy texture that contrasts with the harsh-feeling structures within each piece. This juxtaposition reflects a tension between the organic and the industrial, elements that often coexist in techno. The palette is also a nod to the genre, where black-and-white visuals are a hallmark of the aesthetic.</p>
+
+        <p>Each work in the series is titled using a catalogue-style naming convention — HYPXXX (e.g., HYP001, HYP002) — inspired by the system of record labels.</p>
+
+        <p>The first two works in the series have been made available as tokenized digital assets, with the links to view or acquire above. The remaining five works in the series remain unminted currently.</p>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    // Slideshow — auto-advances every 3s, thumbnails manually switch
+    const slides = document.querySelectorAll('#hyp-slideshow img');
+    const thumbs = document.querySelectorAll('.hyp-thumb');
+    let current = 0;
+    let timer;
+
+    function goTo(index) {
+      slides[current].classList.remove('active');
+      thumbs[current].classList.remove('active');
+      current = index;
+      slides[current].classList.add('active');
+      thumbs[current].classList.add('active');
+    }
+
+    function next() {
+      goTo((current + 1) % slides.length);
+    }
+
+    function startTimer() {
+      timer = setInterval(next, 3000);
+    }
+
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        clearInterval(timer);
+        goTo(parseInt(thumb.dataset.index));
+        startTimer();
+      });
+    });
+
+    startTimer();
+  </script>
+</body>
+</html>
