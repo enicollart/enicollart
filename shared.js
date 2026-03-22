@@ -15,16 +15,21 @@ const NAV_DESKTOP = `
     <a href="whimsies.html">whimsies</a>
     <a href="hypnotics.html">hypnotics</a>
     <a href="spinning-flowers.html">spinning flowers</a>
-    <a href="still-image-series.html">still image series</a>
+    <a href="still-image-series.html">still image series'</a>
     <a href="animations.html">animations</a>
     <a href="resonance-reverie.html">resonance &amp; reverie</a>
     <a href="pellucid-petals.html">pellucid petals</a>
   </div>
+   <div class="nav-divider"></div>
+  <div class="nav-section">
+    <span class="nav-label">audio</span>
+    <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+  <a href="mixes.html">mixes</a>
+  </div>
   <div class="nav-divider"></div>
   <div class="nav-section">
     <a href="information.html">information</a>
-    <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
-  </div>
+    
 `;
 
 const NAV_MOBILE_MENU = `
@@ -37,13 +42,16 @@ const NAV_MOBILE_MENU = `
   <a href="whimsies.html">whimsies</a>
   <a href="hypnotics.html">hypnotics</a>
   <a href="spinning-flowers.html">spinning flowers</a>
-  <a href="still-image-series.html">still image series</a>
+  <a href="still-image-series.html">still image series'</a>
   <a href="animations.html">animations</a>
   <a href="resonance-reverie.html">resonance &amp; reverie</a>
   <a href="pellucid-petals.html">pellucid petals</a>
   <div class="mobile-menu-divider"></div>
-  <a href="information.html">information</a>
+ <div class="mobile-menu-label">audio</div>
   <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
+  <a href="mixes.html">mixes</a>
+  <div class="mobile-menu-divider"></div>
+   <a href="information.html">information</a> 
 `;
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -9,227 +9,336 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
+  <link rel="icon" href="images/favicon.ico">
   <style>
     .si-title {
       font-family: var(--font-serif);
       font-size: 1.4rem;
       font-weight: 400;
       letter-spacing: 0.04em;
+      margin-bottom: 2rem;
+    }
+
+    .si-collage {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+      gap: 1rem;
+    }
+
+    .si-card {
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+    }
+
+    .si-card-thumb {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.6s ease-in-out;
+    }
+
+    .si-card-thumb.active { opacity: 1; }
+    .si-card:hover .si-card-thumb.active { opacity: 0.75; }
+
+    .si-card-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.5em 0.7em;
+      background: linear-gradient(transparent, rgba(14,14,14,0.55));
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 1;
+    }
+
+    .si-card:hover .si-card-label { opacity: 1; }
+
+    .si-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      background: rgba(14,14,14,0.88);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 2rem 2rem;
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .si-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+      
+    }
+
+    .si-modal-inner {
+      background: var(--cream);
+      max-width: 1300px;
+      width: 100%;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .si-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
       margin-bottom: 1.6rem;
     }
 
-    /* Scrolling ticker */
-    .si-ticker {
-      overflow: hidden;
-      white-space: nowrap;
-      margin-bottom: 0.3rem;
-    }
-
-    .si-ticker-inner {
-      display: inline-block;
-      animation: si-scroll 16s linear infinite;
+    .si-modal-title {
       font-family: var(--font-serif);
-      font-size: 1rem;
-      font-weight: 300;
+      font-size: 1.2rem;
+      font-weight: 400;
       font-style: italic;
-      color: var(--black);
+      letter-spacing: 0.04em;
     }
 
-    @keyframes si-scroll {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    .si-modal-year {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--mid);
+      margin-left: 0.8rem;
     }
 
-    .si-hr {
-      border: none;
-      border-top: 1px solid rgba(14,14,14,0.2);
-      margin: 0.4rem 0 1.2rem;
+    .si-modal-close {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--mid);
+      cursor: pointer;
+      margin-left: 1.5rem;
+      flex-shrink: 0;
     }
 
-    .si-section {
-      margin-bottom: 3rem;
-    }
+    .si-modal-close:hover { color: var(--black); }
 
-    /* Constrain overall grid width */
-    .si-section {
-      margin-bottom: 3rem;
-      max-width: 70%;
-    }
-
-    /* Image grids */
-    .si-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-    }
-
-    .si-grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 3rem;
-    }
-
-    .si-grid img {
-      width: 100%;
-      height: auto;
-      display: block;
-      cursor: zoom-in;
-      transition: opacity 0.15s;
-    }
-    .si-grid img:hover { opacity: 0.85; }
-
-    /* gold study */
-    .si-gold-row {
+    .si-modal-grid {
       display: flex;
-      gap: 3rem;
-      margin-bottom: 3rem;
-      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
     }
-    .si-gold-row:last-child {
-      align-items: flex-start;
-      margin-bottom: 0;
-    }
-    .si-gold-item {
-      flex: 1;
-      min-width: 0;
-    }
-    .si-gold-item img {
-      width: 100%;
+
+    .si-modal-grid img {
       height: auto;
       display: block;
-      cursor: zoom-in;
-      transition: opacity 0.15s;
-    }
-    .si-gold-item img:hover { opacity: 0.85; }
-    /* square crop for outer images in top row */
-    .si-gold-item.square img {
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
     }
 
     @media (max-width: 768px) {
-      .si-section { max-width: 100%; }
-      .si-grid-2 { grid-template-columns: 1fr; }
-      .si-grid-4 { grid-template-columns: repeat(2, 1fr); }
-      .si-gold-row { flex-wrap: wrap; gap: 1rem; }
-      .si-gold-item { flex: 1 1 40%; min-width: 0; }
-      .si-gold-item img { width: 100%; height: auto; }
-      .si-gold-item.square img { aspect-ratio: 1 / 1; }
+      .si-collage { grid-template-columns: repeat(2, 1fr); }
+      .si-modal { padding: 1rem; }
+      .si-modal-inner { padding: 1.2rem; }
+      .si-modal-grid img { width: 100% !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Mobile nav -->
   <div class="mobile-nav">
     <div class="hamburger" id="hamburger-btn">menu</div>
     <div class="mobile-menu" id="mobile-menu"></div>
   </div>
 
   <div class="site-wrapper">
-
     <nav class="left-nav"></nav>
 
     <main class="main-content">
-
-      <div class="si-title">still image series</div>
-
-      <!-- ── Kaleidoscope diptych ── -->
-      <div class="si-section">
-        <div class="si-ticker">
-          <span class="si-ticker-inner">
-            kaleidoscope &nbsp;&nbsp;&nbsp; diptych &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            kaleidoscope &nbsp;&nbsp;&nbsp; diptych &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </span>
-        </div>
-        <hr class="si-hr">
-        <div class="si-grid si-grid-2">
-          <img src="images/still-image-series/kaleidoscope-1.png" alt="Kaleidoscope diptych 1" loading="lazy">
-          <img src="images/still-image-series/kaleidoscope-2.png" alt="Kaleidoscope diptych 2" loading="lazy">
-        </div>
-      </div>
-
-      <!-- ── Haze ── -->
-      <div class="si-section">
-        <div class="si-ticker">
-          <span class="si-ticker-inner">
-            haze &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            haze &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </span>
-        </div>
-        <hr class="si-hr">
-        <div class="si-grid si-grid-4">
-          <img src="images/still-image-series/haze-1.jpg" alt="Haze 1" loading="lazy">
-          <img src="images/still-image-series/haze-2.jpg" alt="Haze 2" loading="lazy">
-          <img src="images/still-image-series/haze-3.jpg" alt="Haze 3" loading="lazy">
-          <img src="images/still-image-series/haze-4.jpg" alt="Haze 4" loading="lazy">
-        </div>
-      </div>
-
-      <!-- ── Gold study ── -->
-      <div class="si-section">
-        <div class="si-ticker">
-          <span class="si-ticker-inner">
-            gold study &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            gold study &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </span>
-        </div>
-        <hr class="si-hr">
-        <div class="si-gold-row">
-          <div class="si-gold-item square"><img src="images/still-image-series/gold-1.jpg" alt="Gold study 1" loading="lazy"></div>
-          <div class="si-gold-item"><img src="images/still-image-series/gold-2.jpg" alt="Gold study 2" loading="lazy"></div>
-          <div class="si-gold-item square"><img src="images/still-image-series/gold-3.jpg" alt="Gold study 3" loading="lazy"></div>
-        </div>
-        <div class="si-gold-row">
-          <div class="si-gold-item"><img src="images/still-image-series/gold-4.jpg" alt="Gold study 4" loading="lazy"></div>
-          <div class="si-gold-item"><img src="images/still-image-series/gold-5.jpg" alt="Gold study 5" loading="lazy"></div>
-          <div class="si-gold-item"><img src="images/still-image-series/gold-6.jpg" alt="Gold study 6" loading="lazy"></div>
-        </div>
-      </div>
-
+      <div class="si-title">still image series'</div>
+      <div class="si-collage" id="si-collage"></div>
     </main>
   </div>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox">
-    <span class="lightbox-close" id="lb-close">close ✕</span>
-    <div class="lightbox-inner" id="lb-inner"></div>
-    <div class="lb-caption" id="lb-caption"></div>
+  <div class="si-modal" id="si-modal">
+    <div class="si-modal-inner">
+      <div class="si-modal-header">
+        <div>
+          <span class="si-modal-title" id="si-modal-title"></span>
+          <span class="si-modal-year" id="si-modal-year"></span>
+        </div>
+        <span class="si-modal-close" id="si-modal-close">close ✕</span>
+      </div>
+      <div class="si-modal-grid" id="si-modal-grid"></div>
+    </div>
   </div>
 
   <script src="shared.js"></script>
   <script>
-    const lb      = document.getElementById('lightbox');
-    const lbInner = document.getElementById('lb-inner');
-    const lbCap   = document.getElementById('lb-caption');
-    const lbClose = document.getElementById('lb-close');
 
-    document.querySelectorAll('.si-grid img, .si-gold-item img').forEach(img => {
-      img.addEventListener('click', () => {
-        lbInner.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
-        lbCap.textContent = img.alt;
-        lb.classList.add('open');
-        document.body.style.overflow = 'hidden';
-      });
-    });
+    const SERIES = [
+      {
+        title: 'kaleidoscope',
+        subtitle: 'diptych',
+        year: '2023',
+        thumb: 'images/still-image-series/kaleidoscope-1.png',
+        cols: 2,
+        images: [
+          { src: 'images/still-image-series/kaleidoscope-1.png', alt: 'Kaleidoscope 1' },
+          { src: 'images/still-image-series/kaleidoscope-2.png', alt: 'Kaleidoscope 2' },
+        ]
+      },
+      {
+        title: 'haze',
+        year: '2023',
+        thumb: 'images/still-image-series/haze-1.jpg',
+        cols: 4,
+        images: [
+          { src: 'images/still-image-series/haze-1.jpg', alt: 'Haze 1' },
+          { src: 'images/still-image-series/haze-2.jpg', alt: 'Haze 2' },
+          { src: 'images/still-image-series/haze-3.jpg', alt: 'Haze 3' },
+          { src: 'images/still-image-series/haze-4.jpg', alt: 'Haze 4' },
+        ]
+      },
+      {
+        title: 'gold study',
+        year: '2023',
+        thumb: 'images/still-image-series/gold-1.jpg',
+        cols: 3,
+        images: [
+          { src: 'images/still-image-series/gold-1.jpg', alt: 'Gold study 1' },
+          { src: 'images/still-image-series/gold-2.jpg', alt: 'Gold study 2' },
+          { src: 'images/still-image-series/gold-3.jpg', alt: 'Gold study 3' },
+          { src: 'images/still-image-series/gold-4.jpg', alt: 'Gold study 4' },
+          { src: 'images/still-image-series/gold-5.jpg', alt: 'Gold study 5' },
+          { src: 'images/still-image-series/gold-6.jpg', alt: 'Gold study 6' },
+        ]
+      },
+      {
+  title: 'lettuce',
+  year: '2025',
+  cols: 4,
+  images: [
+    { src: 'images/still-image-series/lettuce1.png', alt: 'Lettuce 1' },
+    { src: 'images/still-image-series/lettuce2.png', alt: 'Lettuce 2' },
+    { src: 'images/still-image-series/lettuce3.png', alt: 'Lettuce 3' },
+    { src: 'images/still-image-series/lettuce4.png', alt: 'Lettuce 4' },
+    { src: 'images/still-image-series/lettuce5.png', alt: 'Lettuce 5' },
+    { src: 'images/still-image-series/lettuce6.png', alt: 'Lettuce 6' },
+    { src: 'images/still-image-series/lettuce7.png', alt: 'Lettuce 7' },
+    { src: 'images/still-image-series/lettuce8.png', alt: 'Lettuce 8' },
+  ]
+},
+{
+  title: 'lime',
+  year: '2025',
+  cols: 3,
+  images: [
+    { src: 'images/still-image-series/lime1.png', alt: 'Lime 1' },
+    { src: 'images/still-image-series/lime2.png', alt: 'Lime 2' },
+    { src: 'images/still-image-series/lime3.png', alt: 'Lime 3' },
+  ]
+},
+{
+  title: 'station',
+  year: '2025',
+  cols: 3,
+  images: [
+    { src: 'images/still-image-series/station1.png', alt: 'Station 1' },
+    { src: 'images/still-image-series/station2.png', alt: 'Station 2' },
+    { src: 'images/still-image-series/station3.png', alt: 'Station 3' },
+    { src: 'images/still-image-series/station4.png', alt: 'Station 4' },
+    { src: 'images/still-image-series/station5.png', alt: 'Station 5' },
+    { src: 'images/still-image-series/station6.png', alt: 'Station 6' },
+  ]
+},
+{
+  title: 'sungod',
+  year: '2025',
+  cols: 4,
+  images: [
+    { src: 'images/still-image-series/sungod1.png', alt: 'Sungod 1' },
+    { src: 'images/still-image-series/sungod2.png', alt: 'Sungod 2' },
+    { src: 'images/still-image-series/sungod3.png', alt: 'Sungod 3' },
+    { src: 'images/still-image-series/sungod4.png', alt: 'Sungod 4' },
+    { src: 'images/still-image-series/sungod5.png', alt: 'Sungod 5' },
+    { src: 'images/still-image-series/sungod6.png', alt: 'Sungod 6' },
+    { src: 'images/still-image-series/sungod7.png', alt: 'Sungod 7' },
+    { src: 'images/still-image-series/sungod8.png', alt: 'Sungod 8' },
+  ]
+},
+{
+  title: 'halftime',
+  year: '2025',
+  cols: 3,
+  images: [
+    { src: 'images/still-image-series/halftime1.png', alt: 'Halftime 1' },
+    { src: 'images/still-image-series/halftime2.png', alt: 'Halftime 2' },
+    { src: 'images/still-image-series/halftime3.png', alt: 'Halftime 3' },
+    { src: 'images/still-image-series/halftime4.png', alt: 'Halftime 4' },
+    { src: 'images/still-image-series/halftime5.png', alt: 'Halftime 5' },
+  ]
+},
+    ];
 
-    [lb, lbClose].forEach(el => {
-      el.addEventListener('click', e => {
-        if (e.target === lb || e.target === lbClose) {
-          lb.classList.remove('open');
-          lbInner.innerHTML = '';
-          document.body.style.overflow = '';
-        }
-      });
-    });
+    const collage = document.getElementById('si-collage');
 
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        lb.classList.remove('open');
-        lbInner.innerHTML = '';
-        document.body.style.overflow = '';
+    SERIES.forEach((series, i) => {
+      const card = document.createElement('div');
+      card.className = 'si-card';
+
+      // Render all images stacked, first one active
+      const imgs = series.images.map((img, idx) =>
+        `<img class="si-card-thumb${idx === 0 ? ' active' : ''}" src="${img.src}" alt="${img.alt}" loading="lazy">`
+      ).join('');
+      card.innerHTML = imgs + `<span class="si-card-label">${series.title}${series.subtitle ? ' — ' + series.subtitle : ''}</span>`;
+
+      // Cycle through images every 1.5s
+      let current = 0;
+      const thumbs = card.querySelectorAll('.si-card-thumb');
+      if (thumbs.length > 1) {
+        setTimeout(() => {
+          setInterval(() => {
+            thumbs[current].classList.remove('active');
+            current = (current + 1) % thumbs.length;
+            thumbs[current].classList.add('active');
+          }, 3000);
+        }, i * 1000);
       }
+
+      card.addEventListener('click', () => openModal(i));
+      collage.appendChild(card);
     });
+
+    const modal      = document.getElementById('si-modal');
+    const modalTitle = document.getElementById('si-modal-title');
+    const modalYear  = document.getElementById('si-modal-year');
+    const modalGrid  = document.getElementById('si-modal-grid');
+    const modalClose = document.getElementById('si-modal-close');
+
+    function openModal(index) {
+      const s = SERIES[index];
+      modalTitle.textContent = s.title + (s.subtitle ? ' — ' + s.subtitle : '');
+      modalYear.textContent  = s.year || '';
+      const imgWidth = `calc(${100 / s.cols}% - 0.8rem)`;
+      modalGrid.innerHTML = s.images.map(img =>
+        `<img src="${img.src}" alt="${img.alt}" loading="lazy" style="width:${imgWidth};">`
+      ).join('');
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
   </script>
 </body>
 </html>

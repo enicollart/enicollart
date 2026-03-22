@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>still image series — ENICOLL</title>
+  <meta name="description" content="emily nicoll is a canadian artist, label owner and dj.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .si-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.6rem;
+    }
+
+    /* Scrolling ticker */
+    .si-ticker {
+      overflow: hidden;
+      white-space: nowrap;
+      margin-bottom: 0.3rem;
+    }
+
+    .si-ticker-inner {
+      display: inline-block;
+      animation: si-scroll 16s linear infinite;
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--black);
+    }
+
+    @keyframes si-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .si-hr {
+      border: none;
+      border-top: 1px solid rgba(14,14,14,0.2);
+      margin: 0.4rem 0 1.2rem;
+    }
+
+    .si-section {
+      margin-bottom: 3rem;
+    }
+
+    /* Constrain overall grid width */
+    .si-section {
+      margin-bottom: 3rem;
+      max-width: 70%;
+    }
+
+    /* Image grids */
+    .si-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .si-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3rem;
+    }
+
+    .si-grid img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+      transition: opacity 0.15s;
+    }
+    .si-grid img:hover { opacity: 0.85; }
+
+    /* gold study */
+    .si-gold-row {
+      display: flex;
+      gap: 3rem;
+      margin-bottom: 3rem;
+      align-items: flex-end;
+    }
+    .si-gold-row:last-child {
+      align-items: flex-start;
+      margin-bottom: 0;
+    }
+    .si-gold-item {
+      flex: 1;
+      min-width: 0;
+    }
+    .si-gold-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+      transition: opacity 0.15s;
+    }
+    .si-gold-item img:hover { opacity: 0.85; }
+    /* square crop for outer images in top row */
+    .si-gold-item.square img {
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+
+    @media (max-width: 768px) {
+      .si-section { max-width: 100%; }
+      .si-grid-2 { grid-template-columns: 1fr; }
+      .si-grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .si-gold-row { flex-wrap: wrap; gap: 1rem; }
+      .si-gold-item { flex: 1 1 40%; min-width: 0; }
+      .si-gold-item img { width: 100%; height: auto; }
+      .si-gold-item.square img { aspect-ratio: 1 / 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu"></div>
+  </div>
+
+  <div class="site-wrapper">
+
+    <nav class="left-nav"></nav>
+
+    <main class="main-content">
+
+      <div class="si-title">still image series</div>
+
+      <!-- ── Kaleidoscope diptych ── -->
+      <div class="si-section">
+        <div class="si-ticker">
+          <span class="si-ticker-inner">
+            kaleidoscope &nbsp;&nbsp;&nbsp; diptych &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            kaleidoscope &nbsp;&nbsp;&nbsp; diptych &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </div>
+        <hr class="si-hr">
+        <div class="si-grid si-grid-2">
+          <img src="images/still-image-series/kaleidoscope-1.png" alt="Kaleidoscope diptych 1" loading="lazy">
+          <img src="images/still-image-series/kaleidoscope-2.png" alt="Kaleidoscope diptych 2" loading="lazy">
+        </div>
+      </div>
+
+      <!-- ── Haze ── -->
+      <div class="si-section">
+        <div class="si-ticker">
+          <span class="si-ticker-inner">
+            haze &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            haze &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </div>
+        <hr class="si-hr">
+        <div class="si-grid si-grid-4">
+          <img src="images/still-image-series/haze-1.jpg" alt="Haze 1" loading="lazy">
+          <img src="images/still-image-series/haze-2.jpg" alt="Haze 2" loading="lazy">
+          <img src="images/still-image-series/haze-3.jpg" alt="Haze 3" loading="lazy">
+          <img src="images/still-image-series/haze-4.jpg" alt="Haze 4" loading="lazy">
+        </div>
+      </div>
+
+      <!-- ── Gold study ── -->
+      <div class="si-section">
+        <div class="si-ticker">
+          <span class="si-ticker-inner">
+            gold study &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            gold study &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </div>
+        <hr class="si-hr">
+        <div class="si-gold-row">
+          <div class="si-gold-item square"><img src="images/still-image-series/gold-1.jpg" alt="Gold study 1" loading="lazy"></div>
+          <div class="si-gold-item"><img src="images/still-image-series/gold-2.jpg" alt="Gold study 2" loading="lazy"></div>
+          <div class="si-gold-item square"><img src="images/still-image-series/gold-3.jpg" alt="Gold study 3" loading="lazy"></div>
+        </div>
+        <div class="si-gold-row">
+          <div class="si-gold-item"><img src="images/still-image-series/gold-4.jpg" alt="Gold study 4" loading="lazy"></div>
+          <div class="si-gold-item"><img src="images/still-image-series/gold-5.jpg" alt="Gold study 5" loading="lazy"></div>
+          <div class="si-gold-item"><img src="images/still-image-series/gold-6.jpg" alt="Gold study 6" loading="lazy"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lb-close">close ✕</span>
+    <div class="lightbox-inner" id="lb-inner"></div>
+    <div class="lb-caption" id="lb-caption"></div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const lb      = document.getElementById('lightbox');
+    const lbInner = document.getElementById('lb-inner');
+    const lbCap   = document.getElementById('lb-caption');
+    const lbClose = document.getElementById('lb-close');
+
+    document.querySelectorAll('.si-grid img, .si-gold-item img').forEach(img => {
+      img.addEventListener('click', () => {
+        lbInner.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+        lbCap.textContent = img.alt;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    [lb, lbClose].forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target === lb || e.target === lbClose) {
+          lb.classList.remove('open');
+          lbInner.innerHTML = '';
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        lb.classList.remove('open');
+        lbInner.innerHTML = '';
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</body>
+</html>
