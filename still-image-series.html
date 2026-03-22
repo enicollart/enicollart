@@ -111,8 +111,10 @@
       .si-section { max-width: 100%; }
       .si-grid-2 { grid-template-columns: 1fr; }
       .si-grid-4 { grid-template-columns: repeat(2, 1fr); }
-      .si-gold-row { flex-wrap: wrap; }
-      .si-gold-row img { flex: 1 1 40%; width: auto; }
+      .si-gold-row { flex-wrap: wrap; gap: 1rem; }
+      .si-gold-item { flex: 1 1 40%; min-width: 0; }
+      .si-gold-item img { width: 100%; height: auto; }
+      .si-gold-item.square img { aspect-ratio: 1 / 1; }
     }
   </style>
 </head>
