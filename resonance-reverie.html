@@ -3,83 +3,80 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>animations — ENICOLL</title>
+  <title>resonance &amp; reverie — ENICOLL</title>
   <meta name="description" content="emily nicoll is a canadian artist, label owner and dj.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
   <style>
-    .anim-title {
+    .rr-title {
       font-family: var(--font-serif);
       font-size: 1.4rem;
       font-weight: 400;
       letter-spacing: 0.04em;
+      margin-bottom: 1.2rem;
+    }
+
+    .rr-release {
+      font-family: var(--font-serif);
+      font-size: 0.85rem;
+      line-height: 1.6;
       margin-bottom: 2rem;
     }
 
-    .anim-work {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 2rem;
-      margin-bottom: 3rem;
-      align-items: start;
-    }
-
-    .anim-meta {
-      text-align: right;
-      font-family: var(--font-serif);
-      font-size: 1rem;
-      line-height: 1.5;
-      padding-top: 0.2rem;
-    }
-
-    .anim-meta .work-title {
-      font-weight: 600;
-      font-size: 1rem;
-    }
-
-    .anim-meta .work-desc {
-      color: var(--black);
-      font-style: normal;
-    }
-
-    .anim-meta .work-edition {
-      font-style: italic;
-    }
-
-    .anim-meta .work-link {
-      display: inline-block;
-      margin-top: 1rem;
-      font-weight: 600;
-      font-style: normal;
-      text-decoration: underline;
-      color: var(--black);
-      font-size: 0.8rem;
-    }
-
-    .anim-meta .work-link:hover {
-      opacity: 0.6;
-    }
-
-    .anim-image img {
+    /* Scrolling marquee */
+    .rr-marquee-wrap {
+      overflow: hidden;
       width: 100%;
-      height: auto;
+      margin-bottom: 2rem;
+    }
+
+    .rr-marquee-track {
+      display: flex;
+      gap: 2rem;
+      width: max-content;
+      animation: rr-scroll 60s linear infinite;
+    }
+
+    .rr-marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes rr-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .rr-marquee-track img {
+      height: 40vw;
+      max-height: 500px;
+      width: auto;
       display: block;
       cursor: zoom-in;
       transition: opacity 0.15s;
     }
 
-    .anim-image img:hover { opacity: 0.85; }
+    .rr-marquee-track img:hover { opacity: 0.85; }
 
-    @media (max-width: 768px) {
-      .anim-work {
-        grid-template-columns: 1fr;
-      }
-      .anim-meta {
-        text-align: left;
-      }
+    .rr-body {
+      font-family: var(--font-serif);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      max-width: 90ch;
+      margin-bottom: 1.2rem;
     }
+
+    .rr-link {
+      font-family: var(--font-serif);
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-style: italic;
+      text-decoration: underline;
+      color: var(--black);
+    }
+
+    .rr-link:hover { opacity: 0.6; }
   </style>
 </head>
 <body>
@@ -137,60 +134,36 @@
 
     <main class="main-content">
 
+      <!--
+        IMAGES: save to images/resonance-reverie/
+          rr-1.png
+          rr-2.png
+          rr-3.png
+      -->
 
-      <div class="anim-title">animations</div>
+      <div class="rr-title">resonance &amp; reverie</div>
 
-      <!-- aphotic guardian -->
-      <div class="anim-work">
-        <div class="anim-meta">
-          <div class="work-title">aphotic guardian</div>
-          <div class="work-desc">tokenized digital art on foundation, animated</div>
-          <div class="work-edition"><em>1 of 1, available</em></div>
-          <a class="work-link" href="https://foundation.app/@ENICOLL/foundation/111793" target="_blank">view</a>
-        </div>
-        <div class="anim-image">
-          <img src="images/animations/aphotic-guardian.png" alt="aphotic guardian" loading="lazy">
+      <div class="rr-release">
+        released as tokenized digital art on nifty gateway.<br>
+        October 2022.
+      </div>
+
+      <!-- Scrolling image marquee -->
+      <div class="rr-marquee-wrap">
+        <div class="rr-marquee-track" id="rr-track">
+          <img src="images/resonance-reverie/rr-1.png" alt="Resonance & Reverie 1" loading="lazy">
+          <img src="images/resonance-reverie/rr-2.png" alt="Resonance & Reverie 2" loading="lazy">
+          <img src="images/resonance-reverie/rr-3.png" alt="Resonance & Reverie 3" loading="lazy">
+          <!-- duplicate for seamless loop -->
+          <img src="images/resonance-reverie/rr-1.png" alt="Resonance & Reverie 1" loading="lazy" aria-hidden="true">
+          <img src="images/resonance-reverie/rr-2.png" alt="Resonance & Reverie 2" loading="lazy" aria-hidden="true">
+          <img src="images/resonance-reverie/rr-3.png" alt="Resonance & Reverie 3" loading="lazy" aria-hidden="true">
         </div>
       </div>
 
-      <!-- zephyr -->
-      <div class="anim-work">
-        <div class="anim-meta">
-          <div class="work-title">zephyr</div>
-          <div class="work-desc">tokenized digital art on foundation, animated</div>
-          <div class="work-edition"><em>1 of 1, sold</em></div>
-          <a class="work-link" href="https://foundation.app/@ENICOLL/foundation/65969" target="_blank">view</a>
-        </div>
-        <div class="anim-image">
-          <img src="images/animations/zephyr.png" alt="zephyr" loading="lazy">
-        </div>
-      </div>
+      <p class="rr-body">Resonance &amp; Reverie is a reflection on escapism. Inspired by hypnotic techno, the three works use repetitive and loopy animations to induce a trance-like state &ndash; a hypnotic distraction to engage a state of meditative autopilot. The artworks are built from layered 3D structures that together form intricate and perplexing compositions. Through dark and subdued palettes, the works evoke a sombre and melancholic feel. Floral motifs found in nature are paired with subtle metallic textures; a juxtaposition frequently found in ENICOLL's digital work. Audio by 747.</p>
 
-      <!-- portal -->
-      <div class="anim-work">
-        <div class="anim-meta">
-          <div class="work-title">portal</div>
-          <div class="work-desc">tokenized digital art on known origin, animated</div>
-          <div class="work-edition"><em>ed. of 10, available</em></div>
-          <a class="work-link" href="https://foundation.app/mint/eth/0xABB3738f04Dc2Ec20f4AE4462c3d069d02AE045B/12585008" target="_blank">view</a>
-        </div>
-        <div class="anim-image">
-          <img src="images/animations/portal.png" alt="portal" loading="lazy">
-        </div>
-      </div>
-
-      <!-- soul searcher -->
-      <div class="anim-work">
-        <div class="anim-meta">
-          <div class="work-title">soul searcher</div>
-          <div class="work-desc">tokenized digital art on foundation, animated</div>
-          <div class="work-edition"><em>1 of 1, sold</em></div>
-          <a class="work-link" href="https://foundation.app/@ENICOLL/foundation/40889" target="_blank">view</a>
-        </div>
-        <div class="anim-image">
-          <img src="images/animations/soul-searcher.png" alt="soul searcher" loading="lazy">
-        </div>
-      </div>
+      <a class="rr-link" href="https://niftygateway.com" target="_blank"><em>view collection</em></a>
 
     </main>
   </div>
@@ -209,7 +182,8 @@
     const lbCap   = document.getElementById('lb-caption');
     const lbClose = document.getElementById('lb-close');
 
-    document.querySelectorAll('.anim-image img').forEach(img => {
+    // only bind lightbox to first 3 (not duplicates)
+    document.querySelectorAll('#rr-track img:not([aria-hidden])').forEach(img => {
       img.addEventListener('click', () => {
         lbInner.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
         lbCap.textContent = img.alt;

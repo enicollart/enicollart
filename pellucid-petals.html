@@ -3,82 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>animations — ENICOLL</title>
+  <title>pellucid petals — ENICOLL</title>
   <meta name="description" content="emily nicoll is a canadian artist, label owner and dj.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
   <style>
-    .anim-title {
+    .pp-title {
       font-family: var(--font-serif);
       font-size: 1.4rem;
       font-weight: 400;
       letter-spacing: 0.04em;
+      margin-bottom: 1.4rem;
+    }
+
+    .pp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
       margin-bottom: 2rem;
     }
 
-    .anim-work {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 2rem;
-      margin-bottom: 3rem;
-      align-items: start;
-    }
-
-    .anim-meta {
-      text-align: right;
+    .pp-desc {
       font-family: var(--font-serif);
-      font-size: 1rem;
-      line-height: 1.5;
-      padding-top: 0.2rem;
-    }
-
-    .anim-meta .work-title {
-      font-weight: 600;
-      font-size: 1rem;
-    }
-
-    .anim-meta .work-desc {
-      color: var(--black);
-      font-style: normal;
-    }
-
-    .anim-meta .work-edition {
-      font-style: italic;
-    }
-
-    .anim-meta .work-link {
-      display: inline-block;
-      margin-top: 1rem;
-      font-weight: 600;
-      font-style: normal;
-      text-decoration: underline;
-      color: var(--black);
       font-size: 0.8rem;
+      line-height: 1.6;
+      max-width: 55%;
     }
 
-    .anim-meta .work-link:hover {
-      opacity: 0.6;
+    .pp-btn {
+      font-family: var(--font-serif);
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: 2px solid var(--black);
+      padding: 0.4em 0.8em;
+      color: var(--black);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+      box-shadow: 3px 3px 0 var(--black);
     }
 
-    .anim-image img {
+    .pp-btn:hover { opacity: 0.65; }
+
+    /* Justified gallery — rows of natural-ratio images filling full width */
+    .pp-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .pp-gallery-row {
+      display: flex;
+      gap: 2rem;
       width: 100%;
-      height: auto;
+    }
+
+    .pp-gallery-row img {
       display: block;
+      flex: 1;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
       cursor: zoom-in;
       transition: opacity 0.15s;
+      min-width: 0;
+      height: auto;
     }
 
-    .anim-image img:hover { opacity: 0.85; }
+    .pp-gallery-row img:hover { opacity: 0.85; }
 
     @media (max-width: 768px) {
-      .anim-work {
-        grid-template-columns: 1fr;
-      }
-      .anim-meta {
-        text-align: left;
-      }
+      .pp-header { flex-direction: column; }
+      .pp-desc { max-width: 100%; }
+      .pp-gallery-row img { height: auto; }
     }
   </style>
 </head>
@@ -137,58 +136,25 @@
 
     <main class="main-content">
 
+      <div class="pp-title">pellucid petals</div>
 
-      <div class="anim-title">animations</div>
-
-      <!-- aphotic guardian -->
-      <div class="anim-work">
-        <div class="anim-meta">
-          <div class="work-title">aphotic guardian</div>
-          <div class="work-desc">tokenized digital art on foundation, animated</div>
-          <div class="work-edition"><em>1 of 1, available</em></div>
-          <a class="work-link" href="https://foundation.app/@ENICOLL/foundation/111793" target="_blank">view</a>
-        </div>
-        <div class="anim-image">
-          <img src="images/animations/aphotic-guardian.png" alt="aphotic guardian" loading="lazy">
-        </div>
+      <div class="pp-header">
+        <p class="pp-desc">ongoing collection of hand-modeled digital glass flowers. available as tokenized digital art editions via opensea.</p>
+        <a class="pp-btn" href="https://opensea.io/collection/pellucid-petals" target="_blank">view collection</a>
       </div>
 
-      <!-- zephyr -->
-      <div class="anim-work">
-        <div class="anim-meta">
-          <div class="work-title">zephyr</div>
-          <div class="work-desc">tokenized digital art on foundation, animated</div>
-          <div class="work-edition"><em>1 of 1, sold</em></div>
-          <a class="work-link" href="https://foundation.app/@ENICOLL/foundation/65969" target="_blank">view</a>
+      <!-- Justified gallery: row 1 = 3 images, row 2 = 4 images -->
+      <div class="pp-gallery">
+        <div class="pp-gallery-row">
+          <img src="images/pellucid-petals/pellucid-petals-01.png" alt="Pellucid Petals 1" loading="lazy">
+          <img src="images/pellucid-petals/pellucid-petals-02.png" alt="Pellucid Petals 2" loading="lazy">
+          <img src="images/pellucid-petals/pellucid-petals-03.png" alt="Pellucid Petals 3" loading="lazy">
         </div>
-        <div class="anim-image">
-          <img src="images/animations/zephyr.png" alt="zephyr" loading="lazy">
-        </div>
-      </div>
-
-      <!-- portal -->
-      <div class="anim-work">
-        <div class="anim-meta">
-          <div class="work-title">portal</div>
-          <div class="work-desc">tokenized digital art on known origin, animated</div>
-          <div class="work-edition"><em>ed. of 10, available</em></div>
-          <a class="work-link" href="https://foundation.app/mint/eth/0xABB3738f04Dc2Ec20f4AE4462c3d069d02AE045B/12585008" target="_blank">view</a>
-        </div>
-        <div class="anim-image">
-          <img src="images/animations/portal.png" alt="portal" loading="lazy">
-        </div>
-      </div>
-
-      <!-- soul searcher -->
-      <div class="anim-work">
-        <div class="anim-meta">
-          <div class="work-title">soul searcher</div>
-          <div class="work-desc">tokenized digital art on foundation, animated</div>
-          <div class="work-edition"><em>1 of 1, sold</em></div>
-          <a class="work-link" href="https://foundation.app/@ENICOLL/foundation/40889" target="_blank">view</a>
-        </div>
-        <div class="anim-image">
-          <img src="images/animations/soul-searcher.png" alt="soul searcher" loading="lazy">
+        <div class="pp-gallery-row">
+          <img src="images/pellucid-petals/pellucid-petals-04.png" alt="Pellucid Petals 4" loading="lazy">
+          <img src="images/pellucid-petals/pellucid-petals-05.png" alt="Pellucid Petals 5" loading="lazy">
+          <img src="images/pellucid-petals/pellucid-petals-06.png" alt="Pellucid Petals 6" loading="lazy">
+          <img src="images/pellucid-petals/pellucid-petals-07.png" alt="Pellucid Petals 7" loading="lazy">
         </div>
       </div>
 
@@ -209,7 +175,7 @@
     const lbCap   = document.getElementById('lb-caption');
     const lbClose = document.getElementById('lb-close');
 
-    document.querySelectorAll('.anim-image img').forEach(img => {
+    document.querySelectorAll('.pp-gallery img').forEach(img => {
       img.addEventListener('click', () => {
         lbInner.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
         lbCap.textContent = img.alt;
