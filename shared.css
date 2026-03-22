@@ -87,10 +87,10 @@ nav.left-nav a {
 }
 nav.left-nav a:hover { opacity: 0.45; }
 nav.left-nav a.active { font-weight: 400; }
-nav.left-nav a.nav-name { font-size: 1.2rem; padding-left: 0.4rem; }
+nav.left-nav a.nav-name { font-size: 1.2rem; padding-left: 0.4rem; font-family: var(--font-serif);}
 
 .nav-ext-link { display: flex; align-items: center; gap: 0.2em; }
-.nav-ext-link::after { content: '↗'; font-size: 0.6rem; opacity: 0.5; }
+.nav-ext-link::after { content: '↗'; font-size: 0.8rem; opacity: 1; }
 
 .nav-divider { height: 1px; background: var(--light); margin: 1.2rem 0; }
 
