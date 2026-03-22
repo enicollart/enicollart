@@ -56,6 +56,21 @@ const NAV_MOBILE_MENU = `
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // ── Open Graph tags (global, uses homepage image) ──
+  const OG_IMAGE = 'https://enicoll.com/images/og-preview.jpg';
+  const OG_DESC  = 'emily nicoll is a canadian artist, label owner and dj.';
+ 
+  function setMeta(property, content, isName = false) {
+    const attr = isName ? 'name' : 'property';
+    let el = document.querySelector(`meta[${attr}="${property}"]`);
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute(attr, property);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  }
+
   // ── Inject nav ──
   const desktopNav = document.querySelector('nav.left-nav');
   if (desktopNav) desktopNav.innerHTML = NAV_DESKTOP;
