@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ENICOLL</title>
   <meta name="description" content="emily nicoll is a canadian artist, label owner and dj.">
+  <link rel="icon" href="images/favicon.ico">
 
   <!-- Open Graph -->
   <meta property="og:title" content="ENICOLL">
@@ -16,7 +17,6 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 
   <style>
@@ -47,15 +47,17 @@
     a { color: inherit; text-decoration: none; }
     a:hover { opacity: 0.6; }
 
-    /* ── p5 flower backdrop ── */
-    #p5-bg {
+    /* ── Animated backdrop ── */
+    #backdrop-canvas {
       position: fixed;
       inset: 0;
+      width: 100%;
+      height: 100%;
       z-index: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease;
     }
-    #p5-bg canvas {
-      display: block;
-    }
+    #backdrop-canvas.loaded { opacity: 1; }
 
     /* ── Layout ── */
     .site-wrapper {
@@ -77,7 +79,6 @@
       scrollbar-width: none;
       position: relative;
       z-index: 10;
-      background: #ffffff;
     }
     nav.left-nav::-webkit-scrollbar { display: none; }
 
@@ -241,8 +242,8 @@
 </head>
 <body>
 
-  <!-- Flower backdrop -->
-  <div id="p5-bg"></div>
+  <!-- Animated backdrop -->
+  <canvas id="backdrop-canvas"></canvas>
 
   <!-- Mobile nav -->
   <div class="mobile-nav">
@@ -264,119 +265,85 @@
   </div>
 
   <script>
-    // ── Spinning flowers backdrop ──
-    const SAGE = ['#dcedc8','#c8e6b0','#e8f5e2','#d4edbe','#c5e0aa'];
-    const GREY = ['#aaaaaa','#cccccc','#888888','#bbbbbb','#999999'];
-    const CENTER_FAMILIES = [SAGE, GREY];
+    // ── Slitscan-inspired canvas backdrop ──
+    const canvas = document.getElementById('backdrop-canvas');
+    const ctx    = canvas.getContext('2d');
 
-    let flowers = [];
-    let cols, rows, tileW, tileH;
+    let W, H, offscreen, offCtx, time = 0;
 
-    const sketch = (p) => {
-      let flowers = [];
-      let cols, tileW, tileH;
-      let tmpl = null;
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      buildSource();
+    }
 
-      p.setup = () => {
-        let cnv = p.createCanvas(p.windowWidth, p.windowHeight);
-        cnv.parent('p5-bg');
-        p.noSmooth();
-        buildGrid();
-      };
+    // Build a soft gradient source image to scan
+    function buildSource() {
+      offscreen = document.createElement('canvas');
+      offscreen.width  = W;
+      offscreen.height = H;
+      offCtx = offscreen.getContext('2d');
 
-      p.windowResized = () => {
-        p.resizeCanvas(p.windowWidth, p.windowHeight);
-        buildGrid();
-      };
+      // Layered soft gradients that give the slitscan something interesting to work with
+      const g1 = offCtx.createRadialGradient(W * 0.3, H * 0.4, 0, W * 0.5, H * 0.5, W * 0.8);
+      g1.addColorStop(0,   'rgba(228, 234, 212, 0.9)'); // accent cream-green
+      g1.addColorStop(0.4, 'rgba(210, 220, 240, 0.6)'); // soft blue
+      g1.addColorStop(1,   'rgba(245, 242, 236, 0.1)'); // cream
 
-      function buildGrid() {
-        flowers = [];
-        cols  = Math.floor(p.random(3, 13));
-        tileW = p.width / cols;
-        tileH = tileW;
-        let rows = Math.ceil(p.height / tileH) + 1;
+      offCtx.fillStyle = 'rgba(245, 242, 236, 1)';
+      offCtx.fillRect(0, 0, W, H);
+      offCtx.fillStyle = g1;
+      offCtx.fillRect(0, 0, W, H);
 
-        // Single template shared by every cell
-        let numLayers = Math.floor(p.random(2, 4));
-        let layers = [];
-        for (let l = 0; l < numLayers; l++) {
-          let g = Math.floor(p.random(60, 210));
-          let col = p.color(g, g, g);
-          col.setAlpha(Math.floor(p.random(55, 145)));
-          layers.push({
-            petals : Math.floor(p.random(5, 14)),
-            len    : tileW * p.map(l, 0, numLayers - 1, 0.44, 0.18),
-            wid    : p.random(8, tileW * 0.22),
-            shape  : p.random(['oval', 'oval', 'pointy']),
-            col,
-            dir    : p.random([-1, 1])
-          });
-        }
-        let fam = p.random([SAGE, GREY]);
-        let cc  = p.color(p.random(fam));
-        cc.setAlpha(200);
-        tmpl = {
-          layers,
-          centerCol  : cc,
-          centerSize : tileW * p.random(0.04, 0.1),
-          targetVel  : p.random(0.01, 0.025)
-        };
+      const g2 = offCtx.createLinearGradient(0, 0, W, H);
+      g2.addColorStop(0,   'rgba(253, 178, 249, 0.15)'); // faint pink (swatch-6 from original)
+      g2.addColorStop(0.5, 'rgba(200, 230, 255, 0.1)');
+      g2.addColorStop(1,   'rgba(228, 234, 212, 0.2)');
+      offCtx.fillStyle = g2;
+      offCtx.fillRect(0, 0, W, H);
+    }
 
-        for (let r = 0; r < rows; r++) {
-          for (let c = 0; c < cols; c++) {
-            flowers.push({ c, r, angle: p.random(p.TWO_PI), vel: 0 });
-          }
-        }
+    // Slitscan: each horizontal strip is drawn from a different time-offset
+    // creating the characteristic smearing / shimmering effect
+    const STRIP_H   = 2;    // px per strip
+    const SPEED     = 0.4;  // how fast strips shift
+    const AMPLITUDE = 80;   // max horizontal shift (px)
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      const strips = Math.ceil(H / STRIP_H);
+
+      for (let i = 0; i < strips; i++) {
+        const y      = i * STRIP_H;
+        const phase  = (i / strips) * Math.PI * 6;   // spatial frequency
+        const offset = Math.sin(phase + time * SPEED) * AMPLITUDE * (i / strips);
+
+        // Source x oscillates per strip - creates the warp
+        const srcX = Math.sin(phase * 0.5 + time * SPEED * 0.7) * 30;
+
+        ctx.drawImage(
+          offscreen,
+          Math.max(0, srcX), y, W - Math.abs(srcX), STRIP_H,
+          0,                  y, W,                  STRIP_H
+        );
+
+        // Subtle color tint per strip using globalAlpha layers
+        const hue    = (i / strips * 60 + time * 8) % 360;
+        const bright = 0.5 + 0.5 * Math.sin(phase + time * SPEED);
+        ctx.fillStyle = `hsla(${hue}, 18%, 85%, ${0.04 * bright})`;
+        ctx.fillRect(0, y, W, STRIP_H);
       }
 
-      p.draw = () => {
-        p.background(255);
-        let hc = Math.floor(p.mouseX / tileW);
-        let hr = Math.floor(p.mouseY / tileH);
-        for (let f of flowers) {
-          let hovered = f.c === hc && f.r === hr;
-          f.vel = hovered
-            ? p.lerp(f.vel, tmpl.targetVel, 0.12)
-            : p.lerp(f.vel, 0, 0.04);
-          f.angle += f.vel;
-          drawFlower(f);
-        }
-      };
+      time += 0.016;
+      requestAnimationFrame(draw);
+    }
 
-      function drawFlower(f) {
-        p.push();
-        p.translate((f.c + 0.5) * tileW, (f.r + 0.5) * tileH);
-        for (let l = 0; l < tmpl.layers.length; l++) {
-          let ly = tmpl.layers[l];
-          p.push();
-          p.rotate(f.angle * ly.dir + l * (p.TWO_PI / tmpl.layers.length) * 0.4);
-          p.fill(ly.col);
-          p.noStroke();
-          for (let j = 0; j < ly.petals; j++) {
-            p.push();
-            p.rotate(p.TWO_PI / ly.petals * j);
-            drawPetal(ly.wid, ly.len, ly.shape);
-            p.pop();
-          }
-          p.pop();
-        }
-        p.fill(tmpl.centerCol);
-        p.noStroke();
-        p.ellipse(0, 0, tmpl.centerSize);
-        p.pop();
-      }
+    window.addEventListener('resize', resize);
+    resize();
+    canvas.classList.add('loaded');
+    draw();
 
-      function drawPetal(w, h, shape) {
-        if (shape === 'oval') { p.ellipse(0, -h / 2, w, h); return; }
-        p.beginShape();
-        p.vertex(0, 0);
-        p.bezierVertex(-w/2, -h*0.3, -w/2, -h*0.9, 0, -h);
-        p.bezierVertex( w/2, -h*0.9,  w/2, -h*0.3, 0,  0);
-        p.endShape(p.CLOSE);
-      }
-    };
-
-    new p5(sketch);
   </script>
   <script src="shared.js"></script>
 </body>
