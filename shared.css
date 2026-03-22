@@ -88,7 +88,7 @@ nav.left-nav a {
 }
 nav.left-nav a:hover { opacity: 0.45; }
 nav.left-nav a.active { font-weight: 400; }
-nav.left-nav a.nav-name { font-weight: 500; font-size: 1.2rem; padding-left: 0.4rem; font-family: var(--font-serif);}
+nav.left-nav a.nav-name { letter-spacing: 0.1em; font-weight: 500; font-size: 1.2rem; padding-left: 0.4rem; font-family: var(--font-serif);}
 
 .nav-ext-link { display: flex; align-items: center; gap: 0.2em; }
 .nav-ext-link::after { content: '↗'; font-size: 0.8rem; opacity: 1; }
