@@ -15,21 +15,16 @@ const NAV_DESKTOP = `
     <a href="whimsies.html">whimsies</a>
     <a href="hypnotics.html">hypnotics</a>
     <a href="spinning-flowers.html">spinning flowers</a>
-    <a href="still-image-series.html">still image series'</a>
+    <a href="still-image-series.html">still image series</a>
     <a href="animations.html">animations</a>
     <a href="resonance-reverie.html">resonance &amp; reverie</a>
     <a href="pellucid-petals.html">pellucid petals</a>
   </div>
-   <div class="nav-divider"></div>
-  <div class="nav-section">
-    <span class="nav-label">audio</span>
-    <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
-  <a href="mixes.html">mixes</a>
-  </div>
   <div class="nav-divider"></div>
   <div class="nav-section">
     <a href="information.html">information</a>
-    
+    <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+  </div>
 `;
 
 const NAV_MOBILE_MENU = `
@@ -42,33 +37,24 @@ const NAV_MOBILE_MENU = `
   <a href="whimsies.html">whimsies</a>
   <a href="hypnotics.html">hypnotics</a>
   <a href="spinning-flowers.html">spinning flowers</a>
-  <a href="still-image-series.html">still image series'</a>
+  <a href="still-image-series.html">still image series</a>
   <a href="animations.html">animations</a>
   <a href="resonance-reverie.html">resonance &amp; reverie</a>
   <a href="pellucid-petals.html">pellucid petals</a>
   <div class="mobile-menu-divider"></div>
- <div class="mobile-menu-label">audio</div>
+  <a href="information.html">information</a>
   <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
-  <a href="mixes.html">mixes</a>
-  <div class="mobile-menu-divider"></div>
-   <a href="information.html">information</a> 
 `;
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ── Open Graph tags (global, uses homepage image) ──
-  const OG_IMAGE = 'https://enicoll.com/images/og-preview.jpg';
-  const OG_DESC  = 'emily nicoll is a canadian artist, label owner and dj.';
- 
-  function setMeta(property, content, isName = false) {
-    const attr = isName ? 'name' : 'property';
-    let el = document.querySelector(`meta[${attr}="${property}"]`);
-    if (!el) {
-      el = document.createElement('meta');
-      el.setAttribute(attr, property);
-      document.head.appendChild(el);
-    }
-    el.setAttribute('content', content);
+  // ── Inject mobile name button ──
+  if (!document.querySelector('.mobile-name')) {
+    const mobileNameEl = document.createElement('a');
+    mobileNameEl.className = 'mobile-name';
+    mobileNameEl.href = 'index.html';
+    mobileNameEl.textContent = 'Emily Nicoll';
+    document.body.insertBefore(mobileNameEl, document.body.firstChild);
   }
 
   // ── Inject nav ──

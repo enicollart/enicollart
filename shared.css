@@ -8,7 +8,7 @@
   --mid:    rgba(14,14,14,0.45);
   --light:  rgba(14,14,14,0.18);
   --accent2: #e4ead4;
-  --accent: #dce4d1;
+  --accent: #E1E4D1;
   --pink:   #fdb2f9;
   --nav-w:  220px;
   --font-serif: 'Cormorant Garamond', Georgia, serif;
@@ -204,6 +204,26 @@ main.main-content {
   letter-spacing: 0.1em;
 }
 
+/* ── Mobile name button ── */
+.mobile-name {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 9999;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--accent);
+  border: 1px solid rgba(14,14,14,0.25);
+  padding: 0.3em 0.55em;
+  line-height: 1.3;
+  text-decoration: none;
+  color: var(--black);
+}
+
 /* ── Mobile nav ── */
 .mobile-nav {
   display: none;
@@ -260,6 +280,7 @@ main.main-content {
   .site-wrapper { flex-direction: column; }
   nav.left-nav { display: none; }
   .mobile-nav { display: block; }
+  .mobile-name { display: block; }
   main.main-content { padding: 4.5rem 1.2rem 3rem; }
   .image-grid.grid-2,
   .image-grid.grid-3 { grid-template-columns: 1fr; }
