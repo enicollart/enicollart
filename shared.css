@@ -3,7 +3,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --cream:  #f5f2ec;
+  --cream:  #ffffff;
   --black:  #0e0e0e;
   --mid:    rgba(14,14,14,0.45);
   --light:  rgba(14,14,14,0.18);
@@ -87,6 +87,7 @@ nav.left-nav a {
 }
 nav.left-nav a:hover { opacity: 0.45; }
 nav.left-nav a.active { font-weight: 400; }
+nav.left-nav a.nav-name { font-size: 1.2rem; padding-left: 0.4rem; }
 
 .nav-ext-link { display: flex; align-items: center; gap: 0.2em; }
 .nav-ext-link::after { content: '↗'; font-size: 0.6rem; opacity: 0.5; }
