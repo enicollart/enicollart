@@ -1,9 +1,62 @@
-// shared.js — nav toggle + active state + lightbox
+// shared.js — nav injection + toggle + active state + lightbox
+
+// ── Nav HTML (edit here to update nav across all pages) ──
+const NAV_DESKTOP = `
+  <a href="index.html" class="nav-name">Emily Nicoll</a>
+  <div class="nav-section">
+    <span class="nav-label">music + art</span>
+    <a href="album-art.html">album art</a>
+    <a href="music-videos.html">music videos</a>
+    <a href="pacific-spirit.html">pacific spirit</a>
+  </div>
+  <div class="nav-divider"></div>
+  <div class="nav-section">
+    <span class="nav-label">digital works</span>
+    <a href="whimsies.html">whimsies</a>
+    <a href="hypnotics.html">hypnotics</a>
+    <a href="spinning-flowers.html">spinning flowers</a>
+    <a href="still-image-series.html">still image series</a>
+    <a href="animations.html">animations</a>
+    <a href="resonance-reverie.html">resonance &amp; reverie</a>
+    <a href="pellucid-petals.html">pellucid petals</a>
+  </div>
+  <div class="nav-divider"></div>
+  <div class="nav-section">
+    <a href="information.html">information</a>
+    <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+  </div>
+`;
+
+const NAV_MOBILE_MENU = `
+  <div class="mobile-menu-label">music + art</div>
+  <a href="album-art.html">album art</a>
+  <a href="music-videos.html">music videos</a>
+  <a href="pacific-spirit.html">pacific spirit</a>
+  <div class="mobile-menu-divider"></div>
+  <div class="mobile-menu-label">digital works</div>
+  <a href="whimsies.html">whimsies</a>
+  <a href="hypnotics.html">hypnotics</a>
+  <a href="spinning-flowers.html">spinning flowers</a>
+  <a href="still-image-series.html">still image series</a>
+  <a href="animations.html">animations</a>
+  <a href="resonance-reverie.html">resonance &amp; reverie</a>
+  <a href="pellucid-petals.html">pellucid petals</a>
+  <div class="mobile-menu-divider"></div>
+  <a href="information.html">information</a>
+  <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
+`;
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Mobile menu ──
-  const btn  = document.getElementById('hamburger-btn');
+  // ── Inject nav ──
+  const desktopNav = document.querySelector('nav.left-nav');
+  if (desktopNav) desktopNav.innerHTML = NAV_DESKTOP;
+
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (mobileMenu) mobileMenu.innerHTML = NAV_MOBILE_MENU;
+
+  // ── Mobile menu toggle ──
+  const btn = document.getElementById('hamburger-btn');
   const menu = document.getElementById('mobile-menu');
   if (btn && menu) {
     btn.addEventListener('click', () => menu.classList.toggle('open'));
