@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>album art — ENICOLL</title>
+  <meta name="description" content="album artwork created by emily nicoll for aquaregia records including 747 releases.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <link rel="icon" href="images/favicon.ico">
+  <style>
+    /* ── Album art specific ── */
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+    }
+
+    .album-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .album-item img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      cursor: zoom-in;
+      transition: opacity 0.15s;
+      background: rgba(14,14,14,0.05); /* placeholder color while loading */
+    }
+    .album-item img:hover { opacity: 0.85; }
+
+    .album-caption {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: var(--mid);
+      letter-spacing: 0.03em;
+      line-height: 1.4;
+      padding: 0.35em 0 1em;
+    }
+
+    @media (max-width: 900px) {
+      .album-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .album-grid { grid-template-columns: repeat(2, 1fr); gap: 0.15rem; }
+      .album-caption { font-size: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu"></div>
+  </div>
+
+  <div class="site-wrapper">
+
+    <!-- Left nav -->
+    <nav class="left-nav"></nav>
+
+    <!-- Content -->
+    <main class="main-content">
+
+      <div class="album-grid" id="album-grid">
+
+        <div class="album-item">
+          <img src="images/album-art/various-artists-10.png"
+               alt="Various Artists - 10"
+               data-caption="Various Artists - 10"
+               loading="lazy">
+          <span class="album-caption">Various Artists - 10</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-pacific-spirit-continuous-mix.jpg"
+               alt="747 - Pacific Spirit (Continuous Mix)"
+               data-caption="747 - Pacific Spirit (Continuous Mix)"
+               loading="lazy">
+          <span class="album-caption">747 - Pacific Spirit (Continuous Mix)</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-camosun-bog-single.png"
+               alt="747 - Camosun Bog (Single)"
+               data-caption="747 - Camosun Bog (Single)"
+               loading="lazy">
+          <span class="album-caption">747 - Camosun Bog (Single)</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-pacific-spirit-single.jpg"
+               alt="747 - Pacific Spirit (Single)"
+               data-caption="747 - Pacific Spirit (Single)"
+               loading="lazy">
+          <span class="album-caption">747 - Pacific Spirit (Single)</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-sea-to-sky-single.png"
+               alt="747 - Sea to Sky (Single)"
+               data-caption="747 - Sea to Sky (Single)"
+               loading="lazy">
+          <span class="album-caption">747 - Sea to Sky (Single)</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-second-narrows-single.jpg"
+               alt="747 - Second Narrows (Single)"
+               data-caption="747 - Second Narrows (Single)"
+               loading="lazy">
+          <span class="album-caption">747 - Second Narrows (Single)</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-pacific-spirit.jpg"
+               alt="747 - Pacific Spirit (LP &amp; Gen Art Series)"
+               data-caption="747 - Pacific Spirit (LP &amp; Gen Art Series)"
+               loading="lazy">
+          <span class="album-caption">747 - Pacific Spirit (LP &amp; Gen Art Series)</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-deep-space-opera-ep.jpg"
+               alt="747 - Deep Space Opera EP"
+               data-caption="747 - Deep Space Opera EP"
+               loading="lazy">
+          <span class="album-caption">747 - Deep Space Opera EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-veiltail-stairway.jpg"
+               alt="747 - Veiltail / Stairway"
+               data-caption="747 - Veiltail / Stairway"
+               loading="lazy">
+          <span class="album-caption">747 - Veiltail / Stairway</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/troma-pers1-ancestral-posterity-lp.jpg"
+               alt="Troma &amp; PERS1 - Ancestral Posterity (LP)"
+               data-caption="Troma &amp; PERS1 - Ancestral Posterity (LP)"
+               loading="lazy">
+          <span class="album-caption">Troma &amp; PERS1 - Ancestral Posterity (LP)</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/blazej-malinowski-moods-ep.jpg"
+               alt="Blazej Malinowski - Moods EP"
+               data-caption="Blazej Malinowski - Moods EP"
+               loading="lazy">
+          <span class="album-caption">Blazej Malinowski - Moods EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/teo-drean-viandox-ep.jpg"
+               alt="Téo Dréan - Viandox EP"
+               data-caption="Téo Dréan - Viandox EP"
+               loading="lazy">
+          <span class="album-caption">Téo Dréan - Viandox EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/nicola-dal-sacco-wirrwarr-ep.jpg"
+               alt="Nicola Dal Sacco - Wirrwarr EP"
+               data-caption="Nicola Dal Sacco - Wirrwarr EP"
+               loading="lazy">
+          <span class="album-caption">Nicola Dal Sacco - Wirrwarr EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/various-artists-acid-analects-vol-1.jpg"
+               alt="Various Artists - Acid Analects Vol. 1"
+               data-caption="Various Artists (Nicola Dal Sacco, Elad Magdasi, 747, DJ Huntsman) - Acid Analects Vol. 1"
+               loading="lazy">
+          <span class="album-caption">Various Artists - Acid Analects Vol. 1</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/troma-pers1-kaede-ep.jpg"
+               alt="Troma &amp; PERS1 - Kaede EP"
+               data-caption="Troma &amp; PERS1 - Kaede EP"
+               loading="lazy">
+          <span class="album-caption">Troma &amp; PERS1 - Kaede EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-while-my-303-gently-weeps-ep.jpg"
+               alt="747 - While My 303 Gently Weeps EP"
+               data-caption="747 - While My 303 Gently Weeps EP"
+               loading="lazy">
+          <span class="album-caption">747 - While My 303 Gently Weeps EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-while-my-303-gently-weeps-single.jpg"
+               alt="747 - While My 303 Gently Weeps (Single)"
+               data-caption="747 - While My 303 Gently Weeps (Single)"
+               loading="lazy">
+          <span class="album-caption">747 - While My 303 Gently Weeps (Single)</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/teo-drean-3x500-ep.jpg"
+               alt="Téo Dréan - 3x500 EP"
+               data-caption="Téo Dréan - 3x500 EP"
+               loading="lazy">
+          <span class="album-caption">Téo Dréan - 3x500 EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-aurora-centralis-the-remixes.jpg"
+               alt="747 - Aurora Centralis — The Remixes"
+               data-caption="747 - Aurora Centralis — The Remixes (ft. Schacke, Tin Man, nthng &amp; Primal Code)"
+               loading="lazy">
+          <span class="album-caption">747 - Aurora Centralis — The Remixes</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/troma-pers1-astro-pt-2.jpg"
+               alt="Troma &amp; PERS1 - Astro Pt. II"
+               data-caption="Troma &amp; PERS1 - Astro Pt. II"
+               loading="lazy">
+          <span class="album-caption">Troma &amp; PERS1 - Astro Pt. II</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-the-gate-of-life-lp.jpg"
+               alt="747 - The Gate of Life (LP)"
+               data-caption="747 - The Gate of Life (LP)"
+               loading="lazy">
+          <span class="album-caption">747 - The Gate of Life (LP)</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/troma-pers1-astro-pt-1.jpg"
+               alt="Troma &amp; PERS1 - Astro Pt. I"
+               data-caption="Troma &amp; PERS1 - Astro Pt. I"
+               loading="lazy">
+          <span class="album-caption">Troma &amp; PERS1 - Astro Pt. I</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/troma-pers1-rainfall-ep.jpg"
+               alt="Troma &amp; PERS1 - Rainfall EP"
+               data-caption="Troma &amp; PERS1 - Rainfall EP"
+               loading="lazy">
+          <span class="album-caption">Troma &amp; PERS1 - Rainfall EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-paleo-pt-3.jpg"
+               alt="747 - Paleo Pt. III"
+               data-caption="747 - Paleo Pt. III"
+               loading="lazy">
+          <span class="album-caption">747 - Paleo Pt. III</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-paleo-pt-2.jpg"
+               alt="747 - Paleo Pt. II"
+               data-caption="747 - Paleo Pt. II"
+               loading="lazy">
+          <span class="album-caption">747 - Paleo Pt. II</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-paleo-pt-1.jpg"
+               alt="747 - Paleo Pt. I"
+               data-caption="747 - Paleo Pt. I"
+               loading="lazy">
+          <span class="album-caption">747 - Paleo Pt. I</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-aurora-centralis-ep.jpg"
+               alt="747 - Aurora Centralis EP"
+               data-caption="747 - Aurora Centralis EP"
+               loading="lazy">
+          <span class="album-caption">747 - Aurora Centralis EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-ammonite-ep.jpg"
+               alt="747 - Ammonite EP"
+               data-caption="747 - Ammonite EP"
+               loading="lazy">
+          <span class="album-caption">747 - Ammonite EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-alien-alien-ep.jpg"
+               alt="747 - Alien Alien EP"
+               data-caption="747 - Alien Alien EP"
+               loading="lazy">
+          <span class="album-caption">747 - Alien Alien EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-my-brain-is-melting-the-remixes.jpg"
+               alt="747 - My Brain is Melting — The Remixes"
+               data-caption="747 - My Brain is Melting — The Remixes"
+               loading="lazy">
+          <span class="album-caption">747 - My Brain is Melting — The Remixes</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-spice-garden-ep.jpg"
+               alt="747 - Spice Garden EP"
+               data-caption="747 - Spice Garden EP"
+               loading="lazy">
+          <span class="album-caption">747 - Spice Garden EP</span>
+        </div>
+
+        <div class="album-item">
+          <img src="images/album-art/747-my-brain-is-melting-ep.jpg"
+               alt="747 - My Brain is Melting EP"
+               data-caption="747 - My Brain is Melting EP"
+               loading="lazy">
+          <span class="album-caption">747 - My Brain is Melting EP</span>
+        </div>
+
+      </div><!-- /album-grid -->
+    </main>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lb-close">close ✕</span>
+    <div class="lightbox-inner" id="lb-inner"></div>
+    <div class="lb-caption" id="lb-caption"></div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    // Album-specific lightbox (overrides shared.js generic one for finer control)
+    const lb      = document.getElementById('lightbox');
+    const lbInner = document.getElementById('lb-inner');
+    const lbCap   = document.getElementById('lb-caption');
+    const lbClose = document.getElementById('lb-close');
+
+    document.querySelectorAll('.album-item img').forEach(img => {
+      img.addEventListener('click', () => {
+        lbInner.innerHTML = `<img src="${img.src.replace('/w/800/', '/w/1600/')}" alt="${img.alt}">`;
+        lbCap.textContent = img.dataset.caption || img.alt;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    [lb, lbClose].forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target === lb || e.target === lbClose) {
+          lb.classList.remove('open');
+          lbInner.innerHTML = '';
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        lb.classList.remove('open');
+        lbInner.innerHTML = '';
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</body>
+</html>

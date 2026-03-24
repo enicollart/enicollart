@@ -42,6 +42,116 @@
       letter-spacing: 0.03em;
       line-height: 1.4;
       padding: 0.35em 0 1em;
+      display: none;
+    }
+
+    /* ── View toggle ── */
+    .view-toggle {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+
+    .toggle-btn {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      cursor: pointer;
+      padding: 0.3em 0;
+      border-bottom: 1px solid transparent;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      transition: color 0.15s;
+    }
+
+    .toggle-btn.active {
+      color: var(--black);
+      border-bottom-color: var(--black);
+    }
+
+    .toggle-btn:hover { color: var(--black); }
+
+    .toggle-sep {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--light);
+    }
+
+    /* ── List view ── */
+    #album-list { display: none; }
+
+    .album-list-item {
+      border-bottom: 1px solid var(--light);
+    }
+
+    .album-list-item:first-child {
+      border-top: 1px solid var(--light);
+    }
+
+    .album-list-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 0.55em 0;
+      color: var(--black);
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .album-list-row:hover { opacity: 0.55; }
+
+    .album-list-thumb {
+      width: 2.4rem;
+      height: 2.4rem;
+      object-fit: cover;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .album-list-cat {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 300;
+      color: var(--mid);
+      letter-spacing: 0.05em;
+      width: 5rem;
+      flex-shrink: 0;
+    }
+
+    .album-list-title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 300;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .album-list-date {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 300;
+      color: var(--mid);
+      flex-shrink: 0;
+      width: 6rem;
+      text-align: right;
+    }
+
+    .album-list-arrow {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--mid);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .album-list-date { display: none; }
+      .album-list-cat { width: 3.5rem; }
     }
 
     @media (max-width: 900px) {
@@ -68,6 +178,13 @@
 
     <!-- Content -->
     <main class="main-content">
+
+      <!-- View toggle -->
+      <div class="view-toggle">
+        <button class="toggle-btn active" id="btn-grid" onclick="setView('grid')">grid</button>
+        <span class="toggle-sep">/</span>
+        <button class="toggle-btn" id="btn-list" onclick="setView('list')">list</button>
+      </div>
 
       <div class="album-grid" id="album-grid">
 
@@ -296,14 +413,6 @@
         </div>
 
         <div class="album-item">
-          <img src="images/album-art/747-alien-alien-ep.jpg"
-               alt="747 - Alien Alien EP"
-               data-caption="747 - Alien Alien EP"
-               loading="lazy">
-          <span class="album-caption">747 - Alien Alien EP</span>
-        </div>
-
-        <div class="album-item">
           <img src="images/album-art/747-my-brain-is-melting-the-remixes.jpg"
                alt="747 - My Brain is Melting — The Remixes"
                data-caption="747 - My Brain is Melting — The Remixes"
@@ -320,6 +429,14 @@
         </div>
 
         <div class="album-item">
+          <img src="images/album-art/747-alien-alien-ep.jpg"
+               alt="747 - Alien Alien EP"
+               data-caption="747 - Alien Alien EP"
+               loading="lazy">
+          <span class="album-caption">747 - Alien Alien EP</span>
+        </div>
+        
+        <div class="album-item">
           <img src="images/album-art/747-my-brain-is-melting-ep.jpg"
                alt="747 - My Brain is Melting EP"
                data-caption="747 - My Brain is Melting EP"
@@ -328,6 +445,297 @@
         </div>
 
       </div><!-- /album-grid -->
+      <!-- List view -->
+      <ul class="album-list" id="album-list" style="list-style:none;padding:0;margin:0;">
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/10" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/various-artists-10.png" alt="Various Artists - 10" loading="lazy">
+            <span class="album-list-cat">AQR027</span>
+            <span class="album-list-title">Various Artists - 10</span>
+            <span class="album-list-date">2026-01-23</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://open.spotify.com/album/0RilOmZ7wJqMx2Q1zkAKNm" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-pacific-spirit-continuous-mix.jpg" alt="747 - Pacific Spirit (Continuous Mix)" loading="lazy">
+            <span class="album-list-cat">AQR026MIXED</span>
+            <span class="album-list-title">747 - Pacific Spirit (Continuous Mix)</span>
+            <span class="album-list-date">2025-09-12</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/pacific-spirit" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-camosun-bog-single.png" alt="747 - Camosun Bog (Single)" loading="lazy">
+            <span class="album-list-cat">AQR026S3</span>
+            <span class="album-list-title">747 - Camosun Bog (Single)</span>
+            <span class="album-list-date">2025-06-20</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/pacific-spirit" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-pacific-spirit-single.jpg" alt="747 - Pacific Spirit (Single)" loading="lazy">
+            <span class="album-list-cat">AQR026S0</span>
+            <span class="album-list-title">747 - Pacific Spirit (Single)</span>
+            <span class="album-list-date">2025-06-05</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/pacific-spirit" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-sea-to-sky-single.png" alt="747 - Sea to Sky (Single)" loading="lazy">
+            <span class="album-list-cat">AQR026S2</span>
+            <span class="album-list-title">747 - Sea to Sky (Single)</span>
+            <span class="album-list-date">2025-05-16</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/pacific-spirit" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-second-narrows-single.jpg" alt="747 - Second Narrows (Single)" loading="lazy">
+            <span class="album-list-cat">AQR026S1</span>
+            <span class="album-list-title">747 - Second Narrows (Single)</span>
+            <span class="album-list-date">2025-04-25</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/pacific-spirit" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-pacific-spirit.jpg" alt="747 - Pacific Spirit (LP &amp; Gen Art Series)" loading="lazy">
+            <span class="album-list-cat">AQR026</span>
+            <span class="album-list-title">747 - Pacific Spirit (LP &amp; Gen Art Series)</span>
+            <span class="album-list-date">2025-25-07</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/deep-space-opera-ep-vinyl-only" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-deep-space-opera-ep.jpg" alt="747 - Deep Space Opera EP" loading="lazy">
+            <span class="album-list-cat">AQR025</span>
+            <span class="album-list-title">747 - Deep Space Opera EP</span>
+            <span class="album-list-date">2025-04-04</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/veiltail-stairway" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-veiltail-stairway.jpg" alt="747 - Veiltail / Stairway" loading="lazy">
+            <span class="album-list-cat">AQR024</span>
+            <span class="album-list-title">747 - Veiltail / Stairway</span>
+            <span class="album-list-date">2024-03-22</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/ancestral-posterity" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/troma-pers1-ancestral-posterity-lp.jpg" alt="Troma &amp; PERS1 - Ancestral Posterity (LP)" loading="lazy">
+            <span class="album-list-cat">AQR023</span>
+            <span class="album-list-title">Troma &amp; PERS1 - Ancestral Posterity (LP)</span>
+            <span class="album-list-date">2024-02-02</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/moods-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/blazej-malinowski-moods-ep.jpg" alt="Blazej Malinowski - Moods EP" loading="lazy">
+            <span class="album-list-cat">AQR022</span>
+            <span class="album-list-title">Blazej Malinowski - Moods EP</span>
+            <span class="album-list-date">2023-01-13</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/viandox-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/teo-drean-viandox-ep.jpg" alt="Téo Dréan - Viandox EP" loading="lazy">
+            <span class="album-list-cat">AQR021</span>
+            <span class="album-list-title">Téo Dréan - Viandox EP</span>
+            <span class="album-list-date">2022-07-15</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/wirrwarr-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/nicola-dal-sacco-wirrwarr-ep.jpg" alt="Nicola Dal Sacco - Wirrwarr EP" loading="lazy">
+            <span class="album-list-cat">AQR020</span>
+            <span class="album-list-title">Nicola Dal Sacco - Wirrwarr EP</span>
+            <span class="album-list-date">2023-04-14</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/acid-analects-vol-1" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/various-artists-acid-analects-vol-1.jpg" alt="Various Artists - Acid Analects Vol. 1" loading="lazy">
+            <span class="album-list-cat">AQR019</span>
+            <span class="album-list-title">Various Artists - Acid Analects Vol. 1</span>
+            <span class="album-list-date">2021-10-22</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/kaede-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/troma-pers1-kaede-ep.jpg" alt="Troma &amp; PERS1 - Kaede EP" loading="lazy">
+            <span class="album-list-cat">AQR018</span>
+            <span class="album-list-title">Troma &amp; PERS1 - Kaede EP</span>
+            <span class="album-list-date">2021-06-25</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/while-my-303-gently-weeps-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-while-my-303-gently-weeps-ep.jpg" alt="747 - While My 303 Gently Weeps EP" loading="lazy">
+            <span class="album-list-cat">AQR017</span>
+            <span class="album-list-title">747 - While My 303 Gently Weeps EP</span>
+            <span class="album-list-date">2021-02-12</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/while-my-303-gently-weeps-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-while-my-303-gently-weeps-single.jpg" alt="747 - While My 303 Gently Weeps (Single)" loading="lazy">
+            <span class="album-list-cat">AQR017S1</span>
+            <span class="album-list-title">747 - While My 303 Gently Weeps (Single)</span>
+            <span class="album-list-date">2021-01-29</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/3x500-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/teo-drean-3x500-ep.jpg" alt="Téo Dréan - 3x500 EP" loading="lazy">
+            <span class="album-list-cat">AQR016</span>
+            <span class="album-list-title">Téo Dréan - 3x500 EP</span>
+            <span class="album-list-date">2020-09-18</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/aurora-centralis-the-remixes" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-aurora-centralis-the-remixes.jpg" alt="747 - Aurora Centralis — The Remixes" loading="lazy">
+            <span class="album-list-cat">AQR015</span>
+            <span class="album-list-title">747 - Aurora Centralis — The Remixes</span>
+            <span class="album-list-date">2020-05-15</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/astro-pt-2" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/troma-pers1-astro-pt-2.jpg" alt="Troma &amp; PERS1 - Astro Pt. II" loading="lazy">
+            <span class="album-list-cat">AQR014</span>
+            <span class="album-list-title">Troma &amp; PERS1 - Astro Pt. II</span>
+            <span class="album-list-date">2020-03-06</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/the-gate-of-life" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-the-gate-of-life-lp.jpg" alt="747 - The Gate of Life (LP)" loading="lazy">
+            <span class="album-list-cat">AQR013</span>
+            <span class="album-list-title">747 - The Gate of Life (LP)</span>
+            <span class="album-list-date">2019-11-04</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/astro-pt-1" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/troma-pers1-astro-pt-1.jpg" alt="Troma &amp; PERS1 - Astro Pt. I" loading="lazy">
+            <span class="album-list-cat">AQR012</span>
+            <span class="album-list-title">Troma &amp; PERS1 - Astro Pt. I</span>
+            <span class="album-list-date">2019-07-05</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/rainfall-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/troma-pers1-rainfall-ep.jpg" alt="Troma &amp; PERS1 - Rainfall EP" loading="lazy">
+            <span class="album-list-cat">AQR011</span>
+            <span class="album-list-title">Troma &amp; PERS1 - Rainfall EP</span>
+            <span class="album-list-date">2018-08-31</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/paleo-pt-3" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-paleo-pt-3.jpg" alt="747 - Paleo Pt. III" loading="lazy">
+            <span class="album-list-cat">AQR009</span>
+            <span class="album-list-title">747 - Paleo Pt. III</span>
+            <span class="album-list-date">2018-07-13</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/paleo-pt-2" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-paleo-pt-2.jpg" alt="747 - Paleo Pt. II" loading="lazy">
+            <span class="album-list-cat">AQR008</span>
+            <span class="album-list-title">747 - Paleo Pt. II</span>
+            <span class="album-list-date">2018-02-23</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/paleo-pt-1" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-paleo-pt-1.jpg" alt="747 - Paleo Pt. I" loading="lazy">
+            <span class="album-list-cat">AQR007</span>
+            <span class="album-list-title">747 - Paleo Pt. I</span>
+            <span class="album-list-date">2017-10-27</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/aurora-centralis-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-aurora-centralis-ep.jpg" alt="747 - Aurora Centralis EP" loading="lazy">
+            <span class="album-list-cat">AQR006</span>
+            <span class="album-list-title">747 - Aurora Centralis EP</span>
+            <span class="album-list-date">2017-06-30</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/ammonite-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-ammonite-ep.jpg" alt="747 - Ammonite EP" loading="lazy">
+            <span class="album-list-cat">AQR005</span>
+            <span class="album-list-title">747 - Ammonite EP</span>
+            <span class="album-list-date">2016-12-16</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/my-brain-is-melting-ep-the-remixes" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-my-brain-is-melting-the-remixes.jpg" alt="747 - My Brain is Melting — The Remixes" loading="lazy">
+            <span class="album-list-cat">AQR004</span>
+            <span class="album-list-title">747 - My Brain is Melting — The Remixes</span>
+            <span class="album-list-date">2016-08-01</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/spice-garden-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-spice-garden-ep.jpg" alt="747 - Spice Garden EP" loading="lazy">
+            <span class="album-list-cat">AQR003</span>
+            <span class="album-list-title">747 - Spice Garden EP</span>
+            <span class="album-list-date">2016-05-16</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/alien-alien-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-alien-alien-ep.jpg" alt="747 - Alien Alien EP" loading="lazy">
+            <span class="album-list-cat">AQR002</span>
+            <span class="album-list-title">747 - Alien Alien EP</span>
+            <span class="album-list-date">2016-02-19</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+        <li class="album-list-item">
+          <a class="album-list-row" href="https://aquaregiarec.bandcamp.com/album/my-brain-is-melting-ep" target="_blank">
+            <img class="album-list-thumb" src="images/album-art/747-my-brain-is-melting-ep.jpg" alt="747 - My Brain is Melting EP" loading="lazy">
+            <span class="album-list-cat">AQR001</span>
+            <span class="album-list-title">747 - My Brain is Melting EP</span>
+            <span class="album-list-date">2015-12-07</span>
+            <span class="album-list-arrow">↗</span>
+          </a>
+        </li>
+      </ul>
     </main>
   </div>
 
@@ -372,6 +780,24 @@
         document.body.style.overflow = '';
       }
     });
+
+    function setView(view) {
+      const grid = document.getElementById('album-grid');
+      const list = document.getElementById('album-list');
+      const btnGrid = document.getElementById('btn-grid');
+      const btnList = document.getElementById('btn-list');
+      if (view === 'grid') {
+        grid.style.display = '';
+        list.style.display = 'none';
+        btnGrid.classList.add('active');
+        btnList.classList.remove('active');
+      } else {
+        grid.style.display = 'none';
+        list.style.display = 'block';
+        btnGrid.classList.remove('active');
+        btnList.classList.add('active');
+      }
+    }
   </script>
 </body>
 </html>
