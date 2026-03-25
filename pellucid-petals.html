@@ -143,7 +143,7 @@
         entries.forEach(entry => {
           entry.isIntersecting ? entry.target.play() : entry.target.pause();
         });
-      }, { threshold: 0.2 });
+      }, { threshold: 0.9 });
       videos.forEach(v => observer.observe(v));
     }
   </script>
