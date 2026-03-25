@@ -77,7 +77,10 @@
     @media (max-width: 768px) {
       .pp-header { flex-direction: column; }
       .pp-desc { max-width: 100%; }
-      .pp-gallery-row img { height: auto; }
+      .pp-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+      .pp-gallery-row { display: contents; }
+      .pp-gallery-row img,
+      .pp-gallery-row video { width: 100%; height: auto; flex: none; }
     }
   </style>
 </head>
@@ -111,7 +114,7 @@
           <video src="https://raw2.seadn.io/ethereum/0x495f947276749ce646f68ac8c248420045cb7b5e/23b88dfc4d061814ea47f29618f10055.mp4" loop muted playsinline></video>
         </div>
         <div class="pp-gallery-row">
-          <video src="https://raw2.seadn.io/ethereum/0x495f947276749ce646f68ac8c248420045cb7b5e/cb9ce02e87a1c1a3af749df1620f44f5.mp4" loop muted playsinline></video>
+          <video src="https://raw2.seadn.io/ethereum/0x495f947276749ce646f68ac8c248420045cb7b5e/3ca43ed6b159071569e9596127212cfc.mp4" loop muted playsinline></video>
           <video src="https://raw2.seadn.io/ethereum/0x495f947276749ce646f68ac8c248420045cb7b5e/a78bed9046492d5886e8811ab48f011e.mp4" loop muted playsinline></video>
           <video src="https://raw2.seadn.io/ethereum/0x495f947276749ce646f68ac8c248420045cb7b5e/73fc555e750d750ca948f27e9bbf3a3b.mp4" loop muted playsinline></video>
         </div>
@@ -137,7 +140,7 @@
           video.pause();
         }
       });
-    }, { threshold: 0.85 });
+    }, { threshold: 0.95 });
 
     document.querySelectorAll('.pp-gallery-row video').forEach(v => observer.observe(v));
   </script>
