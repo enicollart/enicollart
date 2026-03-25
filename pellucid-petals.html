@@ -137,6 +137,8 @@
     if (isMobile) {
       videos.forEach(v => {
         v.setAttribute('preload', 'auto');
+        // Force first frame on iOS
+        v.play().then(() => v.pause()).catch(() => {});
         v.addEventListener('click', () => {
           v.paused ? v.play() : v.pause();
         });
