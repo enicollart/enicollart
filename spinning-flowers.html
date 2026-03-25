@@ -37,22 +37,19 @@
     }
     .sf-intro a:hover { opacity: 0.55; }
 
-    /* 2-column grid, no gap (matches original) */
     .sf-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
-      width: 80%;
     }
 
-    .sf-grid img,
     .sf-grid video {
       width: 100%;
       display: block;
     }
 
-    @media (max-width: 600px) {
-      .sf-grid { grid-template-columns: 1fr; }
+    @media (max-width: 768px) {
+      .sf-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -78,21 +75,34 @@
       </div>
 
       <div class="sf-grid">
-        <img src="images/spinning-flowers/sf-01.jpg" alt="" loading="lazy">
-        <img src="images/spinning-flowers/sf-02.png" alt="" loading="lazy">
-        <img src="images/spinning-flowers/sf-03.png" alt="" loading="lazy">
-        <img src="images/spinning-flowers/sf-04.jpg" alt="" loading="lazy">
-        <img src="images/spinning-flowers/sf-05.png" alt="" loading="lazy">
-        <img src="images/spinning-flowers/sf-06.png" alt="" loading="lazy">
-        <img src="images/spinning-flowers/sf-07.png" alt="" loading="lazy">
-        <img src="images/spinning-flowers/sf-08.png" alt="" loading="lazy">
-        <img src="images/spinning-flowers/sf-09.png" alt="" loading="lazy">
-        <img src="images/spinning-flowers/sf-10.jpg" alt="" loading="lazy">
+        <video src="videos/spinning-flowers/sf-01.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-02.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-03.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-04.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-05.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-06.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-07.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-08.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-09.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-10.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-11.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-12.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-13.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-14.mp4" loop muted playsinline></video>
+        <video src="videos/spinning-flowers/sf-15.mp4" loop muted playsinline></video>
       </div>
 
     </main>
   </div>
 
   <script src="shared.js"></script>
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        entry.isIntersecting ? entry.target.play() : entry.target.pause();
+      });
+    }, { threshold: 0.9 });
+    document.querySelectorAll('.sf-grid video').forEach(v => observer.observe(v));
+  </script>
 </body>
 </html>
