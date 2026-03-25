@@ -102,7 +102,7 @@
 
     if (isMobile) {
       videos.forEach(v => {
-        v.setAttribute('preload', 'metadata');
+        v.setAttribute('preload', 'auto');
         v.addEventListener('click', () => {
           v.paused ? v.play() : v.pause();
         });

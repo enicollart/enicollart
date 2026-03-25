@@ -77,7 +77,10 @@
     @media (max-width: 768px) {
       .pp-header { flex-direction: column; }
       .pp-desc { max-width: 100%; }
-      .pp-gallery-row img { height: auto; }
+      .pp-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+      .pp-gallery-row { display: contents; }
+      .pp-gallery-row img,
+      .pp-gallery-row video { width: 100%; height: auto; flex: none; }
     }
   </style>
 </head>
@@ -133,7 +136,7 @@
 
     if (isMobile) {
       videos.forEach(v => {
-        v.setAttribute('preload', 'metadata');
+        v.setAttribute('preload', 'auto');
         v.addEventListener('click', () => {
           v.paused ? v.play() : v.pause();
         });
