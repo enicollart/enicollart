@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="shared.css">
   <link rel="icon" href="images/favicon.ico">
   <style>
+
+  
     .anim-title {
       font-family: var(--font-serif);
       font-size: 1.4rem;
@@ -21,10 +23,11 @@
 
     .anim-work {
       display: grid;
-      grid-template-columns: 1fr 2fr;
+      grid-template-columns: 1fr 1fr;
       gap: 2rem;
       margin-bottom: 3rem;
       align-items: start;
+      max-width: 90%;
     }
 
     .anim-meta {
@@ -63,15 +66,11 @@
       opacity: 0.6;
     }
 
-    .anim-image img {
+    .anim-image video {
       width: 100%;
       height: auto;
       display: block;
-      cursor: zoom-in;
-      transition: opacity 0.15s;
     }
-
-    .anim-image img:hover { opacity: 0.85; }
 
     @media (max-width: 768px) {
       .anim-work {
@@ -109,7 +108,7 @@
           <a class="work-link" href="https://foundation.app/@ENICOLL/foundation/111793" target="_blank">view</a>
         </div>
         <div class="anim-image">
-          <img src="images/animations/aphotic-guardian.png" alt="aphotic guardian" loading="lazy">
+          <video src="https://ipfs.io/ipfs/QmToo1f7FjCTBnLhMwFXAwW9iVuzuAZmidZvEsnzF5zPqU/nft.mp4" autoplay loop muted playsinline></video>
         </div>
       </div>
 
@@ -122,7 +121,7 @@
           <a class="work-link" href="https://foundation.app/@ENICOLL/foundation/65969" target="_blank">view</a>
         </div>
         <div class="anim-image">
-          <img src="images/animations/zephyr.png" alt="zephyr" loading="lazy">
+          <video src="https://ipfs.io/ipfs/QmSnZoApnQXL1o6gFjfX5XmT7ESASvgqGLpaYNtbJBvvCU/nft.mp4" autoplay loop muted playsinline></video>
         </div>
       </div>
 
@@ -135,7 +134,7 @@
           <a class="work-link" href="https://foundation.app/mint/eth/0xABB3738f04Dc2Ec20f4AE4462c3d069d02AE045B/12585008" target="_blank">view</a>
         </div>
         <div class="anim-image">
-          <img src="images/animations/portal.png" alt="portal" loading="lazy">
+          <video src="https://ipfs.io/ipfs/QmTnnkEfiej3jc7T8XqXykHCyZtmyjNk3CtPpCEN7nUinr/asset.mp4" autoplay loop muted playsinline></video>
         </div>
       </div>
 
@@ -148,53 +147,13 @@
           <a class="work-link" href="https://foundation.app/@ENICOLL/foundation/40889" target="_blank">view</a>
         </div>
         <div class="anim-image">
-          <img src="images/animations/soul-searcher.png" alt="soul searcher" loading="lazy">
+          <video src="https://ipfs.io/ipfs/QmUJ1UF2wgLLmf8aydYm5zgZJRnTc68gTTa4yamnuTUUA4/nft.mp4" autoplay loop muted playsinline></video>
         </div>
       </div>
 
     </main>
   </div>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox">
-    <span class="lightbox-close" id="lb-close">close ✕</span>
-    <div class="lightbox-inner" id="lb-inner"></div>
-    <div class="lb-caption" id="lb-caption"></div>
-  </div>
-
   <script src="shared.js"></script>
-  <script>
-    const lb      = document.getElementById('lightbox');
-    const lbInner = document.getElementById('lb-inner');
-    const lbCap   = document.getElementById('lb-caption');
-    const lbClose = document.getElementById('lb-close');
-
-    document.querySelectorAll('.anim-image img').forEach(img => {
-      img.addEventListener('click', () => {
-        lbInner.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
-        lbCap.textContent = img.alt;
-        lb.classList.add('open');
-        document.body.style.overflow = 'hidden';
-      });
-    });
-
-    [lb, lbClose].forEach(el => {
-      el.addEventListener('click', e => {
-        if (e.target === lb || e.target === lbClose) {
-          lb.classList.remove('open');
-          lbInner.innerHTML = '';
-          document.body.style.overflow = '';
-        }
-      });
-    });
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        lb.classList.remove('open');
-        lbInner.innerHTML = '';
-        document.body.style.overflow = '';
-      }
-    });
-  </script>
 </body>
 </html>
