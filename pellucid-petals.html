@@ -77,10 +77,7 @@
     @media (max-width: 768px) {
       .pp-header { flex-direction: column; }
       .pp-desc { max-width: 100%; }
-      .pp-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-      .pp-gallery-row { display: contents; }
-      .pp-gallery-row img,
-      .pp-gallery-row video { width: 100%; height: auto; flex: none; }
+      .pp-gallery-row img { height: auto; }
     }
   </style>
 </head>
@@ -131,18 +128,24 @@
 
   <script src="shared.js"></script>
   <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const video = entry.target;
-        if (entry.isIntersecting) {
-          video.play();
-        } else {
-          video.pause();
-        }
-      });
-    }, { threshold: 0.95 });
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const videos = document.querySelectorAll('.pp-gallery-row video');
 
-    document.querySelectorAll('.pp-gallery-row video').forEach(v => observer.observe(v));
+    if (isMobile) {
+      videos.forEach(v => {
+        v.setAttribute('preload', 'metadata');
+        v.addEventListener('click', () => {
+          v.paused ? v.play() : v.pause();
+        });
+      });
+    } else {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          entry.isIntersecting ? entry.target.play() : entry.target.pause();
+        });
+      }, { threshold: 0.2 });
+      videos.forEach(v => observer.observe(v));
+    }
   </script>
 </body>
 </html>

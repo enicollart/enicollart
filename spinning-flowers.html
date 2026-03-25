@@ -97,12 +97,24 @@
 
   <script src="shared.js"></script>
   <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        entry.isIntersecting ? entry.target.play() : entry.target.pause();
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const videos = document.querySelectorAll('.sf-grid video');
+
+    if (isMobile) {
+      videos.forEach(v => {
+        v.setAttribute('preload', 'metadata');
+        v.addEventListener('click', () => {
+          v.paused ? v.play() : v.pause();
+        });
       });
-    }, { threshold: 0.9 });
-    document.querySelectorAll('.sf-grid video').forEach(v => observer.observe(v));
+    } else {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          entry.isIntersecting ? entry.target.play() : entry.target.pause();
+        });
+      }, { threshold: 0.9 });
+      videos.forEach(v => observer.observe(v));
+    }
   </script>
 </body>
 </html>
