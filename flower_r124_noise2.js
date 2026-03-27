@@ -408,7 +408,7 @@ function generateFlower() {
   return { root, paletteName, numLayers, layerGroups, isMonochrome };
 }
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = false;
@@ -577,59 +577,60 @@ const _speedRoll  = R.random_dec();
 const _speedMode  = _speedRoll < 0.10 ? 'crawl' : _speedRoll < 0.20 ? 'run' : 'walk';
 const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.007 : 0.0025;
 
-(function buildNoiseRenderer() {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
+// ── POST-PROCESS NOISE ───────────────────────────────────────────────────────
+// Generate Gaussian noise texture in JS, apply via WebGL post-process pass.
+// Renders scene to renderTarget first, then composites noise in shader.
+// Consistent across all platforms including iOS.
 
-  function gaussian() {
-    let u = 0, v = 0;
-    while (u === 0) u = Math.random();
-    while (v === 0) v = Math.random();
-    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
+function gaussian() {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
 
-  const noiseData = new Uint8Array(w * h * 4);
-  for (let i = 0; i < noiseData.length; i += 4) {
-    const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 40)));
-    noiseData[i]     = v;
-    noiseData[i + 1] = v;
-    noiseData[i + 2] = v;
-    noiseData[i + 3] = Math.round(0.18 * 255);
-  }
+const _nw = window.innerWidth;
+const _nh = window.innerHeight;
+const _noiseData = new Uint8Array(_nw * _nh * 4);
+for (let i = 0; i < _noiseData.length; i += 4) {
+  const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 55)));
+  _noiseData[i] = _noiseData[i+1] = _noiseData[i+2] = v;
+  _noiseData[i+3] = 255;
+}
+const noiseTex = new THREE.DataTexture(_noiseData, _nw, _nh, THREE.RGBAFormat);
+noiseTex.needsUpdate = true;
 
-  const noiseTex = new THREE.DataTexture(noiseData, w, h, THREE.RGBAFormat);
-  noiseTex.needsUpdate = true;
+const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight);
 
-  const noiseRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
-  noiseRenderer.setPixelRatio(1);
-  noiseRenderer.setSize(w, h);
-  noiseRenderer.domElement.style.position      = 'fixed';
-  noiseRenderer.domElement.style.top           = '0';
-  noiseRenderer.domElement.style.left          = '0';
-  noiseRenderer.domElement.style.pointerEvents = 'none';
-  noiseRenderer.domElement.style.zIndex        = '999';
-  document.body.appendChild(noiseRenderer.domElement);
+const vShader = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }';
+const fShader = [
+  'uniform sampler2D tDiffuse;',
+  'uniform sampler2D tNoise;',
+  'uniform float uStrength;',
+  'varying vec2 vUv;',
+  'void main() {',
+  '  vec4 color = texture2D(tDiffuse, vUv);',
+  '  vec3 noise = texture2D(tNoise, vUv).rgb;',
+  '  color.rgb = 1.0 - (1.0 - color.rgb) * (1.0 - noise * uStrength);',
+  '  gl_FragColor = color;',
+  '}'
+].join('');
 
-  const noiseScene  = new THREE.Scene();
-  const noiseCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-  const vShader = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }';
-  const fShader = 'uniform sampler2D tNoise; varying vec2 vUv; void main() { gl_FragColor = texture2D(tNoise, vUv); }';
-
-  const noiseMat = new THREE.ShaderMaterial({
-    uniforms:       { tNoise: { value: noiseTex } },
-    vertexShader:   vShader,
-    fragmentShader: fShader,
-    transparent:    true,
-    depthTest:      false,
-    depthWrite:     false,
-    blending:       THREE.AdditiveBlending,
-  });
-
-  const noiseQuad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), noiseMat);
-  noiseScene.add(noiseQuad);
-  noiseRenderer.render(noiseScene, noiseCamera);
-})();
+const postScene  = new THREE.Scene();
+const postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+const postMat = new THREE.ShaderMaterial({
+  uniforms: {
+    tDiffuse: { value: renderTarget.texture },
+    tNoise:   { value: noiseTex },
+    uStrength: { value: 0.34 },
+  },
+  vertexShader:   vShader,
+  fragmentShader: fShader,
+  depthTest:  false,
+  depthWrite: false,
+});
+const postQuad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), postMat);
+postScene.add(postQuad);
 
 let tileCanvas = null, tileCtx = null;
 
@@ -658,7 +659,15 @@ if (GRID > 1) {
     g.rotation.z += g.userData.spinDir * speed;
   });
 
+  renderer.setRenderTarget(renderTarget);
+  renderer.autoClear = false;
+  renderer.setClearColor(0x000000, 1.0);
+  renderer.clearColor();
+  renderer.clearDepth();
+  renderer.autoClear = true;
   renderer.render(scene, camera);
+  renderer.setRenderTarget(null);
+  renderer.render(postScene, postCamera);
 
   if (GRID > 1 && tileCtx) {
     const tw = window.innerWidth  / GRID;
