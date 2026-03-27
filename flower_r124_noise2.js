@@ -588,7 +588,7 @@ const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.0
   const _nh = window.innerHeight;
   const _nd = new Uint8Array(_nw * _nh * 4);
   for (let i = 0; i < _nd.length; i += 4) {
-    const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 20)));
+    const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 10)));
     _nd[i] = _nd[i+1] = _nd[i+2] = v;
     _nd[i+3] = 255;
   }
@@ -606,7 +606,7 @@ const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.0
     uniforms: {
       tDiffuse:  { value: renderTarget.texture },
       tNoise:    { value: noiseTex },
-      uStrength: { value: 0.35 },
+      uStrength: { value: 0.43 },
     },
     vertexShader:   vShader,
     fragmentShader: fShader,
