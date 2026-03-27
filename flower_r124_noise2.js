@@ -191,7 +191,7 @@ function buildPetalGeometry(w, h, shape) {
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   geo.setIndex(indices);
-  const merged = mergeVertices(geo, 1e-4);
+  const merged = mergeVertices(geo, 1e-6);
   merged.computeVertexNormals();
   return merged;
 }
@@ -554,7 +554,7 @@ if (usePaletteBg) {
   _bgPlane.position.z = -((numLayers + 1) * LAYER_GAP) / 2 - 3;
   scene.add(_bgPlane);
 }
-scene.background = null;
+scene.background = new THREE.Color(0, 0, 0);
 
 const FILTER_NORMAL = 'brightness(0.85) contrast(1.45)';
 const FILTER_MONO   = 'brightness(1.25) contrast(1.4) saturate(0)';
@@ -569,7 +569,8 @@ root.position.z = -midZ;
 const _fovAdj = _aspect < 1
   ? Math.atan(Math.tan(fovHalf) * _aspect)
   : fovHalf;
-const camZ = (maxPetalRadius * 1.05) / Math.tan(_fovAdj);
+const _camMult = _aspect < 1 ? 1.05 / _aspect : 1.05;
+const camZ = (maxPetalRadius * _camMult) / Math.tan(_fovAdj);
 camera.position.set(0, 0, camZ);
 camera.lookAt(0, 0, 0);
 
@@ -593,7 +594,7 @@ const _nw = window.innerWidth;
 const _nh = window.innerHeight;
 const _noiseData = new Uint8Array(_nw * _nh * 4);
 for (let i = 0; i < _noiseData.length; i += 4) {
-  const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 55)));
+  const v = Math.max(100, Math.min(255, Math.round(128 + gaussian() * 30)));
   _noiseData[i] = _noiseData[i+1] = _noiseData[i+2] = v;
   _noiseData[i+3] = 255;
 }
@@ -603,18 +604,7 @@ noiseTex.needsUpdate = true;
 const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight);
 
 const vShader = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }';
-const fShader = [
-  'uniform sampler2D tDiffuse;',
-  'uniform sampler2D tNoise;',
-  'uniform float uStrength;',
-  'varying vec2 vUv;',
-  'void main() {',
-  '  vec4 color = texture2D(tDiffuse, vUv);',
-  '  vec3 noise = texture2D(tNoise, vUv).rgb;',
-  '  color.rgb = 1.0 - (1.0 - color.rgb) * (1.0 - noise * uStrength);',
-  '  gl_FragColor = color;',
-  '}'
-].join('');
+const fShader = "uniform sampler2D tDiffuse; uniform sampler2D tNoise; uniform float uStrength; varying vec2 vUv; void main() { vec4 color = texture2D(tDiffuse, vUv); vec3 noise = texture2D(tNoise, vUv).rgb; color.rgb = 1.0 - (1.0 - color.rgb) * (1.0 - noise * uStrength); gl_FragColor = color; }";
 
 const postScene  = new THREE.Scene();
 const postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -622,7 +612,7 @@ const postMat = new THREE.ShaderMaterial({
   uniforms: {
     tDiffuse: { value: renderTarget.texture },
     tNoise:   { value: noiseTex },
-    uStrength: { value: 0.34 },
+    uStrength: { value: 0.35 },
   },
   vertexShader:   vShader,
   fragmentShader: fShader,
@@ -660,11 +650,6 @@ if (GRID > 1) {
   });
 
   renderer.setRenderTarget(renderTarget);
-  renderer.autoClear = false;
-  renderer.setClearColor(0x000000, 1.0);
-  renderer.clearColor();
-  renderer.clearDepth();
-  renderer.autoClear = true;
   renderer.render(scene, camera);
   renderer.setRenderTarget(null);
   renderer.render(postScene, postCamera);
