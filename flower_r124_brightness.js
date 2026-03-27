@@ -589,6 +589,7 @@ const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.0
   noiseCanvas.style.opacity        = '0.18';
   noiseCanvas.style.mixBlendMode   = 'screen';
   document.body.appendChild(noiseCanvas);
+  noiseCanvas.style.display = 'none';
   const ctx = noiseCanvas.getContext('2d');
   const w = window.innerWidth;
   const h = window.innerHeight;
