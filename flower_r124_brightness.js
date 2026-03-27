@@ -413,7 +413,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = false;
 renderer.toneMapping       = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;
+renderer.toneMappingExposure = 1.0;
 document.body.appendChild(renderer.domElement);
 const scene  = new THREE.Scene();
 const pmrem = new THREE.PMREMGenerator(renderer);
@@ -556,8 +556,8 @@ if (usePaletteBg) {
 }
 scene.background = null;
 
-const FILTER_NORMAL = 'brightness(0.85) contrast(1.45)';
-const FILTER_MONO   = 'brightness(1.25) contrast(1.4) saturate(0)';
+const FILTER_NORMAL = 'contrast(1.45)';
+const FILTER_MONO   = 'contrast(1.4) saturate(0)';
 const activeFilter  = isMonochrome ? FILTER_MONO : FILTER_NORMAL;
 renderer.domElement.style.filter = activeFilter;
 
