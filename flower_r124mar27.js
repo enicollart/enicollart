@@ -1,67 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-
-</head>
-<body>
-<script>
-  var tokenData = {
-    hash: "0x" + [...Array(64)].map(() => Math.floor(Math.random()*16).toString(16)).join(''),
-    tokenId: "123000001"
-  };
-</script>
-  <!--
-<script>
 'use strict';
 
-// ── DOCUMENT STYLES ───────────────────────────────────────────────────────────
-document.body.style.cssText = 'margin:0;padding:0;background:#000;overflow:hidden;';
-document.documentElement.style.cssText = 'margin:0;padding:0;';
-const _traitsEl = document.getElementById('traits-overlay');
-Object.assign(_traitsEl.style, {
-  position: 'fixed', top: '20px', left: '20px',
-  background: 'rgba(0,0,0,0.65)', color: '#fff',
-  fontFamily: 'monospace', fontSize: '12px', lineHeight: '1.8',
-  padding: '14px 18px', borderRadius: '6px',
-  pointerEvents: 'none', zIndex: '100',
-  letterSpacing: '0.05em', border: '1px solid rgba(255,255,255,0.1)',
-});
+document.body.style.margin  = '0';
+document.body.style.padding = '0';
+document.body.style.background = '#000';
+document.body.style.overflow   = 'hidden';
 
-
-// ── ART BLOCKS HASH INJECTION ─────────────────────────────────────────────────
-// On Art Blocks, tokenData.hash is injected before this script runs.
-// This fallback generates a random hash for local testing.
-window.tokenData = window.tokenData || {
-  hash: '0x' + [...Array(64)].map(() => Math.floor(Math.random()*16).toString(16)).join('')
-};
-
-// ── SEEDED RNG (Mulberry32) ────────────────────────────────────────────────────
-// Derives a deterministic seed from the token hash so every load
-// of the same token produces the exact same flower.
-function makeRNG(hash) {
-  let s = 0;
-  for (let i = 2; i < hash.length; i++)
-    s = ((s * 31) + parseInt(hash[i], 16)) & 0xffffffff;
-
-  return {
-    _s: s >>> 0,
-    next() {
-      this._s = (this._s + 0x6D2B79F5) >>> 0;
-      let t = Math.imul(this._s ^ (this._s >>> 15), 1 | this._s);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    },
-    range(a, b)  { return a + this.next() * (b - a); },
-    int(a, b)    { return Math.floor(this.range(a, b)); },   // [a, b)
-    pick(arr)    { return arr[this.int(0, arr.length)]; },
-    bool(p = .5) { return this.next() < p; }
-  };
+class Random {
+  constructor() {
+    this.useA = false;
+    let sfc32 = function(uint128Hex) {
+      let a = parseInt(uint128Hex.substring(0, 8), 16);
+      let b = parseInt(uint128Hex.substring(8, 16), 16);
+      let c = parseInt(uint128Hex.substring(16, 24), 16);
+      let d = parseInt(uint128Hex.substring(24, 32), 16);
+      return function() {
+        a |= 0; b |= 0; c |= 0; d |= 0;
+        let t = (((a + b) | 0) + d) | 0;
+        d = (d + 1) | 0;
+        a = b ^ (b >>> 9);
+        b = (c + (c << 3)) | 0;
+        c = (c << 21) | (c >>> 11);
+        c = (c + t) | 0;
+        return (t >>> 0) / 4294967296;
+      };
+    };
+    this.prngA = new sfc32(tokenData.hash.substring(2, 34));
+    this.prngB = new sfc32(tokenData.hash.substring(34, 66));
+    for (let i = 0; i < 1e6; i += 2) { this.prngA(); this.prngB(); }
+  }
+  random_dec()          { this.useA = !this.useA; return this.useA ? this.prngA() : this.prngB(); }
+  random_num(a, b)      { return a + (b - a) * this.random_dec(); }
+  random_int(a, b)      { return Math.floor(this.random_num(a, b + 1)); }
+  random_bool(p)        { return this.random_dec() < p; }
+  random_choice(list)   { return list[this.random_int(0, list.length - 1)]; }
 }
 
-const RNG = makeRNG(window.tokenData.hash);
+const R = new Random();
 
-// ── GENERATION PARAMETERS ─────────────────────────────────────────────────────
 const WORLD_SCALE   = 0.01;
 const PETAL_EXTRUDE = 0.35;
 const LAYER_GAP     = 0.6;
@@ -84,7 +59,6 @@ const COLOR_PALETTES = {
   cinnabar:      ['#080408','#280818','#781838','#d04060','#e89030','#f8d060'],
 };
 
-// ── HELPERS ───────────────────────────────────────────────────────────────────
 function hexToRGB(h) {
   h = h.replace('#','');
   return [
@@ -148,7 +122,30 @@ function petalOutline(w, h, shape, steps = STEPS_PER_SEG) {
   return out;
 }
 
-// ── GEOMETRY BUILDERS ─────────────────────────────────────────────────────────
+function mergeVertices(geometry, tolerance) {
+  tolerance = tolerance || 1e-4;
+  const precision = Math.pow(10, Math.max(0, Math.log10(1 / tolerance)));
+  const pos = geometry.attributes.position;
+  const count = pos.count;
+  const hashMap = {};
+  const uniqueVerts = [];
+  const indexRemap = new Int32Array(count);
+  for (let i = 0; i < count; i++) {
+    const key = Math.round(pos.getX(i)*precision)+'_'+Math.round(pos.getY(i)*precision)+'_'+Math.round(pos.getZ(i)*precision);
+    if (hashMap[key] === undefined) { hashMap[key] = uniqueVerts.length; uniqueVerts.push([pos.getX(i),pos.getY(i),pos.getZ(i)]); }
+    indexRemap[i] = hashMap[key];
+  }
+  const newPos = new Float32Array(uniqueVerts.length * 3);
+  for (let i = 0; i < uniqueVerts.length; i++) { newPos[i*3]=uniqueVerts[i][0]; newPos[i*3+1]=uniqueVerts[i][1]; newPos[i*3+2]=uniqueVerts[i][2]; }
+  const oldIdx = geometry.index ? geometry.index.array : null;
+  const newIdx = new Uint16Array(oldIdx ? oldIdx.length : count);
+  for (let i = 0; i < newIdx.length; i++) newIdx[i] = indexRemap[oldIdx ? oldIdx[i] : i];
+  const out = new THREE.BufferGeometry();
+  out.setAttribute('position', new THREE.Float32BufferAttribute(newPos, 3));
+  out.setIndex(Array.from(newIdx));
+  return out;
+}
+
 function buildPetalGeometry(w, h, shape) {
   const outline = petalOutline(w, h, shape);
   const n = outline.length;
@@ -164,12 +161,10 @@ function buildPetalGeometry(w, h, shape) {
   const positions = [];
   const indices   = [];
 
-  // add all ring verts
   rings.forEach(ring => ring.forEach(([x,y,z]) => positions.push(x, y, z)));
 
   const vIdx = (ring, i) => ring * n + i;
 
-  // caps — fan from centroid
   for (const [ri, rev] of [[0, false],[N_PROFILE-1, true]]) {
     const ring = rings[ri];
     const cx = ring.reduce((s,v) => s+v[0], 0) / n;
@@ -184,7 +179,6 @@ function buildPetalGeometry(w, h, shape) {
     }
   }
 
-  // sides
   for (let p = 0; p < N_PROFILE - 1; p++) {
     for (let i = 0; i < n; i++) {
       const j  = (i+1) % n;
@@ -197,21 +191,17 @@ function buildPetalGeometry(w, h, shape) {
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   geo.setIndex(indices);
-  // merge vertices sharing the same position so normals are averaged across
-  // face seams — eliminates visible faceting on curved petal surfaces
-  const merged = THREE.BufferGeometryUtils.mergeVertices(geo, 1e-4);
+  const merged = mergeVertices(geo, 1e-4);
   merged.computeVertexNormals();
-  return merged; // colors baked in after palette is known
+  return merged;
 }
 
-// Bake vertex colors onto petal geometry: gradient base->tip + subtle noise
 function bakeVertexColors(geo, colA, colB) {
   const pos    = geo.attributes.position;
   const colors = new Float32Array(pos.count * 3);
   const [r1,g1,b1] = hexToRGB(colA);
   const [r2,g2,b2] = hexToRGB(colB);
 
-  // find Y range of geometry
   let yMin = Infinity, yMax = -Infinity;
   for (let i = 0; i < pos.count; i++) {
     const y = pos.getY(i);
@@ -223,19 +213,16 @@ function bakeVertexColors(geo, colA, colB) {
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
     const y = pos.getY(i);
-    // gradient factor 0=base 1=tip, clamped
     let t = (y - yMin) / yRange;
-    // add value noise for texture — cheap hash
     const nx = Math.floor(x * 80 + 1000);
     const ny = Math.floor(y * 80 + 1000);
     const h  = Math.sin(nx * 127.1 + ny * 311.7) * 43758.5453;
-    const n  = (h - Math.floor(h) - 0.5) * 0.14; // ±7% brightness shift
+    const n  = (h - Math.floor(h) - 0.5) * 0.14;
     t = Math.max(0, Math.min(1, t + n * 0.4));
 
     colors[i*3]   = r1 + (r2-r1)*t + n*(r1+r2)*0.3;
     colors[i*3+1] = g1 + (g2-g1)*t + n*(g1+g2)*0.3;
     colors[i*3+2] = b1 + (b2-b1)*t + n*(b1+b2)*0.3;
-    // clamp
     colors[i*3]   = Math.max(0, Math.min(1, colors[i*3]));
     colors[i*3+1] = Math.max(0, Math.min(1, colors[i*3+1]));
     colors[i*3+2] = Math.max(0, Math.min(1, colors[i*3+2]));
@@ -243,13 +230,9 @@ function bakeVertexColors(geo, colA, colB) {
   geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 }
 
-// ── MATERIAL FACTORY ─────────────────────────────────────────────────────────
-// Pure MeshStandardMaterial — no textures, no UV dependency.
-// Gradient is baked into vertex colors in buildPetalGeometry.
-// Noise is baked as vertex color variation too.
-function makeMat(roughness = 0.08, isCenter = false) {
+function makeMat(roughness = 0.08) {
   return new THREE.MeshStandardMaterial({
-    vertexColors:    !isCenter,
+    vertexColors:    true,
     metalness:       1.0,
     roughness,
     envMapIntensity: 4.0,
@@ -267,46 +250,47 @@ function makeCenterMat(hexColor, roughness = 0.4) {
   });
 }
 
-// ── FLOWER GENERATOR ──────────────────────────────────────────────────────────
 function generateFlower() {
   const root = new THREE.Group();
 
-  // weighted palette selection
   const PALETTE_WEIGHTS = [
-    ['pearl',            8.0],
-    ['lapis_lazuli',    8.0],
-    ['garnet',          8.0],
-    ['azurite',         8.0],
-    ['fire_opal',      8.0],
-    ['chalcopyrite',     8.0],
-    ['cobalt',   8.0],
-    ['malachite',       8.0],
-    ['citrine',        8.0],
-    ['fluorite',          8.0],
-    ['cinnabar',       8.0],
-    ['hematite',       6.0],
-    ['monochrome',      6.0],
+    ['pearl', 4.5],
+    ['lapis_lazuli', 8.5],
+    ['garnet', 7.5],
+    ['azurite', 10.0],
+    ['fire_opal', 9.0],
+    ['chalcopyrite', 9.5],
+    ['cobalt', 8.5],
+    ['malachite', 9.0],
+    ['citrine', 8.5],
+    ['fluorite', 10.0],
+    ['cinnabar', 9.0],
+    ['hematite', 5.0],
+    ['black_and_white', 1.0],
   ];
-  const _pw = RNG.next() * 100;
+  const _pw = R.random_dec() * 100;
   let _acc = 0, paletteName = PALETTE_WEIGHTS[0][0];
   for (const [name, weight] of PALETTE_WEIGHTS) {
     _acc += weight;
     if (_pw < _acc) { paletteName = name; break; }
   }
 
-  // monochrome effect: separate roll, 8% chance regardless of palette
-  // when true, desaturate + boost contrast after render
-  const isMonochrome = (paletteName === 'monochrome');
-  // when monochrome, reverse palette so outermost layer is lightest (avoids blending into black bg)
+  const isMonochrome = (paletteName === 'black_and_white');
   const _basePalette = COLOR_PALETTES[isMonochrome ? 'hematite' : paletteName];
   const palette      = isMonochrome ? [..._basePalette].reverse() : _basePalette;
-  const parity       = RNG.pick(['even','odd']);
-  const numLayers     = RNG.bool(0.2) ? RNG.int(2,4) : RNG.int(4,11);
+  const parity       = R.random_choice(['even','odd']);
+  const numLayers     = isMonochrome ? R.random_int(8, 10) : (R.random_bool(0.2) ? R.random_int(2, 3) : R.random_int(4, 10));
 
-  const layerGroups = []; // store for independent rotation in animate()
+  const layerGroups = [];
+  const mat = makeMat(0.04);
+
+  const _useRandom = paletteName === 'lapis_lazuli' || paletteName === 'garnet'
+    || paletteName === 'malachite'
+    || (paletteName === 'azurite' && R.random_bool(0.4))
+    || (paletteName === 'citrine' && R.random_bool(0.4));
 
   for (let l = 0; l < numLayers; l++) {
-    let petals = RNG.bool(0.15) ? RNG.int(15,20) : RNG.int(5,15);
+    let petals = R.random_bool(0.15) ? R.random_int(15, 19) : R.random_int(5, 14);
     if (parity === 'even' && petals % 2 !== 0) petals++;
     else if (parity === 'odd' && petals % 2 === 0) petals++;
 
@@ -314,26 +298,24 @@ function generateFlower() {
     const minLen      = maxLen * 0.3;
     const t           = l / Math.max(numLayers - 1, 1);
     const petalLength = maxLen - (maxLen - minLen) * t;
-    let   petalWidth  = RNG.range(40, 120) * WORLD_SCALE;
+    const _maxWidth = petals <= 7  ? 120 :
+                      petals <= 10 ? 100 :
+                      petals <= 13 ? 80  :
+                      petals <= 16 ? 65  : 55;
+    let   petalWidth  = R.random_num(40, _maxWidth) * WORLD_SCALE;
 
     if (l === numLayers - 1) {
       const maxSafe = 2 * (petalLength * 0.5) * Math.sin(Math.PI / petals) * 0.85;
       petalWidth = Math.min(petalWidth, maxSafe);
     }
 
-    const shape         = RNG.pick(SHAPES);
+    const shape         = R.random_choice(SHAPES);
     const layerZ        = l * LAYER_GAP;
     const layerRotation = l * (Math.PI / petals);
-    // lapis_lazuli uses random colour picking, all others step through palette
     let colA, colB;
-    // lapis_lazuli and garnet always randomize; azurite randomizes 40% of the time
-    const _useRandom = paletteName === 'lapis_lazuli' || paletteName === 'garnet'
-      || paletteName === 'malachite'
-      || (paletteName === 'azurite' && RNG.bool(0.4))
-      || (paletteName === 'citrine' && RNG.bool(0.4));
     if (_useRandom) {
-      const _idxA = RNG.int(0, palette.length);
-      let _idxB = RNG.int(0, palette.length - 1);
+      const _idxA = R.random_int(0, (palette.length) - 1);
+      let _idxB = R.random_int(0, (palette.length - 1) - 1);
       if (_idxB >= _idxA) _idxB++;
       colA = palette[_idxA];
       colB = palette[_idxB];
@@ -343,10 +325,8 @@ function generateFlower() {
     }
     const spinDir       = l % 2 === 0 ? 1 : -1;
 
-    // bake gradient+noise into vertex colors — no UV needed
     const petalGeo = buildPetalGeometry(petalWidth, petalLength, shape);
     bakeVertexColors(petalGeo, colA, colB);
-    const mat = makeMat(0.04, false);
 
     const layerGroup = new THREE.Group();
     layerGroup.position.z = layerZ;
@@ -357,7 +337,7 @@ function generateFlower() {
       const mesh  = new THREE.Mesh(petalGeo, mat);
       mesh.rotation.z    = angle;
       mesh.position.z    = j * 0.005;
-      
+
       layerGroup.add(mesh);
     }
 
@@ -365,34 +345,27 @@ function generateFlower() {
     layerGroups.push(layerGroup);
   }
 
-  // ── CENTER SPHERE ──────────────────────────────────────────────────────────
-  // 20% no ball, 40% normal ball, 40% small ball
-  const _centerRoll = RNG.next();
-  const centerMode  = _centerRoll < 0.2 ? 'none' : _centerRoll < 0.6 ? 'normal' : 'small';
-  const _baseSize   = RNG.range(0.04, 0.12) * 1000 * WORLD_SCALE;
+  const _centerRoll = R.random_dec();
+  const centerMode  = isMonochrome ? 'none' : paletteName === 'pearl' ? (_centerRoll < 0.5 ? 'normal' : 'small') : (_centerRoll < 0.2 ? 'none' : _centerRoll < 0.6 ? 'normal' : 'small');
+  const _baseSize   = R.random_num(0.04, 0.12) * 1000 * WORLD_SCALE;
   const centerSize  = centerMode === 'small' ? _baseSize * 0.3 : _baseSize;
-  const centerHex   = RNG.pick([palette[0], palette[palette.length-1]]);
+  const _centerPalette = paletteName === 'hematite' ? [palette[2]] : [palette[0], palette[palette.length-1]];
+  const centerHex   = R.random_choice(_centerPalette);
   const centerMat   = makeCenterMat(centerHex, 0.4);
-  const centerGeo   = new THREE.IcosahedronGeometry(centerSize / 2, 4);
+  const centerGeo   = new THREE.IcosahedronBufferGeometry(centerSize / 2, 4);
   const centerMesh  = new THREE.Mesh(centerGeo, centerMat);
   const topZ        = (numLayers + 1) * LAYER_GAP;
   centerMesh.position.z = topZ;
   if (centerMode !== 'none') root.add(centerMesh);
 
-  // ── STAMEN ────────────────────────────────────────────────────────────────
-  const showStamen = RNG.bool(0.8);
+  const showStamen = R.random_bool(0.8);
   if (showStamen) {
-    // with ball: stamen sits below ball (numLayers gap)
-    // no ball: stamen sits halfway between second-to-last and last petal layer,
-    //           so the innermost petal layer remains visually on top
     const stamenZ = centerMode === 'none'
       ? (numLayers - 1.5) * LAYER_GAP
       : numLayers * LAYER_GAP;
-    const numSticks  = RNG.int(8, 20);
-    const slen       = centerSize * RNG.range(1.2, 2);
-    const showPollen = RNG.bool(0.7);
-    // stamen uses innermost palette colours (last two stops)
-    // exception: lapis_lazuli uses pyrite gold for stamen/pollen
+    const numSticks  = R.random_int(8, 19);
+    const slen       = centerSize * R.random_num(1.2, 2);
+    const showPollen = R.random_bool(0.7);
     const _pyriteA = '#c8a840';
     const _pyriteB = '#b09030';
     const stamenColA = paletteName === 'lapis_lazuli' ? _pyriteA : palette[palette.length - 1];
@@ -403,10 +376,10 @@ function generateFlower() {
     const pollenMatFinal = new THREE.MeshStandardMaterial({ color: new THREE.Color(_sca[0],_sca[1],_sca[2]), metalness: 1.0, roughness: 0.12, envMapIntensity: 4.0 });
     const pollenR    = 0.05;
 
+    const stemInner = centerMode === 'none' ? 0 : centerSize / 2;
+    const polGeoShared = showPollen ? new THREE.IcosahedronBufferGeometry(pollenR, 2) : null;
     for (let i = 0; i < numSticks; i++) {
       const angle = (Math.PI * 2 / numSticks) * i;
-      // when no center ball, stems start at origin (0,0) so they all meet in the middle
-      const stemInner = centerMode === 'none' ? 0 : centerSize / 2;
       const x1 = Math.cos(angle) * stemInner;
       const y1 = Math.sin(angle) * stemInner;
       const x2 = Math.cos(angle) * slen;
@@ -414,11 +387,8 @@ function generateFlower() {
       const dx = x2 - x1, dy = y2 - y1;
       const stemLen = Math.sqrt(dx*dx + dy*dy);
 
-      // cylinder
-      // CylinderGeometry is along Y by default.
-      // Rotate X by pi/2 to lay it along X, then rotate Z to point radially.
       const stemAngle = Math.atan2(dy, dx);
-      const stemGeo   = new THREE.CylinderGeometry(0.008, 0.008, stemLen, 6);
+      const stemGeo   = new THREE.CylinderBufferGeometry(0.008, 0.008, stemLen, 6);
       const stemGroup = new THREE.Group();
       stemGroup.position.set((x1+x2)/2, (y1+y2)/2, stamenZ);
       stemGroup.rotation.z = stemAngle;
@@ -427,20 +397,17 @@ function generateFlower() {
       stemGroup.add(innerMesh);
       root.add(stemGroup);
 
-      // pollen ball
       if (showPollen) {
-        const polGeo  = new THREE.IcosahedronGeometry(pollenR, 2);
-        const polMesh = new THREE.Mesh(polGeo, pollenMatFinal);
+        const polMesh = new THREE.Mesh(polGeoShared, pollenMatFinal);
         polMesh.position.set(x2, y2, stamenZ + pollenR * 0.6);
         root.add(polMesh);
       }
     }
   }
 
-  return { root, paletteName, numLayers, layerGroups, parity, isMonochrome, centerMode };
+  return { root, paletteName, numLayers, layerGroups, isMonochrome };
 }
 
-// ── SCENE SETUP ───────────────────────────────────────────────────────────────
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -449,22 +416,16 @@ renderer.toneMapping       = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
 document.body.appendChild(renderer.domElement);
 const scene  = new THREE.Scene();
-scene.background = null;
-
-// ── ENVIRONMENT MAP ─────────────────────────────────────────────────────────
-// Gradient sky sphere gives metallic surfaces a range of tones to reflect.
 const pmrem = new THREE.PMREMGenerator(renderer);
 pmrem.compileEquirectangularShader();
-
 (function buildEnvMap() {
   const envScene = new THREE.Scene();
-  const sGeo = new THREE.SphereGeometry(50, 64, 32);
+  const sGeo = new THREE.SphereBufferGeometry(50, 64, 32);
   const sColors = [];
   const sPos = sGeo.attributes.position;
   for (let i = 0; i < sPos.count; i++) {
     const y = sPos.getY(i);
     const norm = (y + 50) / 100;
-    // top: cool blue tint, bottom: warm dark amber
     const r = 0.04 + norm * 0.18;
     const g = 0.04 + norm * 0.16;
     const b = 0.08 + norm * 0.28;
@@ -474,19 +435,19 @@ pmrem.compileEquirectangularShader();
   const sMat = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide });
   envScene.add(new THREE.Mesh(sGeo, sMat));
 
-  const patchGeo = new THREE.SphereGeometry(6, 16, 16);
+  const patchGeo = new THREE.SphereBufferGeometry(6, 16, 16);
   const patchMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
   const patch = new THREE.Mesh(patchGeo, patchMat);
   patch.position.set(20, 30, 25);
   envScene.add(patch);
 
-  const warmGeo = new THREE.SphereGeometry(2, 16, 16);
+  const warmGeo = new THREE.SphereBufferGeometry(2, 16, 16);
   const warmMat = new THREE.MeshBasicMaterial({ color: 0xcc6622 });
   const warm = new THREE.Mesh(warmGeo, warmMat);
   warm.position.set(-25, -20, 15);
   envScene.add(warm);
 
-  const coolGeo = new THREE.SphereGeometry(3, 16, 16);
+  const coolGeo = new THREE.SphereBufferGeometry(3, 16, 16);
   const coolMat = new THREE.MeshBasicMaterial({ color: 0x6699ff });
   const cool = new THREE.Mesh(coolGeo, coolMat);
   cool.position.set(-30, 20, 20);
@@ -496,13 +457,11 @@ pmrem.compileEquirectangularShader();
   scene.environment = envTex;
 })();
 
-// ── LIGHTS ───────────────────────────────────────────────────────────────────
 const ambient = new THREE.AmbientLight(0xffffff, 0.3);
 scene.add(ambient);
 
 const key = new THREE.DirectionalLight(0xffffff, 2.5);
 key.position.set(3, 4, 8);
-
 
 scene.add(key);
 
@@ -514,68 +473,122 @@ const rim = new THREE.DirectionalLight(0xcc8844, 0.6);
 rim.position.set(0, -6, 2);
 scene.add(rim);
 
-// ── CAMERA ────────────────────────────────────────────────────────────────────
 const camera = new THREE.PerspectiveCamera(
   40,
   window.innerWidth / window.innerHeight,
   0.01,
   1000
 );
-// top-down perspective matching the Blender setup
 const maxPetalRadius = 1000 * 0.45 * WORLD_SCALE;
 const fovHalf = 20 * Math.PI / 180;
-// camZ set after GRID is determined — see below
 
-// ── GENERATE ──────────────────────────────────────────────────────────────────
-// grid mode determined by RNG — tiling happens in 2D after render
-const _gridRoll = RNG.next();
-const GRID = _gridRoll < 0.03 ? 4 : _gridRoll < 0.08 ? 2 : 1;
+const _gridRoll = R.random_dec();
+const GRID = _gridRoll < 0.03 ? 4 : _gridRoll < 0.05 ? 3 : _gridRoll < 0.10 ? 2 : 1;
 
-const { root, numLayers, layerGroups, paletteName, parity, isMonochrome, centerMode } = generateFlower();
+const { root, numLayers, layerGroups, paletteName, isMonochrome } = generateFlower();
 
-// apply filter now that isMonochrome is known
+if (paletteName === 'hematite') {
+  (function buildHematiteEnvMap() {
+    const envScene = new THREE.Scene();
+    const sGeo = new THREE.SphereBufferGeometry(50, 64, 32);
+    const sColors = [];
+    const sPos = sGeo.attributes.position;
+    for (let i = 0; i < sPos.count; i++) {
+      const y = sPos.getY(i);
+      const norm = (y + 50) / 100;
+      const r = 0.08 + norm * 0.22;
+      const g = 0.08 + norm * 0.20;
+      const b = 0.10 + norm * 0.24;
+      sColors.push(r, g, b);
+    }
+    sGeo.setAttribute('color', new THREE.Float32BufferAttribute(sColors, 3));
+    const sMat = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide });
+    envScene.add(new THREE.Mesh(sGeo, sMat));
+    const patchGeo = new THREE.SphereBufferGeometry(6, 16, 16);
+    const patchMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const patch = new THREE.Mesh(patchGeo, patchMat);
+    patch.position.set(20, 30, 25);
+    envScene.add(patch);
+    scene.environment = pmrem.fromScene(envScene).texture;
+  })();
+  renderer.toneMappingExposure = 1.4;
+  scene.traverse(obj => {
+    if (obj.isMesh && obj.material) {
+      obj.material.roughness = 0.02;
+      obj.material.envMapIntensity = 6.0;
+      obj.material.needsUpdate = true;
+    }
+  });
+}
+
+if (isMonochrome) {
+  scene.environment = null;
+  renderer.toneMappingExposure = 1.6;
+  key.intensity = 1.4;
+  const backLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  backLight.position.set(0, 0, -8);
+  scene.add(backLight);
+  const topLight = new THREE.DirectionalLight(0xffffff, 1.0);
+  topLight.position.set(0, 8, 4);
+  scene.add(topLight);
+}
+
+const _aspect      = window.innerWidth / window.innerHeight;
+const _bgRoll      = R.random_dec();
+const usePaletteBg = GRID === 1 && !isMonochrome && _bgRoll < 0.10;
+if (usePaletteBg) {
+  const _paletteBg    = COLOR_PALETTES[paletteName];
+  const _bgHex        = paletteName === 'lapis_lazuli'
+    ? _paletteBg[4]
+    : _paletteBg[_paletteBg.length - 1];
+  const [_br,_bg,_bb] = hexToRGB(_bgHex);
+  const _planeSize    = Math.max(20, 20 * Math.max(_aspect, 1 / _aspect) * 1.5);
+  const _bgPlaneGeo   = new THREE.PlaneBufferGeometry(_planeSize, _planeSize);
+  const _bgPlaneMat   = new THREE.MeshStandardMaterial({
+    color:           new THREE.Color(_br, _bg, _bb),
+    metalness:       1.0,
+    roughness:       0.08,
+    envMapIntensity: 4.0,
+  });
+  const _bgPlane      = new THREE.Mesh(_bgPlaneGeo, _bgPlaneMat);
+  _bgPlane.position.z = -((numLayers + 1) * LAYER_GAP) / 2 - 3;
+  scene.add(_bgPlane);
+}
+scene.background = null;
+
 const FILTER_NORMAL = 'brightness(0.85) contrast(1.45)';
 const FILTER_MONO   = 'brightness(1.25) contrast(1.4) saturate(0)';
 const activeFilter  = isMonochrome ? FILTER_MONO : FILTER_NORMAL;
-renderer.domElement.style.filter = activeFilter;
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+if (!isIOS) renderer.domElement.style.filter = activeFilter;
 
 scene.add(root);
 
 const midZ = ((numLayers + 1) * LAYER_GAP) / 2;
 root.position.z = -midZ;
 
-
-
-// position camera
-const camZ = (maxPetalRadius * 1.05) / Math.tan(fovHalf);
+const _fovAdj = _aspect < 1
+  ? Math.atan(Math.tan(fovHalf) * _aspect)
+  : fovHalf;
+const camZ = (maxPetalRadius * 1.05) / Math.tan(_fovAdj);
 camera.position.set(0, 0, camZ);
 camera.lookAt(0, 0, 0);
 
-// ── TRAITS OVERLAY ────────────────────────────────────────────────────────────
-(function showTraits() {
-  const gridLabel  = GRID === 1 ? 'single' : GRID === 2 ? '2x2' : '4x4';
-  const publicName = paletteName.replace(/_/g, ' ');
+const _speedRoll  = R.random_dec();
+const _speedMode  = _speedRoll < 0.10 ? 'crawl' : _speedRoll < 0.20 ? 'run' : 'walk';
+const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.007 : 0.0025;
 
-  const traits = [
-    ['seed',        window.tokenData.hash.slice(0, 10) + '...'],
-    ['palette',     publicName],
-    ['monochrome effect', isMonochrome ? 'yes' : 'no'],
-    ['center',      centerMode],
-    ['layers',      numLayers],
-    ['parity',      parity],
-    ['layout',      gridLabel],
-  ];
-  const el = document.getElementById('traits-overlay');
-  el.innerHTML = traits.map(([k, v]) =>
-    '<div><span style="color:rgba(255,255,255,0.5);margin-right:6px">' + k + '</span>' + v + '</div>'
-  ).join('');
-})();
-
-// ── NOISE OVERLAY ───────────────────────────────────────────────────────────
-// Generated once at full resolution using Box-Muller Gaussian — never redrawn.
 (function buildStaticNoise() {
   const noiseCanvas = document.createElement('canvas');
-  noiseCanvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.18;mix-blend-mode:screen;z-index:999;';
+  noiseCanvas.style.position      = 'fixed';
+  noiseCanvas.style.top            = '0';
+  noiseCanvas.style.left           = '0';
+  noiseCanvas.style.width          = '100%';
+  noiseCanvas.style.height         = '100%';
+  noiseCanvas.style.pointerEvents  = 'none';
+  noiseCanvas.style.zIndex         = '999';
+  noiseCanvas.style.opacity        = '0.18';
+  noiseCanvas.style.mixBlendMode   = 'screen';
   document.body.appendChild(noiseCanvas);
   const ctx = noiseCanvas.getContext('2d');
   const w = window.innerWidth;
@@ -586,7 +599,6 @@ camera.lookAt(0, 0, 0);
   const id = ctx.createImageData(w, h);
   const d  = id.data;
 
-  // Box-Muller transform for Gaussian distribution
   function gaussian() {
     let u = 0, v = 0;
     while (u === 0) u = Math.random();
@@ -595,7 +607,6 @@ camera.lookAt(0, 0, 0);
   }
 
   for (let i = 0; i < d.length; i += 4) {
-    // mean=128, sigma=30 — centred grey so screen blend lifts midtones gently
     const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 55)));
     d[i] = d[i+1] = d[i+2] = v;
     d[i+3] = 255;
@@ -603,29 +614,28 @@ camera.lookAt(0, 0, 0);
   ctx.putImageData(id, 0, 0);
 })();
 
-// ── TILING CANVAS (for 2x2 and 4x4 grid modes) ───────────────────────────────
 let tileCanvas = null, tileCtx = null;
 
 if (GRID > 1) {
-  // hide the three.js canvas from view — we'll read it each frame
   renderer.domElement.style.position = 'fixed';
   renderer.domElement.style.left = '-9999px';
 
   tileCanvas = document.createElement('canvas');
-  tileCanvas.style.cssText = 'position:fixed;inset:0;display:block;';
+  tileCanvas.style.position = 'fixed';
+  tileCanvas.style.top      = '0';
+  tileCanvas.style.left     = '0';
+  tileCanvas.style.width    = '100%';
+  tileCanvas.style.height   = '100%';
+  tileCanvas.style.display  = 'block';
+  if (!isIOS) tileCanvas.style.filter = activeFilter;
   tileCanvas.width  = window.innerWidth;
   tileCanvas.height = window.innerHeight;
   document.body.insertBefore(tileCanvas, document.body.firstChild);
   tileCtx = tileCanvas.getContext('2d');
-  tileCanvas.style.filter = activeFilter;
 }
 
-// ── ANIMATION LOOP ─────────────────────────────────────────────────────────────
-let frame = 0;
-const BASE_SPEED = 0.0025;
 (function animate() {
   requestAnimationFrame(animate);
-  frame++;
   layerGroups.forEach((g, i) => {
     const speed = BASE_SPEED * (1 + i * 0.04);
     g.rotation.z += g.userData.spinDir * speed;
@@ -633,9 +643,7 @@ const BASE_SPEED = 0.0025;
 
   renderer.render(scene, camera);
 
-
   if (GRID > 1 && tileCtx) {
-    // tile the rendered flower across the screen
     const tw = window.innerWidth  / GRID;
     const th = window.innerHeight / GRID;
     tileCtx.clearRect(0, 0, tileCanvas.width, tileCanvas.height);
@@ -648,8 +656,6 @@ const BASE_SPEED = 0.0025;
 
 })();
 
-
-// ── RESIZE ───────────────────────────────────────────────────────────────────
 window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -659,60 +665,3 @@ window.addEventListener('resize', () => {
     tileCanvas.height = window.innerHeight;
   }
 });
-</script>
--->
-
-
-<!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
-  <script src ="flower_artblocks_mini.js"></script>
-  <script src="flower_features.js"></script>
--->
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"></script>
-<script src="flower_r124mar27.js"></script>
-<script src="flower_featuresmar27.js"></script>
-
- <script>
-    const features = calculateFeatures(tokenData);
- 
-    const overlay = document.createElement('div');
-    overlay.style.position      = 'fixed';
-    overlay.style.bottom        = '20px';
-    overlay.style.right         = '20px';
-    overlay.style.background    = 'rgba(0,0,0,0.75)';
-    overlay.style.color         = '#fff';
-    overlay.style.fontFamily    = 'monospace';
-    overlay.style.fontSize      = '12px';
-    overlay.style.lineHeight    = '1.8';
-    overlay.style.padding       = '14px 18px';
-    overlay.style.borderRadius  = '6px';
-    overlay.style.pointerEvents = 'none';
-    overlay.style.zIndex        = '1000';
-    overlay.style.border        = '1px solid rgba(255,255,255,0.15)';
-    overlay.style.minWidth      = '200px';
- 
-    const title = document.createElement('div');
-    title.style.color         = 'rgba(255,255,255,0.5)';
-    title.style.marginBottom  = '6px';
-    title.style.borderBottom  = '1px solid rgba(255,255,255,0.15)';
-    title.style.paddingBottom = '6px';
-    title.textContent = 'features';
-    overlay.appendChild(title);
- 
-    for (const [key, val] of Object.entries(features)) {
-      const row = document.createElement('div');
-      const label = document.createElement('span');
-      label.style.color       = 'rgba(255,255,255,0.5)';
-      label.style.marginRight = '8px';
-      label.textContent       = key;
-      row.appendChild(label);
-      row.appendChild(document.createTextNode(String(val)));
-      overlay.appendChild(row);
-    }
- 
-    document.body.appendChild(overlay);
-  </script>
-</body>
-</html>
