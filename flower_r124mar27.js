@@ -559,8 +559,7 @@ scene.background = null;
 const FILTER_NORMAL = 'brightness(0.85) contrast(1.45)';
 const FILTER_MONO   = 'brightness(1.25) contrast(1.4) saturate(0)';
 const activeFilter  = isMonochrome ? FILTER_MONO : FILTER_NORMAL;
-const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-if (!isIOS) renderer.domElement.style.filter = activeFilter;
+renderer.domElement.style.filter = activeFilter;
 
 scene.add(root);
 
@@ -627,7 +626,7 @@ if (GRID > 1) {
   tileCanvas.style.width    = '100%';
   tileCanvas.style.height   = '100%';
   tileCanvas.style.display  = 'block';
-  if (!isIOS) tileCanvas.style.filter = activeFilter;
+  tileCanvas.style.filter   = activeFilter;
   tileCanvas.width  = window.innerWidth;
   tileCanvas.height = window.innerHeight;
   document.body.insertBefore(tileCanvas, document.body.firstChild);
