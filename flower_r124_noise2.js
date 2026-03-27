@@ -408,7 +408,7 @@ function generateFlower() {
   return { root, paletteName, numLayers, layerGroups, isMonochrome };
 }
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = false;
@@ -416,49 +416,6 @@ renderer.toneMapping       = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
 document.body.appendChild(renderer.domElement);
 const scene  = new THREE.Scene();
-
-const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight);
-
-const noiseShader = {
-  uniforms: {
-    tDiffuse: { value: null },
-    uSeed:    { value: Math.random() * 1000.0 },
-    uStrength:{ value: 0.08 },
-  },
-  vertexShader: [
-    'varying vec2 vUv;',
-    'void main() {',
-    '  vUv = uv;',
-    '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
-    '}'
-  ].join('\n'),
-  fragmentShader: [
-    'uniform sampler2D tDiffuse;',
-    'uniform float uSeed;',
-    'uniform float uStrength;',
-    'varying vec2 vUv;',
-    'float rand(vec2 co) {',
-    '  return fract(sin(dot(co, vec2(12.9898, 78.233)) + uSeed) * 43758.5453);',
-    '}',
-    'void main() {',
-    '  vec4 color = texture2D(tDiffuse, vUv);',
-    '  float noise = rand(vUv) * 2.0 - 1.0;',
-    '  color.rgb += noise * uStrength;',
-    '  gl_FragColor = clamp(color, 0.0, 1.0);',
-    '}'
-  ].join('\n')
-};
-
-const postScene  = new THREE.Scene();
-const postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-const postGeo    = new THREE.PlaneBufferGeometry(2, 2);
-const postMat    = new THREE.ShaderMaterial({
-  uniforms:       THREE.UniformsUtils.clone(noiseShader.uniforms),
-  vertexShader:   noiseShader.vertexShader,
-  fragmentShader: noiseShader.fragmentShader,
-});
-postMat.uniforms.tDiffuse.value = renderTarget.texture;
-postScene.add(new THREE.Mesh(postGeo, postMat));
 const pmrem = new THREE.PMREMGenerator(renderer);
 pmrem.compileEquirectangularShader();
 (function buildEnvMap() {
@@ -620,7 +577,59 @@ const _speedRoll  = R.random_dec();
 const _speedMode  = _speedRoll < 0.10 ? 'crawl' : _speedRoll < 0.20 ? 'run' : 'walk';
 const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.007 : 0.0025;
 
+(function buildNoiseRenderer() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
 
+  function gaussian() {
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+
+  const noiseData = new Uint8Array(w * h * 4);
+  for (let i = 0; i < noiseData.length; i += 4) {
+    const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 40)));
+    noiseData[i]     = v;
+    noiseData[i + 1] = v;
+    noiseData[i + 2] = v;
+    noiseData[i + 3] = Math.round(0.18 * 255);
+  }
+
+  const noiseTex = new THREE.DataTexture(noiseData, w, h, THREE.RGBAFormat);
+  noiseTex.needsUpdate = true;
+
+  const noiseRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+  noiseRenderer.setPixelRatio(1);
+  noiseRenderer.setSize(w, h);
+  noiseRenderer.domElement.style.position      = 'fixed';
+  noiseRenderer.domElement.style.top           = '0';
+  noiseRenderer.domElement.style.left          = '0';
+  noiseRenderer.domElement.style.pointerEvents = 'none';
+  noiseRenderer.domElement.style.zIndex        = '999';
+  document.body.appendChild(noiseRenderer.domElement);
+
+  const noiseScene  = new THREE.Scene();
+  const noiseCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+  const vShader = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }';
+  const fShader = 'uniform sampler2D tNoise; varying vec2 vUv; void main() { gl_FragColor = texture2D(tNoise, vUv); }';
+
+  const noiseMat = new THREE.ShaderMaterial({
+    uniforms:       { tNoise: { value: noiseTex } },
+    vertexShader:   vShader,
+    fragmentShader: fShader,
+    transparent:    true,
+    depthTest:      false,
+    depthWrite:     false,
+    blending:       THREE.AdditiveBlending,
+  });
+
+  const noiseQuad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), noiseMat);
+  noiseScene.add(noiseQuad);
+  noiseRenderer.render(noiseScene, noiseCamera);
+})();
 
 let tileCanvas = null, tileCtx = null;
 
@@ -649,10 +658,7 @@ if (GRID > 1) {
     g.rotation.z += g.userData.spinDir * speed;
   });
 
-  renderer.setRenderTarget(renderTarget);
   renderer.render(scene, camera);
-  renderer.setRenderTarget(null);
-  renderer.render(postScene, postCamera);
 
   if (GRID > 1 && tileCtx) {
     const tw = window.innerWidth  / GRID;
@@ -669,7 +675,6 @@ if (GRID > 1) {
 
 window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderTarget.setSize(window.innerWidth, window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   if (tileCanvas) {
