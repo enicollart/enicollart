@@ -408,7 +408,7 @@ function generateFlower() {
   return { root, paletteName, numLayers, layerGroups, isMonochrome };
 }
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = false;
@@ -588,14 +588,14 @@ const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.0
   const _nh = window.innerHeight;
   const _nd = new Uint8Array(_nw * _nh * 4);
   for (let i = 0; i < _nd.length; i += 4) {
-    const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 40)));
+    const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 20)));
     _nd[i] = _nd[i+1] = _nd[i+2] = v;
     _nd[i+3] = 255;
   }
   const noiseTex = new THREE.DataTexture(_nd, _nw, _nh, THREE.RGBAFormat);
   noiseTex.needsUpdate = true;
 
-  const renderTarget = new THREE.WebGLRenderTarget(_nw, _nh);
+  const renderTarget = new THREE.WebGLMultisampleRenderTarget(_nw, _nh, { samples: 4 });
 
   const vShader = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }';
   const fShader = 'uniform sampler2D tDiffuse; uniform sampler2D tNoise; uniform float uStrength; varying vec2 vUv; void main() { vec4 color = texture2D(tDiffuse, vUv); vec3 noise = texture2D(tNoise, vUv).rgb; color.rgb = 1.0 - (1.0 - color.rgb) * (1.0 - noise * uStrength); gl_FragColor = color; }';
@@ -606,7 +606,7 @@ const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.0
     uniforms: {
       tDiffuse:  { value: renderTarget.texture },
       tNoise:    { value: noiseTex },
-      uStrength: { value: 0.20 },
+      uStrength: { value: 0.35 },
     },
     vertexShader:   vShader,
     fragmentShader: fShader,
@@ -648,6 +648,8 @@ if (GRID > 1) {
   });
 
   renderer.setRenderTarget(renderer._renderTarget);
+  renderer.setClearColor(0x000000, 1);
+  renderer.clear();
   renderer.render(scene, camera);
   renderer.setRenderTarget(null);
   renderer.render(renderer._postScene, renderer._postCamera);
@@ -667,7 +669,7 @@ if (GRID > 1) {
 
 window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
-  if (renderer._renderTarget) renderer._renderTarget.setSize(window.innerWidth, window.innerHeight);
+  if (renderer._renderTarget) { renderer._renderTarget.setSize(window.innerWidth, window.innerHeight); }
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   if (tileCanvas) {
