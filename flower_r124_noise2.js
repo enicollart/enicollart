@@ -577,67 +577,98 @@ const _speedRoll  = R.random_dec();
 const _speedMode  = _speedRoll < 0.10 ? 'crawl' : _speedRoll < 0.20 ? 'run' : 'walk';
 const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.007 : 0.0025;
 
-(function buildPostNoise() {
+// ── SHARED GAUSSIAN NOISE TEXTURE ────────────────────────────────────────────
+const _nw = window.innerWidth;
+const _nh = window.innerHeight;
+(function() {
   function gaussian() {
     let u = 0, v = 0;
     while (u === 0) u = Math.random();
     while (v === 0) v = Math.random();
     return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
   }
-  const _nw = window.innerWidth;
-  const _nh = window.innerHeight;
   const _nd = new Uint8Array(_nw * _nh * 4);
   for (let i = 0; i < _nd.length; i += 4) {
     const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 10)));
     _nd[i] = _nd[i+1] = _nd[i+2] = v;
     _nd[i+3] = 255;
   }
-  const noiseTex = new THREE.DataTexture(_nd, _nw, _nh, THREE.RGBAFormat);
-  noiseTex.needsUpdate = true;
-
-  const renderTarget = new THREE.WebGLMultisampleRenderTarget(_nw, _nh, { samples: 4 });
-
-  const vShader = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }';
-  const fShader = 'uniform sampler2D tDiffuse; uniform sampler2D tNoise; uniform float uStrength; varying vec2 vUv; void main() { vec4 color = texture2D(tDiffuse, vUv); vec3 noise = texture2D(tNoise, vUv).rgb; color.rgb = 1.0 - (1.0 - color.rgb) * (1.0 - noise * uStrength); gl_FragColor = color; }';
-
-  const postScene  = new THREE.Scene();
-  const postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  const postMat = new THREE.ShaderMaterial({
-    uniforms: {
-      tDiffuse:  { value: renderTarget.texture },
-      tNoise:    { value: noiseTex },
-      uStrength: { value: 0.43 },
-    },
-    vertexShader:   vShader,
-    fragmentShader: fShader,
-    depthTest:  false,
-    depthWrite: false,
-  });
-  postScene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), postMat));
-
-  renderer._postScene    = postScene;
-  renderer._postCamera   = postCamera;
-  renderer._renderTarget = renderTarget;
+  renderer._noiseTex = new THREE.DataTexture(_nd, _nw, _nh, THREE.RGBAFormat);
+  renderer._noiseTex.needsUpdate = true;
 })();
 
-let tileCanvas = null, tileCtx = null;
+// ── SCENE RENDER TARGET ───────────────────────────────────────────────────────
+renderer._sceneTargetMSAA = new THREE.WebGLMultisampleRenderTarget(_nw, _nh, { samples: 4 });
+renderer._sceneTarget     = new THREE.WebGLRenderTarget(_nw, _nh);
+renderer._sceneTarget.texture.minFilter = THREE.NearestFilter;
+renderer._sceneTarget.texture.magFilter = THREE.NearestFilter;
+
+// Copy shader to resolve MSAA target into regular target
+const _copyVS = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }';
+const _copyFS = 'uniform sampler2D tSrc; varying vec2 vUv; void main() { gl_FragColor = texture2D(tSrc, vUv); }';
+const _copyScene  = new THREE.Scene();
+const _copyCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+const _copyMat = new THREE.ShaderMaterial({
+  uniforms:       { tSrc: { value: renderer._sceneTargetMSAA.texture } },
+  vertexShader:   _copyVS,
+  fragmentShader: _copyFS,
+  depthTest: false, depthWrite: false,
+});
+_copyScene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), _copyMat));
+renderer._copyScene  = _copyScene;
+renderer._copyCamera = _copyCamera;
+renderer._sceneTarget.texture.minFilter = THREE.NearestFilter;
+renderer._sceneTarget.texture.magFilter = THREE.NearestFilter;
+
+// ── TILING RENDER TARGET (used only for GRID > 1) ─────────────────────────────
+renderer._tileTarget = GRID > 1 ? new THREE.WebGLRenderTarget(_nw, _nh) : null;
+if (renderer._tileTarget) {
+  renderer._tileTarget.texture.minFilter = THREE.NearestFilter;
+  renderer._tileTarget.texture.magFilter = THREE.NearestFilter;
+}
+
+// ── TILE SHADER (samples scene target with repeated UV) ───────────────────────
+const _tileVShader = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }';
+const _tileFShader = 'uniform sampler2D tScene; uniform float uGrid; varying vec2 vUv; void main() { vec2 tiled = mod(vUv * uGrid, 1.0); gl_FragColor = texture2D(tScene, vec2(tiled.x, tiled.y)); }';
+const _tileScene  = new THREE.Scene();
+const _tileCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+const _tileMat = new THREE.ShaderMaterial({
+  uniforms: {
+    tScene: { value: renderer._sceneTarget.texture },
+    uGrid:  { value: parseFloat(GRID) },
+  },
+  vertexShader:   _tileVShader,
+  fragmentShader: _tileFShader,
+  depthTest:  false,
+  depthWrite: false,
+});
+_tileScene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), _tileMat));
+
+// ── NOISE POST-PROCESS SHADER ─────────────────────────────────────────────────
+const _noiseVShader = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }';
+const _noiseFShader = 'uniform sampler2D tDiffuse; uniform sampler2D tNoise; uniform float uStrength; varying vec2 vUv; void main() { vec4 color = texture2D(tDiffuse, vUv); vec3 noise = texture2D(tNoise, vUv).rgb; color.rgb = 1.0 - (1.0 - color.rgb) * (1.0 - noise * uStrength); gl_FragColor = vec4(clamp(color.rgb, 0.0, 1.0), 1.0); }';
+const _noiseScene  = new THREE.Scene();
+const _noiseCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+const _noiseMat = new THREE.ShaderMaterial({
+  uniforms: {
+    tDiffuse:  { value: GRID > 1 ? renderer._tileTarget.texture : renderer._sceneTarget.texture },
+    tNoise:    { value: renderer._noiseTex },
+    uStrength: { value: 0.40 },
+  },
+  vertexShader:   _noiseVShader,
+  fragmentShader: _noiseFShader,
+  depthTest:  false,
+  depthWrite: false,
+});
+_noiseScene.add(new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), _noiseMat));
+
+renderer._noiseScene  = _noiseScene;
+renderer._noiseCamera = _noiseCamera;
 
 if (GRID > 1) {
   renderer.domElement.style.position = 'fixed';
-  renderer.domElement.style.left = '-9999px';
-
-  tileCanvas = document.createElement('canvas');
-  tileCanvas.style.position = 'fixed';
-  tileCanvas.style.top      = '0';
-  tileCanvas.style.left     = '0';
-  tileCanvas.style.width    = '100%';
-  tileCanvas.style.height   = '100%';
-  tileCanvas.style.display  = 'block';
-  tileCanvas.style.filter   = activeFilter;
-  tileCanvas.width  = window.innerWidth;
-  tileCanvas.height = window.innerHeight;
-  document.body.insertBefore(tileCanvas, document.body.firstChild);
-  tileCtx = tileCanvas.getContext('2d');
+  renderer.domElement.style.top  = '0';
+  renderer.domElement.style.left = '0';
 }
 
 (function animate() {
@@ -647,33 +678,32 @@ if (GRID > 1) {
     g.rotation.z += g.userData.spinDir * speed;
   });
 
-  renderer.setRenderTarget(renderer._renderTarget);
+  // 1. Render scene to MSAA target
+  renderer.setRenderTarget(renderer._sceneTargetMSAA);
   renderer.setClearColor(0x000000, 1);
   renderer.clear();
   renderer.render(scene, camera);
-  renderer.setRenderTarget(null);
-  renderer.render(renderer._postScene, renderer._postCamera);
+  // Resolve MSAA into regular target via copy shader
+  renderer.setRenderTarget(renderer._sceneTarget);
+  renderer.render(renderer._copyScene, renderer._copyCamera);
 
-  if (GRID > 1 && tileCtx) {
-    const tw = window.innerWidth  / GRID;
-    const th = window.innerHeight / GRID;
-    tileCtx.clearRect(0, 0, tileCanvas.width, tileCanvas.height);
-    for (let row = 0; row < GRID; row++) {
-      for (let col = 0; col < GRID; col++) {
-        tileCtx.drawImage(renderer.domElement, col * tw, row * th, tw, th);
-      }
-    }
+  // 2. If grid: composite tiles into tile target
+  if (GRID > 1 && renderer._tileTarget) {
+    renderer.setRenderTarget(renderer._tileTarget);
+    renderer.render(_tileScene, _tileCamera);
   }
+
+  // 3. Apply noise post-process and output to screen
+  renderer.setRenderTarget(null);
+  renderer.render(renderer._noiseScene, renderer._noiseCamera);
 
 })();
 
 window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
-  if (renderer._renderTarget) { renderer._renderTarget.setSize(window.innerWidth, window.innerHeight); }
+  if (renderer._sceneTargetMSAA) renderer._sceneTargetMSAA.setSize(window.innerWidth, window.innerHeight);
+  if (renderer._sceneTarget) renderer._sceneTarget.setSize(window.innerWidth, window.innerHeight);
+  if (renderer._tileTarget)  renderer._tileTarget.setSize(window.innerWidth, window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  if (tileCanvas) {
-    tileCanvas.width  = window.innerWidth;
-    tileCanvas.height = window.innerHeight;
-  }
 });
