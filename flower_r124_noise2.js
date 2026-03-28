@@ -583,6 +583,8 @@ const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.0
 // ── SHARED GAUSSIAN NOISE TEXTURE ────────────────────────────────────────────
 const _nw = Math.floor(window.innerWidth  * Math.min(window.devicePixelRatio, 2) * SUPERSAMPLE);
 const _nh = Math.floor(window.innerHeight * Math.min(window.devicePixelRatio, 2) * SUPERSAMPLE);
+const _noiseW = Math.floor(window.innerWidth  * Math.min(window.devicePixelRatio, 2));
+const _noiseH = Math.floor(window.innerHeight * Math.min(window.devicePixelRatio, 2));
 (function() {
   function gaussian() {
     let u = 0, v = 0;
@@ -590,18 +592,18 @@ const _nh = Math.floor(window.innerHeight * Math.min(window.devicePixelRatio, 2)
     while (v === 0) v = Math.random();
     return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
   }
-  const _nd = new Uint8Array(_nw * _nh * 4);
+  const _nd = new Uint8Array(_noiseW * _noiseH * 4);
   for (let i = 0; i < _nd.length; i += 4) {
     const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 20)));
     _nd[i] = _nd[i+1] = _nd[i+2] = v;
     _nd[i+3] = 255;
   }
-  renderer._noiseTex = new THREE.DataTexture(_nd, _nw, _nh, THREE.RGBAFormat);
+  renderer._noiseTex = new THREE.DataTexture(_nd, _noiseW, _noiseH, THREE.RGBAFormat);
   renderer._noiseTex.needsUpdate = true;
 })();
 
 // ── SCENE RENDER TARGET ───────────────────────────────────────────────────────
-renderer._sceneTargetMSAA = new THREE.WebGLMultisampleRenderTarget(_nw, _nh, { samples: 2 });
+renderer._sceneTargetMSAA = new THREE.WebGLMultisampleRenderTarget(_nw, _nh, { samples: 4 });
 renderer._sceneTarget     = new THREE.WebGLRenderTarget(_nw, _nh);
 renderer._sceneTarget.texture.minFilter = THREE.NearestFilter;
 renderer._sceneTarget.texture.magFilter = THREE.NearestFilter;
