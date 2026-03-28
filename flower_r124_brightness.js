@@ -409,7 +409,7 @@ function generateFlower() {
 }
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-const SUPERSAMPLE = 2;
+const SUPERSAMPLE = 1.6;
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2) * SUPERSAMPLE);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.domElement.style.width  = window.innerWidth + 'px';
