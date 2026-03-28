@@ -603,7 +603,7 @@ const _noiseH = Math.floor(window.innerHeight * Math.min(window.devicePixelRatio
 })();
 
 // ── SCENE RENDER TARGET ───────────────────────────────────────────────────────
-renderer._sceneTargetMSAA = new THREE.WebGLMultisampleRenderTarget(_nw, _nh, { samples: 4 });
+renderer._sceneTargetMSAA = new THREE.WebGLRenderTarget(_nw, _nh);
 renderer._sceneTarget     = new THREE.WebGLRenderTarget(_nw, _nh);
 renderer._sceneTarget.texture.minFilter = THREE.NearestFilter;
 renderer._sceneTarget.texture.magFilter = THREE.NearestFilter;
@@ -688,14 +688,11 @@ if (GRID > 1) {
     g.rotation.z += g.userData.spinDir * speed;
   });
 
-  // 1. Render scene to MSAA target
+  // 1. Render scene to target
   renderer.setRenderTarget(renderer._sceneTargetMSAA);
   renderer.setClearColor(0x000000, 1);
   renderer.clear();
   renderer.render(scene, camera);
-  // Resolve MSAA into regular target via copy shader
-  renderer.setRenderTarget(renderer._sceneTarget);
-  renderer.render(renderer._copyScene, renderer._copyCamera);
 
   // 2. If grid: composite tiles into tile target
   if (GRID > 1 && renderer._tileTarget) {
