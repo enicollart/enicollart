@@ -581,39 +581,51 @@ const _speedMode  = _speedRoll < 0.10 ? 'crawl' : _speedRoll < 0.20 ? 'run' : 'w
 const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.007 : 0.0025;
 
 (function buildStaticNoise() {
-  const noiseCanvas = document.createElement('canvas');
-  noiseCanvas.style.position      = 'fixed';
-  noiseCanvas.style.top            = '0';
-  noiseCanvas.style.left           = '0';
-  noiseCanvas.style.width          = '100%';
-  noiseCanvas.style.height         = '100%';
-  noiseCanvas.style.pointerEvents  = 'none';
-  noiseCanvas.style.zIndex         = '999';
-  noiseCanvas.style.opacity        = '0.15';
-  noiseCanvas.style.mixBlendMode   = 'screen';
-  document.body.appendChild(noiseCanvas);
-  const ctx = noiseCanvas.getContext('2d');
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  noiseCanvas.width  = w;
-  noiseCanvas.height = h;
-
-  const id = ctx.createImageData(w, h);
-  const d  = id.data;
-
   function gaussian() {
     let u = 0, v = 0;
     while (u === 0) u = Math.random();
     while (v === 0) v = Math.random();
     return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
   }
-
-  for (let i = 0; i < d.length; i += 4) {
-    const v = Math.max(0, Math.min(255, Math.round(60 + gaussian() * 20)));
-    d[i] = d[i+1] = d[i+2] = v;
-    d[i+3] = 255;
+ 
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+ 
+  function makeNoiseCanvas(blendMode, opacity, fillFn) {
+    const c = document.createElement('canvas');
+    c.style.position     = 'fixed';
+    c.style.top          = '0';
+    c.style.left         = '0';
+    c.style.width        = '100%';
+    c.style.height       = '100%';
+    c.style.pointerEvents = 'none';
+    c.style.zIndex       = '999';
+    c.style.opacity      = String(opacity);
+    c.style.mixBlendMode = blendMode;
+    c.width  = w;
+    c.height = h;
+    document.body.appendChild(c);
+    const ctx = c.getContext('2d');
+    const id  = ctx.createImageData(w, h);
+    const d   = id.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const v = fillFn();
+      d[i] = d[i+1] = d[i+2] = v;
+      d[i+3] = 255;
+    }
+    ctx.putImageData(id, 0, 0);
+    return c;
   }
-  ctx.putImageData(id, 0, 0);
+ 
+  // Brightening layer -- screen blend, positive noise centred at 128
+  makeNoiseCanvas('screen', 0.15, () =>
+    Math.max(0, Math.min(255, Math.round(128 + gaussian() * 55)))
+  );
+ 
+  // Darkening layer -- multiply blend, inverted noise (dark speckles on white)
+  makeNoiseCanvas('multiply', 0.18, () =>
+    Math.max(0, Math.min(255, Math.round(255 - Math.abs(gaussian() * 55))))
+  );
 })();
 
 let tileCanvas = null, tileCtx = null;
