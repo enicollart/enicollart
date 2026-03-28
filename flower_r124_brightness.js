@@ -2,7 +2,7 @@
 
 document.body.style.margin  = '0';
 document.body.style.padding = '0';
-document.body.style.background = '#0a0a0a';
+document.body.style.background = '#000';
 document.body.style.overflow   = 'hidden';
 
 class Random {
