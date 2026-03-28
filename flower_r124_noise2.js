@@ -689,7 +689,7 @@ if (GRID > 1) {
   });
 
   // 1. Render scene to target
-  renderer.setRenderTarget(renderer._sceneTargetMSAA);
+  renderer.setRenderTarget(renderer._sceneTarget);
   renderer.setClearColor(0x000000, 1);
   renderer.clear();
   renderer.render(scene, camera);
