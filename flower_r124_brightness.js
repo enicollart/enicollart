@@ -589,7 +589,7 @@ const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.0
   noiseCanvas.style.height         = '100%';
   noiseCanvas.style.pointerEvents  = 'none';
   noiseCanvas.style.zIndex         = '999';
-  noiseCanvas.style.opacity        = '0.18';
+  noiseCanvas.style.opacity        = '0.15';
   noiseCanvas.style.mixBlendMode   = 'screen';
   document.body.appendChild(noiseCanvas);
   const ctx = noiseCanvas.getContext('2d');
@@ -609,7 +609,7 @@ const BASE_SPEED  = _speedMode === 'crawl' ? 0.0005 : _speedMode === 'run' ? 0.0
   }
 
   for (let i = 0; i < d.length; i += 4) {
-    const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 40)));
+    const v = Math.max(0, Math.min(255, Math.round(128 + gaussian() * 20)));
     d[i] = d[i+1] = d[i+2] = v;
     d[i+3] = 255;
   }
