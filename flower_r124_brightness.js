@@ -409,8 +409,11 @@ function generateFlower() {
 }
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const SUPERSAMPLE = 1.5;
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2) * SUPERSAMPLE);
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.domElement.style.width  = window.innerWidth + 'px';
+renderer.domElement.style.height = window.innerHeight + 'px';
 renderer.shadowMap.enabled = false;
 renderer.toneMapping       = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
@@ -657,6 +660,8 @@ if (GRID > 1) {
 
 window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.domElement.style.width  = window.innerWidth + 'px';
+  renderer.domElement.style.height = window.innerHeight + 'px';
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   if (tileCanvas) {
