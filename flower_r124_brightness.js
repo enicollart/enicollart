@@ -409,7 +409,7 @@ function generateFlower() {
 }
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-const SUPERSAMPLE = 1.5;
+const SUPERSAMPLE = 2;
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2) * SUPERSAMPLE);
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.domElement.style.width  = window.innerWidth + 'px';
@@ -630,8 +630,11 @@ if (GRID > 1) {
   tileCanvas.style.height   = '100%';
   tileCanvas.style.display  = 'block';
   tileCanvas.style.filter   = activeFilter;
-  tileCanvas.width  = window.innerWidth;
-  tileCanvas.height = window.innerHeight;
+  const _dpr = Math.min(window.devicePixelRatio, 2) * SUPERSAMPLE;
+  tileCanvas.width  = Math.floor(window.innerWidth  * _dpr);
+  tileCanvas.height = Math.floor(window.innerHeight * _dpr);
+  tileCanvas.style.width  = window.innerWidth  + 'px';
+  tileCanvas.style.height = window.innerHeight + 'px';
   document.body.insertBefore(tileCanvas, document.body.firstChild);
   tileCtx = tileCanvas.getContext('2d');
 }
@@ -646,8 +649,8 @@ if (GRID > 1) {
   renderer.render(scene, camera);
 
   if (GRID > 1 && tileCtx) {
-    const tw = window.innerWidth  / GRID;
-    const th = window.innerHeight / GRID;
+    const tw = tileCanvas.width  / GRID;
+    const th = tileCanvas.height / GRID;
     tileCtx.clearRect(0, 0, tileCanvas.width, tileCanvas.height);
     for (let row = 0; row < GRID; row++) {
       for (let col = 0; col < GRID; col++) {
@@ -665,7 +668,10 @@ window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   if (tileCanvas) {
-    tileCanvas.width  = window.innerWidth;
-    tileCanvas.height = window.innerHeight;
+    const _dpr2 = Math.min(window.devicePixelRatio, 2) * SUPERSAMPLE;
+    tileCanvas.width  = Math.floor(window.innerWidth  * _dpr2);
+    tileCanvas.height = Math.floor(window.innerHeight * _dpr2);
+    tileCanvas.style.width  = window.innerWidth  + 'px';
+    tileCanvas.style.height = window.innerHeight + 'px';
   }
 });
