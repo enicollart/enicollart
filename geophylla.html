@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>geophylla — ENICOLL</title>
+  <meta name="description" content="Geophylla is a generative artwork series released on Art Blocks Studio by Emily Nicoll.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <link rel="icon" href="images/favicon.ico">
+  <style>
+    .geo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 2rem;
+    }
+
+    .geo-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin-bottom: 0;
+    }
+
+    .geo-link {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--black);
+      display: inline-block;
+      margin-bottom: 0;
+    }
+
+    .geo-link:hover { opacity: 0.55; }
+
+    .geo-body {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      line-height: 1.75;
+      max-width: 90ch;
+      margin-bottom: 2rem;
+    }
+
+    .geo-body p + p {
+      margin-top: 1rem;
+      max-width: 90ch;
+    }
+
+    .geo-section-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 1rem;
+      margin-top: 2.4rem;
+      display: block;
+    }
+
+    /* Sample outputs grid */
+    .geo-samples {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .geo-sample {
+      aspect-ratio: 1 / 1;
+      background: rgba(14,14,14,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .geo-sample-placeholder {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--mid);
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .geo-sample img,
+    .geo-sample video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .geo-divider {
+      height: 1px;
+      background: var(--light);
+      margin: 2.4rem 0;
+      max-width: 90ch;
+    }
+
+    @media (max-width: 768px) {
+      .geo-samples { grid-template-columns: repeat(2, 1fr); }
+      .geo-body { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu"></div>
+  </div>
+
+  <div class="site-wrapper">
+    <nav class="left-nav"></nav>
+
+    <main class="main-content">
+
+      <div class="geo-header">
+        <div class="geo-title">geophylla</div>
+        <a class="geo-link" href="ARTBLOCKS-URL-PLACEHOLDER" target="_blank">view on art blocks ↗</a>
+      </div>
+
+      <div class="geo-body">
+        <p>Geophylla is a generative artwork series released on Art Blocks Studio, and my second long-form code-based project following Pacific Spirit's release last year. Geophylla is a more personal work and a direct continuation of the preoccupation with floral forms that I've returned to many times.</p>
+
+        <p>I've been making spinning metallic flowers in Blender since 2021, releasing them first on Hic et Nunc in my series of trinkets and objects. While flowers are read as loose organic forms, they are radially symmetric and mathematically precise, strictly following the rules of nature and Fibonacci sequences. This juxtaposition between softness and rigidity is a recurring theme in my work. This particular project brings together floral forms, metallic geometry and mineral-inspired palettes to create hypnotic looping animations using randomness derived from Ethereum blockchain hashes.</p>
+
+        <p>The code behind Geophylla first started as a p5.js script producing flat greyscale flowers. The barebones version of this script lives on my website's homepage, and a more refined version finds its home <a href="spinning-flowers-gen.html">here</a>. From there I moved the logic into Blender, using it to generate the geometry that I could then texture and light using my usual process. That version still required some manual intervention, so translating it into Three.js was the final form allowing the system to generate outputs autonomously, producing a complete animated output without any intervention that maintained the style of my 3D works.</p>
+      </div>
+
+      <!-- Sample outputs -->
+      <span class="geo-section-title">sample outputs</span>
+      <div class="geo-samples">
+        <div class="geo-sample"><video src="videos/geophylla/geophyllasample (3).mp4" autoplay loop muted playsinline></video></div>
+          <div class="geo-sample"><video src="videos/geophylla/geophyllasample (6).mp4" autoplay loop muted playsinline></video></div>
+          <div class="geo-sample"><video src="videos/geophylla/geophyllasample (2).mp4" autoplay loop muted playsinline></video></div>
+          <div class="geo-sample"><video src="videos/geophylla/geophyllasample (8).mp4" autoplay loop muted playsinline></video></div>
+      
+      </div>
+
+      <div class="geo-divider"></div>
+
+      <span class="geo-section-title">the system</span>
+      <div class="geo-body">
+        <p>Each flower is built from a stack of petal layers. The number of layers, the petal count per layer, the width and shape of each petal, and the rotation offset between layers are all determined independently by the hash. Layers are stacked along the z-axis, and each layer spins continuously at a slightly different speed giving the outputs a hypnotic and slightly imperfect feel to the animation.</p>
+
+        <p>Petal geometry is constructed from cubic Bezier curves that define a 2D outline, which is then extruded along a semicircular profile to give it volume. Seven 2D outline shapes were defined in the original p5.js script, and the code randomly selects which shape to use for each layer, and how wide to make each layer's petals. The shapes alone can produce interesting and varied outputs. For example, a wide oval at low petal count is lush and obviously botanical while spiky shapes at high counts push toward crystalline.</p>
+
+        <p>I attempted to mimic my Blender materials and scene setup in the Three.js script. The materials are fully metallic with roughness near zero, which means the petals appear as close to mirror as Three.js allows. The colour comes entirely from two sources: the vertex colour gradient baked into each petal's geometry, and the environment map, which consists of a custom gradient sphere with a cool blue-grey top, warm toned bottom, and a white specular patch that produces the bright reflective streak you see running along each petal's ridge.</p>
+      </div>
+
+      <div class="geo-divider"></div>
+
+      <span class="geo-section-title">palettes</span>
+      <div class="geo-body">
+        <p>The project has twelve colour palettes, each inspired and named after a mineral or gemstone: pearl, lapis lazuli, garnet, azurite, fire opal, chalcopyrite, cobalt, malachite, citrine, fluorite, cinnabar, and hematite. A thirteenth palette, black and white, appears rarely, which creates a harsh lighting effect used occasionally in my past works.</p>
+
+        <p>The default state will set the colour of each layer of petals by stepping through the palette in order and applying a gradient to each petal. Some palettes use a randomized colour picking mode where each layer independently draws two colours from anywhere in the palette rather than stepping through in order. This produces outputs with more colour mixing and less tonal progression.</p>
+      </div>
+
+      <div class="geo-divider"></div>
+
+      <span class="geo-section-title">traits &amp; features</span>
+      <div class="geo-body">
+        <p>The traits are: palette, number of layers, pistil presence, stamen presence, rotation speed, layout, and background. Layout is the most structurally distinctive where a small percentage of outputs tile the flower in a 2×2, 3×3, or 4×4 grid. Layers range from 2 to 10, there are three speed settings, and occasionally the background will select from the palette rather than the standard black.</p>
+
+        <p>Once the flower is rendered, a Gaussian noise texture is overlayed, which has become almost a signature of mine across my work for Aquaregia and my personal practice, adding a grainy and more analogue vibe to the outputs. The noise renders slightly differently across devices.</p>
+      </div>
+
+      <div class="geo-divider"></div>
+
+      <span class="geo-section-title">availability</span>
+      <div class="geo-body">
+        <p>The works are available as tokenized digital assets on <a href="ARTBLOCKS-URL-PLACEHOLDER" target="_blank">Art Blocks Studio</a>.</p>
+      </div>
+    
+
+             <!-- Sample outputs -->
+
+      <div class="geo-samples">
+        <div class="geo-sample"><span class="geo-sample-placeholder">sample output</span></div>
+        <div class="geo-sample"><span class="geo-sample-placeholder">sample output</span></div>
+        <div class="geo-sample"><span class="geo-sample-placeholder">sample output</span></div>
+        <div class="geo-sample"><span class="geo-sample-placeholder">sample output</span></div>
+        <div class="geo-sample"><span class="geo-sample-placeholder">sample output</span></div>
+        <div class="geo-sample"><span class="geo-sample-placeholder">sample output</span></div>
+        <div class="geo-sample"><span class="geo-sample-placeholder">sample output</span></div>
+        <div class="geo-sample"><span class="geo-sample-placeholder">sample output</span></div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+</body>
+</html>
