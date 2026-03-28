@@ -601,7 +601,7 @@ const _nh = Math.floor(window.innerHeight * Math.min(window.devicePixelRatio, 2)
 })();
 
 // ── SCENE RENDER TARGET ───────────────────────────────────────────────────────
-renderer._sceneTargetMSAA = new THREE.WebGLMultisampleRenderTarget(_nw, _nh, { samples: 4 });
+renderer._sceneTargetMSAA = new THREE.WebGLMultisampleRenderTarget(_nw, _nh, { samples: 2 });
 renderer._sceneTarget     = new THREE.WebGLRenderTarget(_nw, _nh);
 renderer._sceneTarget.texture.minFilter = THREE.NearestFilter;
 renderer._sceneTarget.texture.magFilter = THREE.NearestFilter;
@@ -657,11 +657,11 @@ const _noiseMat = new THREE.ShaderMaterial({
     tDiffuse:  { value: GRID > 1 ? renderer._tileTarget.texture : renderer._sceneTarget.texture },
     tNoise:    { value: renderer._noiseTex },
     uStrengthBright: { value: 0.43 },
-    uStrengthDark:   { value: 0.1 },
-    uContrast:       { value: 1.4 },
-    uBrightness:     { value: 0.8 },
-    uSpeckle:        { value: 0.6 },
-    uSpeckleThr:     { value: 0.8 },
+    uStrengthDark: { value: 0.1 },
+    uContrast: { value: 1.4 },
+    uBrightness: { value: 0.8 },
+    uSpeckle:    { value: 0.6 },
+    uSpeckleThr: { value: 0.8 },
   },
   vertexShader:   _noiseVShader,
   fragmentShader: _noiseFShader,
