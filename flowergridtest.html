@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+</head>
+<body>
+<script>
+  var tokenData = {
+    hash: "0x" + [...Array(64)].map(() => Math.floor(Math.random()*16).toString(16)).join(''),
+    tokenId: "123000001"
+  };
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"></script>
+<script src="flower_gridforce.js"></script>
+<script src="flower_featuresmar27.js"></script>
+
+ <script>
+    const features = calculateFeatures(tokenData);
+ 
+    const overlay = document.createElement('div');
+    overlay.style.position      = 'fixed';
+    overlay.style.bottom        = '20px';
+    overlay.style.right         = '20px';
+    overlay.style.background    = 'rgba(0,0,0,0.75)';
+    overlay.style.color         = '#fff';
+    overlay.style.fontFamily    = 'monospace';
+    overlay.style.fontSize      = '12px';
+    overlay.style.lineHeight    = '1.8';
+    overlay.style.padding       = '14px 18px';
+    overlay.style.borderRadius  = '6px';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.zIndex        = '1000';
+    overlay.style.border        = '1px solid rgba(255,255,255,0.15)';
+    overlay.style.minWidth      = '200px';
+ 
+    const title = document.createElement('div');
+    title.style.color         = 'rgba(255,255,255,0.5)';
+    title.style.marginBottom  = '6px';
+    title.style.borderBottom  = '1px solid rgba(255,255,255,0.15)';
+    title.style.paddingBottom = '6px';
+    title.textContent = 'features';
+    overlay.appendChild(title);
+ 
+    for (const [key, val] of Object.entries(features)) {
+      const row = document.createElement('div');
+      const label = document.createElement('span');
+      label.style.color       = 'rgba(255,255,255,0.5)';
+      label.style.marginRight = '8px';
+      label.textContent       = key;
+      row.appendChild(label);
+      row.appendChild(document.createTextNode(String(val)));
+      overlay.appendChild(row);
+    }
+ 
+    document.body.appendChild(overlay);
+  </script>
+</body>
+</html>
