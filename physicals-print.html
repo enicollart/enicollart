@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>print — physicals — ENICOLL</title>
+  <meta name="description" content="print by Emily Nicoll and Aquaregia Records.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <link rel="icon" href="images/favicon.ico">
+  <style>
+    .pc-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 2.4rem;
+    }
+
+    .pc-back {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--mid);
+      text-decoration: none;
+    }
+    .pc-back:hover { color: var(--black); opacity: 1; }
+
+    .pc-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    /* Carousel */
+    .pc-carousel {
+      position: relative;
+      width: 100%;
+    }
+
+    .pc-track-wrap {
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .pc-track {
+      display: flex;
+      transition: transform 0.4s ease;
+    }
+
+    .pc-slide {
+      min-width: 100%;
+      aspect-ratio: 4 / 3;
+      background: rgba(14,14,14,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pc-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .pc-placeholder {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--mid);
+      letter-spacing: 0.08em;
+    }
+
+    .pc-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+
+    .pc-btn {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--mid);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    .pc-btn:hover { color: var(--black); }
+    .pc-btn:disabled { opacity: 0.2; cursor: default; }
+
+    .pc-counter {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--mid);
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu"></div>
+  </div>
+
+  <div class="site-wrapper">
+    <nav class="left-nav"></nav>
+
+    <main class="main-content">
+
+      <div class="pc-header">
+        <a class="pc-back" href="physicals.html">← physicals</a>
+        <div class="pc-title">print</div>
+      </div>
+
+      <div class="pc-carousel">
+        <div class="pc-track-wrap">
+          <div class="pc-track" id="pc-track">
+            <!-- Add slides here: <div class="pc-slide"><img src="images/physicals/print/01.jpg" alt=""></div> -->
+            <div class="pc-slide"><span class="pc-placeholder">image placeholder 1</span></div>
+            <div class="pc-slide"><span class="pc-placeholder">image placeholder 2</span></div>
+            <div class="pc-slide"><span class="pc-placeholder">image placeholder 3</span></div>
+          </div>
+        </div>
+
+        <div class="pc-controls">
+          <button class="pc-btn" id="pc-prev">← prev</button>
+          <span class="pc-counter" id="pc-counter">1 / 3</span>
+          <button class="pc-btn" id="pc-next">next →</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    const track   = document.getElementById('pc-track');
+    const slides  = track.querySelectorAll('.pc-slide');
+    const counter = document.getElementById('pc-counter');
+    const prevBtn = document.getElementById('pc-prev');
+    const nextBtn = document.getElementById('pc-next');
+    let current = 0;
+
+    function goTo(n) {
+      current = Math.max(0, Math.min(n, slides.length - 1));
+      track.style.transform = `translateX(-${current * 100}%)`;
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === slides.length - 1;
+    }
+
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') goTo(current - 1);
+      if (e.key === 'ArrowRight') goTo(current + 1);
+    });
+
+    goTo(0);
+  </script>
+</body>
+</html>

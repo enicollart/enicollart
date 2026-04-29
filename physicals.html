@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>physicals — ENICOLL</title>
+  <meta name="description" content="Physical releases, prints and objects by Emily Nicoll and Aquaregia Records.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <link rel="icon" href="images/favicon.ico">
+  <style>
+    .phys-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin-bottom: 3rem;
+    }
+
+    .phys-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 5rem;
+      align-items: center;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    .phys-item:hover .phys-img { opacity: 0.8; }
+
+    .phys-item.right .phys-img-wrap { order: 2; }
+    .phys-item.right .phys-meta   { order: 1; text-align: right; }
+    .phys-item.left  .phys-img-wrap { order: 1; }
+    .phys-item.left  .phys-meta   { order: 2; text-align: left; }
+
+    .phys-img-wrap {
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: rgba(14,14,14,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .phys-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.2s;
+    }
+
+    .phys-placeholder {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--mid);
+      letter-spacing: 0.08em;
+    }
+
+    .phys-meta-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .phys-meta-title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+    }
+
+    .phys-meta-arrow {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--mid);
+      margin-top: 1rem;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .phys-item {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 3rem;
+      }
+      .phys-item.right .phys-img-wrap,
+      .phys-item.left  .phys-img-wrap { order: 1; }
+      .phys-item.right .phys-meta,
+      .phys-item.left  .phys-meta     { order: 2; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu"></div>
+  </div>
+
+  <div class="site-wrapper">
+    <nav class="left-nav"></nav>
+
+    <main class="main-content">
+      <div class="phys-title">physicals</div>
+
+     <!-- vinyl — image right -->
+      <a class="phys-item right" href="physicals-vinyl.html">
+        <div class="phys-img-wrap">
+          <img class="phys-img" src="images/physicals/vinyl/vin1.jpg" alt="Vinyl">
+        </div>
+        <div class="phys-meta">
+          <span class="phys-meta-label">01</span>
+          <div class="phys-meta-title">vinyl</div>
+          <span class="phys-meta-arrow">view all ↗</span>
+        </div>
+      </a>
+
+      <!-- cd — image left -->
+      <a class="phys-item left" href="physicals-cd.html">
+        <div class="phys-img-wrap">
+          <img class="phys-img" src="images/physicals/cd/cd1.jpg" alt="CD">
+        </div>
+        <div class="phys-meta">
+          <span class="phys-meta-label">02</span>
+          <div class="phys-meta-title">cd</div>
+          <span class="phys-meta-arrow">view all ↗</span>
+        </div>
+      </a>
+
+      <!-- posters — image right -->
+      <a class="phys-item right" href="physicals-posters.html">
+        <div class="phys-img-wrap">
+          <img class="phys-img" src="images/physicals/posters/poster (1).jpg" alt="Posters">
+        </div>
+        <div class="phys-meta">
+          <span class="phys-meta-label">03</span>
+          <div class="phys-meta-title">posters</div>
+          <span class="phys-meta-arrow">view all ↗</span>
+        </div>
+      </a>
+
+
+
+      <!-- merch — image right -->
+      <a class="phys-item left" href="physicals-merch.html">
+        <div class="phys-img-wrap">
+          <img class="phys-img" src="images/physicals/merch/merch0.webp" alt="Merch">
+        </div>
+        <div class="phys-meta">
+          <span class="phys-meta-label">04</span>
+          <div class="phys-meta-title">merch</div>
+          <span class="phys-meta-arrow">view all ↗</span>
+        </div>
+      </a>
+
+    </main>
+  </div>
+
+  <script src="shared.js"></script>
+</body>
+</html>
