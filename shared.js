@@ -20,6 +20,7 @@ const NAV_DESKTOP = `
     <a href="animations.html">animations</a>
     <a href="resonance-reverie.html">resonance &amp; reverie</a>
     <a href="pellucid-petals.html">pellucid petals</a>
+    <a href="trellis.html">trellis (algo)</a>
   </div>
   <div class="nav-divider"></div>
   <div class="nav-section">
@@ -50,6 +51,7 @@ const NAV_MOBILE_MENU = `
   <a href="animations.html">animations</a>
   <a href="resonance-reverie.html">resonance &amp; reverie</a>
   <a href="pellucid-petals.html">pellucid petals</a>
+  <a href="trellis.html">trellis (algo)</a>
   <div class="mobile-menu-divider"></div>
   <div class="mobile-menu-label">audio</div>
   <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
