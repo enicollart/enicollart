@@ -400,7 +400,7 @@ function generateFlower() {
   } else if (_shapeRoll < 0.15) {
     const _pick = R.random_choice(['spiky','trap','trueHeart','sakura','tri','drop']);
     shapePool = [_pick];
-    petalTrait = 'Singular';
+    petalTrait = _pick === 'drop' ? 'Plush' : 'Wild';
   } else if (_shapeRoll < 0.45) {
     const _cat = [..._spikyPool];
     shapePool = [];
@@ -408,13 +408,13 @@ function generateFlower() {
       const idx = R.random_int(0, _cat.length - 1);
       shapePool.push(_cat.splice(idx, 1)[0]);
     }
-    petalTrait = 'Perennial';
+    petalTrait = 'Wild';
   } else if (_shapeRoll < 0.55) {
     shapePool = ['oval','drop'];
     petalTrait = 'Plush';
   } else if (_shapeRoll < 0.90) {
     shapePool = _spikyPool;
-    petalTrait = 'Perennial';
+    petalTrait = 'Wild';
   } else {
     shapePool = SHAPES;
     petalTrait = 'Wild';
