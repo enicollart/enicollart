@@ -522,13 +522,14 @@ function generateFlower() {
       : _stamenRoll < 0.895 ? 'twirls'
       : 'zinnia';
     if ((stamenType === 'twirls' && !_twirlsOk) || (stamenType === 'zinnia' && centerMode === 'none')) stamenType = 'og';
-    const _stamenNames = { og: 'Filament', sticks: 'Anther', messy: 'Messy', twirls: 'Tendril', zinnia: 'Zinnia' };
-    _stamenTrait = _stamenNames[stamenType];
+    const _stamenNames = { sticks: 'Anther', messy: 'Messy', twirls: 'Tendril', zinnia: 'Zinnia' };
+    _stamenTrait = _stamenNames[stamenType] || stamenType;
 
     if (stamenType === 'og') {
       const numSticks  = R.random_int(8, 19);
       const slen       = Math.max(centerSize * R.random_num(1.2, 2), minReach);
       const showPollen = R.random_bool(0.7);
+      _stamenTrait = showPollen ? 'Pollen' : 'Filament';
       const pollenR    = 0.05;
       const stemLen    = slen - stemInner;
       const stemGeo    = new THREE.CylinderBufferGeometry(0.008, 0.008, stemLen, 6);
