@@ -491,7 +491,7 @@ function generateFlower() {
   const centerGeo   = outlineMode
     ? new THREE.TorusBufferGeometry(centerSize / 2, 0.004, 6, 32)
     : wireframe
-      ? new THREE.IcosahedronBufferGeometry(centerSize / 2, 1)
+      ? new THREE.IcosahedronBufferGeometry(centerSize / 2, 4)
       : new THREE.SphereBufferGeometry(centerSize / 2, 48, 32);
   const centerMesh  = new THREE.Mesh(centerGeo, centerMat);
   const topZ        = (numLayers + 1) * LAYER_GAP;
