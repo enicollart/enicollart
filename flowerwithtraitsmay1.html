@@ -408,13 +408,13 @@ function generateFlower() {
       const idx = R.random_int(0, _cat.length - 1);
       shapePool.push(_cat.splice(idx, 1)[0]);
     }
-    petalTrait = 'Duet';
+    petalTrait = 'Perennial';
   } else if (_shapeRoll < 0.55) {
     shapePool = ['oval','drop'];
-    petalTrait = 'Soft';
+    petalTrait = 'Plush';
   } else if (_shapeRoll < 0.90) {
     shapePool = _spikyPool;
-    petalTrait = 'Angular';
+    petalTrait = 'Perennial';
   } else {
     shapePool = SHAPES;
     petalTrait = 'Wild';
@@ -696,7 +696,7 @@ function generateFlower() {
 
   const traits = {
     Palette: paletteName.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    Form: numLayers <= 3 ? 'Single' : 'Flore Pleno',
+    Form: numLayers <= 3 ? 'Minimal' : 'Flore Pleno',
     Body: wireframe ? 'Wire' : outlineMode ? 'Trace' : 'Solid',
     Layers: numLayers,
     Petals: petalTrait,
