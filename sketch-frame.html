@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+
+  <!-- Three.js r128 — same version the sketch was built against -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    // Read config from URL params set by the interface
+    const p = new URLSearchParams(location.search);
+
+    const hash     = p.get('hash')     || ('0x' + 'abcdef1234567890'.repeat(4));
+    const tokenId  = parseInt(p.get('tokenId')) || 0;
+    const captureW = parseInt(p.get('w'))       || 4000;
+    const captureH = parseInt(p.get('h'))       || 5000;
+    const videoDur = parseInt(p.get('dur'))     || 10;
+    const zoomScale = parseFloat(p.get('zoom')) || 0; // 0=normal, 2/3/4=multiplier
+    const noise     = p.get('noise') !== '0'; // default on; off only when explicitly '0'
+
+    // Set globals BEFORE the sketch script runs — it reads these immediately
+    window.tokenData      = { hash, tokenId };
+    window.CAPTURE_W      = captureW;
+    window.CAPTURE_H      = captureH;
+    window.VIDEO_DURATION = videoDur;
+    window.ZOOM_SCALE     = zoomScale;
+
+    // Tell the parent frame when we're ready and when video is done
+    window.addEventListener('load', () => {
+      // If noise should be off, fire the sketch's own N handler to hide the canvases
+      if (!noise) {
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'N', bubbles: true }));
+      }
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: 'sketch:ready' }, '*');
+      }
+    });
+
+    // Intercept video complete so the parent can update its UI
+    const _origCreateObjectURL = URL.createObjectURL.bind(URL);
+    URL.createObjectURL = function(blob) {
+      const url = _origCreateObjectURL(blob);
+      if (blob.type && blob.type.startsWith('video/')) {
+        if (window.parent !== window) {
+          window.parent.postMessage({ type: 'sketch:videoComplete' }, '*');
+        }
+      }
+      return url;
+    };
+  </script>
+
+  <!-- The patched sketch — reads window.tokenData and window.CAPTURE_* on startup -->
+  <script src="final-withscreenrecord2.js"></script>
+
+</body>
+</html>

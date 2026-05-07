@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geophylla - Tools</title>
+  <meta name="description" content="Generate high-resolution stills and videos from your Geophylla by ENICOLL token.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <link rel="icon" href="images/favicon.ico">
+
+  <style>
+    /* ── headings ───────────────────────────────────────────── */
+    .gen-heading {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin-bottom: 2rem;
+    }
+
+    /* ── top layout: controls left, canvas preview right ───── */
+    .gen-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* ── form rows ──────────────────────────────────────────── */
+    .gen-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .gen-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+
+    .gen-token-fields {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    /* inputs & selects */
+    input[type="text"],
+    input[type="number"],
+    select {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--black);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(0,0,0,0.2);
+      padding: 0.3rem 0;
+      outline: none;
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 0;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+      border-bottom-color: var(--black);
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23000' opacity='.35'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.2rem center;
+      padding-right: 1.2rem;
+    }
+
+    /* custom dimension pair */
+    .gen-dim-custom {
+      display: none;
+      gap: 0.4rem;
+      align-items: center;
+      margin-top: 0.4rem;
+    }
+
+    .gen-dim-custom.visible { display: flex; }
+
+    .gen-dim-custom input { max-width: 80px; }
+
+    .gen-dim-sep {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+
+    /* radio groups */
+    .gen-radio-group {
+      display: flex;
+      gap: 1.4rem;
+    }
+
+    .gen-radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      font-weight: 300;
+    }
+
+    .gen-radio-option input[type="radio"] {
+      width: auto;
+      border: none;
+      border-bottom: none;
+      padding: 0;
+      margin: 0;
+      accent-color: var(--black);
+      cursor: pointer;
+    }
+
+    /* duration field */
+    .gen-duration-row {
+      display: none;
+    }
+
+    .gen-duration-row.visible {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .gen-duration-inner {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .gen-duration-inner input {
+      max-width: 60px;
+    }
+
+    .gen-duration-unit {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      opacity: 0.45;
+    }
+
+    /* zoom submenu */
+    .gen-zoom-sub {
+      display: none;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+      padding-left: 0.8rem;
+      border-left: 1px solid rgba(0,0,0,0.12);
+    }
+
+    .gen-zoom-sub.visible { display: flex; }
+
+    .gen-zoom-sub-label {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.35;
+    }
+
+    /* action buttons */
+    .gen-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .gen-btn {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.25);
+      padding: 0.55rem 1.2rem;
+      cursor: pointer;
+      color: var(--black);
+      transition: border-color 0.15s, opacity 0.15s;
+    }
+
+    .gen-btn:hover:not(:disabled) {
+      border-color: var(--black);
+    }
+
+    .gen-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .gen-btn-primary {
+      border-color: var(--black);
+    }
+
+    .gen-btn-primary:hover:not(:disabled) {
+      background: var(--black);
+      color: var(--white, #fff);
+    }
+
+    /* status line */
+    .gen-status {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      opacity: 0.5;
+      margin-top: 0.75rem;
+      min-height: 1em;
+    }
+
+    .gen-status.error { opacity: 1; color: #a00; }
+    .gen-status.success { opacity: 0.7; }
+
+    /* ── right side: live canvas preview ────────────────────── */
+    .gen-preview-col {
+      position: sticky;
+      top: 2rem;
+    }
+
+    .gen-preview-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.35;
+      margin-bottom: 0.6rem;
+    }
+
+    .gen-canvas-wrap {
+      background: var(--accent);
+      border: 1px solid rgba(0,0,0,0.12);
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      max-width: 100%;
+    }
+
+    .gen-canvas-wrap canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+      object-fit: contain;
+    }
+
+    .gen-canvas-empty {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      opacity: 0.25;
+      text-align: center;
+    }
+
+    /* progress bar for video */
+    .gen-progress {
+      display: none;
+      height: 1px;
+      background: rgba(0,0,0,0.1);
+      margin-top: 0.6rem;
+      position: relative;
+    }
+
+    .gen-progress.visible { display: block; }
+
+    .gen-progress-fill {
+      height: 100%;
+      background: var(--black);
+      width: 0%;
+      transition: width 0.3s linear;
+    }
+
+    /* ── notes ──────────────────────────────────────────────── */
+    .gen-notes {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+
+      font-weight: 300;
+      opacity: 0.45;
+      margin-top: 1.2rem;
+      line-height: 1.7;
+    }
+
+    /* ── responsive ──────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .gen-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .gen-preview-col {
+        position: static;
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="hamburger" id="hamburger-btn">menu</div>
+    <div class="mobile-menu" id="mobile-menu"></div>
+  </div>
+
+  <div class="site-wrapper">
+
+    <nav class="left-nav"></nav>
+
+    <main class="main-content">
+
+      <div class="gen-heading">GEOPHYLLA | TOOLS</div>
+
+      <div class="gen-layout">
+
+        <!-- ── LEFT: controls ──────────────────────────────── -->
+        <div class="gen-controls">
+
+          <!-- token id -->
+          <div class="gen-row">
+            <div class="gen-label">token id</div>
+            <div class="gen-token-fields">
+              <input
+                type="number"
+                id="token-id-input"
+                placeholder="e.g. 1000000"
+                min="0"
+                step="1"
+                style="max-width: 160px;"
+              >
+              <button class="gen-btn gen-btn-primary" id="load-btn">load</button>
+              <button class="gen-btn" id="roll-btn" title="random seed">roll</button>
+            </div>
+          </div>
+
+          <!-- dimensions -->
+          <div class="gen-row">
+            <div class="gen-label">dimensions</div>
+            <select id="dim-select">
+              <option value="1080x1080">square — 1080 × 1080</option>
+              <option value="3000x3000">square hi-res — 3000 × 3000</option>
+              <option value="1080x1440">portrait — 1080 × 1440</option>
+              <option value="3000x4000">portrait hi-res — 3000 × 4000</option>
+              <option value="1920x1080">landscape — 1920 × 1080</option>
+              <option value="3840x2160">4k — 3840 × 2160</option>
+              <option value="custom">custom...</option>
+            </select>
+            <div class="gen-dim-custom" id="dim-custom">
+              <input type="number" id="dim-w" placeholder="width" min="100" max="8192">
+              <span class="gen-dim-sep">×</span>
+              <input type="number" id="dim-h" placeholder="height" min="100" max="8192">
+            </div>
+          </div>
+
+          <!-- mode: normal / zoom -->
+          <div class="gen-row">
+            <div class="gen-label">mode</div>
+            <div class="gen-radio-group">
+              <label class="gen-radio-option">
+                <input type="radio" name="mode" value="normal" checked> normal
+              </label>
+              <label class="gen-radio-option">
+                <input type="radio" name="mode" value="zoom"> zoom
+              </label>
+            </div>
+            <div class="gen-zoom-sub" id="zoom-sub">
+              <div class="gen-zoom-sub-label">amount</div>
+              <div class="gen-radio-group">
+                <label class="gen-radio-option">
+                  <input type="radio" name="zoom-level" value="200" checked> 200%
+                </label>
+                <label class="gen-radio-option">
+                  <input type="radio" name="zoom-level" value="300"> 300%
+                </label>
+                <label class="gen-radio-option">
+                  <input type="radio" name="zoom-level" value="400"> 400%
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- noise -->
+          <div class="gen-row">
+            <div class="gen-label">noise</div>
+            <div class="gen-radio-group">
+              <label class="gen-radio-option">
+                <input type="radio" name="noise" value="on" id="noise-on" checked> on (default)
+              </label>
+              <label class="gen-radio-option">
+                <input type="radio" name="noise" value="off" id="noise-off"> off
+              </label>
+            </div>
+          </div>
+
+          <!-- output: still / video -->
+          <div class="gen-row" id="output-row">
+            <div class="gen-label">output</div>
+            <div class="gen-radio-group">
+              <label class="gen-radio-option">
+                <input type="radio" name="output" value="still" checked> still
+              </label>
+              <label class="gen-radio-option" id="video-option-label">
+                <input type="radio" name="output" value="video" id="video-radio"> video
+              </label>
+            </div>
+          </div>
+
+          <!-- video duration (hidden unless video selected) -->
+          <div class="gen-duration-row" id="duration-row">
+            <div class="gen-label">duration</div>
+            <div class="gen-duration-inner">
+              <input type="number" id="duration-input" value="10" min="1" max="120">
+              <span class="gen-duration-unit">seconds</span>
+            </div>
+          </div>
+
+          <!-- actions -->
+          <div class="gen-actions">
+            <button class="gen-btn" id="pause-btn" disabled>pause</button>
+            <button class="gen-btn gen-btn-primary" id="download-btn" disabled>download</button>
+          </div>
+
+          <div class="gen-progress" id="video-progress">
+            <div class="gen-progress-fill" id="video-progress-fill"></div>
+          </div>
+
+          <div class="gen-status" id="status-line"></div>
+
+          <p class="gen-notes">notes: for best noise rendering, generate stills at the highest resolution possible. for hi-res video, disabling noise is recommended to prevent aliasing.</p>
+
+        </div>
+
+        <!-- ── RIGHT: live canvas preview ─────────────────── -->
+        <div class="gen-preview-col">
+          <div class="gen-preview-label">preview</div>
+          <div class="gen-canvas-wrap" id="canvas-wrap">
+            <div class="gen-canvas-empty" id="canvas-empty">generate to preview</div>
+            <iframe
+              id="sketch-iframe"
+              style="display:none; position:absolute; inset:0; width:100%; height:100%; border:none; background:#000;"
+            ></iframe>
+          </div>
+        </div>
+
+      </div><!-- /.gen-layout -->
+
+
+
+
+    </main>
+  </div><!-- /.site-wrapper -->
+
+
+
+  <script src="shared.js"></script>
+
+  <!-- ethers.js for on-chain token hash lookup -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.1/ethers.umd.min.js"></script>
+
+
+
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // CONFIG
+    // ─────────────────────────────────────────────────────────
+    const CONTRACT_ADDRESS = '0x02f518c529a0002e505000795d00c500eb00534a';
+    const CONTRACT_ABI = [
+      {
+        inputs: [{ internalType: 'uint256', name: '_tokenId', type: 'uint256' }],
+        name: 'tokenIdToHash',
+        outputs: [{ internalType: 'bytes32', name: '', type: 'bytes32' }],
+        stateMutability: 'view',
+        type: 'function'
+      },
+    ];
+
+    // Public RPC fallbacks — no API key required
+    const RPC_URLS = [
+      'https://cloudflare-eth.com',
+      'https://eth.llamarpc.com',
+      'https://ethereum.publicnode.com'
+    ];
+
+    // ─────────────────────────────────────────────────────────
+    // STATE
+    // ─────────────────────────────────────────────────────────
+    const state = {
+      tokenId      : null,
+      hash         : null,
+      noiseEnabled : true,   // synced with noise radio + N key
+      zoomScale    : 0,      // 0 = normal, 2/3/4 = multiplier (200/300/400%)
+      outputType   : 'still',
+      paused       : false,
+      generated    : false,
+    };
+
+    // ─────────────────────────────────────────────────────────
+    // DOM REFS
+    // ─────────────────────────────────────────────────────────
+    const tokenInput       = document.getElementById('token-id-input');
+    const rollBtn          = document.getElementById('roll-btn');
+    const dimSelect        = document.getElementById('dim-select');
+    const dimCustom        = document.getElementById('dim-custom');
+    const dimW             = document.getElementById('dim-w');
+    const dimH             = document.getElementById('dim-h');
+    const videoOptionLabel = document.getElementById('video-option-label');
+    const videoRadio       = document.getElementById('video-radio');
+    const durationRow      = document.getElementById('duration-row');
+    const durationInput    = document.getElementById('duration-input');
+    const pauseBtn         = document.getElementById('pause-btn');
+    const downloadBtn      = document.getElementById('download-btn');
+    const statusLine       = document.getElementById('status-line');
+    const canvasWrap       = document.getElementById('canvas-wrap');
+    const canvasEmpty      = document.getElementById('canvas-empty');
+    const videoProgress    = document.getElementById('video-progress');
+    const videoProgressFill= document.getElementById('video-progress-fill');
+    const sketchIframe     = document.getElementById('sketch-iframe');
+
+    // ─────────────────────────────────────────────────────────
+    // STATUS HELPERS
+    // ─────────────────────────────────────────────────────────
+    function setStatus(msg, type = '') {
+      statusLine.textContent = msg;
+      statusLine.className   = 'gen-status' + (type ? ' ' + type : '');
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // DIMENSION HANDLING
+    // ─────────────────────────────────────────────────────────
+    function parseDimensions() {
+      const val = dimSelect.value;
+      if (val === 'custom') {
+        return { width: parseInt(dimW.value) || 1080, height: parseInt(dimH.value) || 1080 };
+      }
+      const [w, h] = val.split('x').map(Number);
+      return { width: w, height: h };
+    }
+
+    function updateAspectRatio() {
+      const { width, height } = parseDimensions();
+      canvasWrap.style.aspectRatio = `${width} / ${height}`;
+    }
+
+    dimSelect.addEventListener('change', () => {
+      dimCustom.classList.toggle('visible', dimSelect.value === 'custom');
+      updateAspectRatio();
+    });
+    dimW.addEventListener('input', updateAspectRatio);
+    dimH.addEventListener('input', updateAspectRatio);
+
+    // ─────────────────────────────────────────────────────────
+    // MODE: normal / zoom — zoom level chosen in sub-menu
+    // state.zoomScale: 0 = normal, 2/3/4 = multiplier (200/300/400%)
+    // ─────────────────────────────────────────────────────────
+    const zoomSub = document.getElementById('zoom-sub');
+
+    function getZoomScale() {
+      const lvl = document.querySelector('input[name="zoom-level"]:checked');
+      return lvl ? parseInt(lvl.value) / 100 : 2;
+    }
+
+    function applyZoomState(isZoom) {
+      state.zoomScale = isZoom ? getZoomScale() : 0;
+      zoomSub.classList.toggle('visible', isZoom);
+      if (isZoom) {
+        videoRadio.checked  = false;
+        videoRadio.disabled = true;
+        videoOptionLabel.style.opacity = '0.3';
+        document.querySelector('input[name="output"][value="still"]').checked = true;
+        state.outputType = 'still';
+        durationRow.classList.remove('visible');
+        videoProgress.classList.remove('visible');
+      } else {
+        videoRadio.disabled = false;
+        videoOptionLabel.style.opacity = '';
+      }
+    }
+
+    document.querySelectorAll('input[name="mode"]').forEach(radio => {
+      radio.addEventListener('change', () => applyZoomState(radio.value === 'zoom'));
+    });
+
+    // Zoom level sub-radios update scale while zoom is active
+    document.querySelectorAll('input[name="zoom-level"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (state.zoomScale > 0) state.zoomScale = parseInt(radio.value) / 100;
+      });
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // NOISE: radio controls (N key syncs with these)
+    // ─────────────────────────────────────────────────────────
+    document.querySelectorAll('input[name="noise"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        state.noiseEnabled = (radio.value === 'on');
+      });
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // OUTPUT: still / video
+    // ─────────────────────────────────────────────────────────
+    document.querySelectorAll('input[name="output"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        state.outputType = radio.value;
+        durationRow.classList.toggle('visible', radio.value === 'video');
+        if (radio.value !== 'video') videoProgress.classList.remove('visible');
+      });
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // CONTRACT: read token hash
+    // ─────────────────────────────────────────────────────────
+    async function fetchTokenHash(tokenId) {
+      let lastErr;
+      for (const url of RPC_URLS) {
+        try {
+          const provider = new ethers.JsonRpcProvider(url);
+          const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+          const hash = await contract.tokenIdToHash(BigInt(tokenId));
+          if (hash === ethers.ZeroHash ||
+              hash === '0x0000000000000000000000000000000000000000000000000000000000000000') {
+            throw new Error('token not minted or hash is zero');
+          }
+          return hash;
+        } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('all RPC providers failed');
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // RANDOM ROLL — generate a random hash, no contract needed
+    // ─────────────────────────────────────────────────────────
+    function randomHash() {
+      const bytes = new Uint8Array(32);
+      crypto.getRandomValues(bytes);
+      return '0x' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    rollBtn.addEventListener('click', () => {
+      tokenInput.value = '';
+      state.tokenId = null;
+      state.hash    = randomHash();
+      loadSketchIframe();
+      downloadBtn.disabled = false;
+      state.generated = true;
+      setStatus(`random seed — ${state.hash.slice(0, 12)}...`, 'success');
+    });
+
+    // Load button — same as pressing Enter in the token id field
+    document.getElementById('load-btn').addEventListener('click', async () => {
+      const rawId = tokenInput.value.trim();
+      if (!rawId) { return; }
+      const tokenId = parseInt(rawId);
+      if (isNaN(tokenId) || tokenId < 0) { setStatus('invalid token id.', 'error'); return; }
+      downloadBtn.disabled = true;
+      setStatus('reading hash from contract...');
+      try {
+        const hash = await fetchTokenHash(tokenId);
+        state.tokenId = tokenId;
+        state.hash    = hash;
+        loadSketchIframe();
+        state.generated  = true;
+        downloadBtn.disabled = false;
+        setStatus(`token ${tokenId} — ${hash.slice(0, 10)}...`, 'success');
+      } catch(err) {
+        setStatus('error: ' + err.message, 'error');
+        downloadBtn.disabled = true;
+      }
+    });
+
+    // Enter on token input → generate
+    tokenInput.addEventListener('keydown', async e => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      const rawId = tokenInput.value.trim();
+      if (!rawId) { return; }
+      const tokenId = parseInt(rawId);
+      if (isNaN(tokenId) || tokenId < 0) { setStatus('invalid token id.', 'error'); return; }
+
+      downloadBtn.disabled = true;
+      setStatus('reading hash from contract...');
+      try {
+        const hash = await fetchTokenHash(tokenId);
+        state.tokenId = tokenId;
+        state.hash    = hash;
+        loadSketchIframe();
+        state.generated  = true;
+        downloadBtn.disabled = false;
+        setStatus(`token ${tokenId} — ${hash.slice(0, 10)}...`, 'success');
+      } catch(err) {
+        setStatus('error: ' + err.message, 'error');
+        downloadBtn.disabled = true;
+      }
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // IFRAME — load / reload the sketch with current state
+    // ─────────────────────────────────────────────────────────
+    function buildIframeSrc() {
+      const { width, height } = parseDimensions();
+      const dur   = parseInt(durationInput.value) || 10;
+      const hash  = state.hash || randomHash();
+      const id    = state.tokenId !== null ? state.tokenId : 0;
+      // Re-read zoom scale at download time in case sub-radio changed
+      const zoomVal = state.zoomScale > 0 ? getZoomScale() : 0;
+      const params = new URLSearchParams({
+        hash,
+        tokenId : id,
+        w       : width,
+        h       : height,
+        dur,
+        zoom    : zoomVal,
+        noise   : state.noiseEnabled ? '1' : '0',
+      });
+      return `sketch-frame.html?${params.toString()}`;
+    }
+
+    function loadSketchIframe() {
+      canvasEmpty.style.display = 'none';
+      sketchIframe.style.display = 'block';
+      sketchIframe.src = buildIframeSrc();
+      // Reset pause state when reloading
+      state.paused = false;
+      pauseBtn.textContent = 'pause';
+      pauseBtn.disabled = true; // re-enabled by sketch:ready
+      setStatus('rendering...', '');
+    }
+
+    function togglePause() {
+      if (!state.generated || !sketchIframe.contentWindow) return;
+      try {
+        const nowPaused = sketchIframe.contentWindow.enicollTogglePause();
+        state.paused = nowPaused;
+        pauseBtn.textContent = nowPaused ? 'resume' : 'pause';
+        setStatus(nowPaused ? 'paused — click download to capture this frame.' : 'rendering...', nowPaused ? 'success' : '');
+      } catch(err) {
+        setStatus('pause error: ' + err.message, 'error');
+      }
+    }
+
+    pauseBtn.addEventListener('click', togglePause);
+
+    // ─────────────────────────────────────────────────────────
+
+
+    // ─────────────────────────────────────────────────────────
+    // MESSAGES FROM IFRAME
+    // ─────────────────────────────────────────────────────────
+    window.addEventListener('message', e => {
+      if (!e.data || !e.data.type) return;
+      if (e.data.type === 'sketch:ready') {
+        pauseBtn.disabled = false;
+      }
+      if (e.data.type === 'sketch:videoComplete') {
+        if (_videoProgressInterval) {
+          clearInterval(_videoProgressInterval);
+          _videoProgressInterval = null;
+        }
+        videoProgressFill.style.width = '100%';
+        setStatus('video saved.', 'success');
+        downloadBtn.disabled = false;
+        setTimeout(() => videoProgress.classList.remove('visible'), 600);
+      }
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // DOWNLOAD
+    // ─────────────────────────────────────────────────────────
+    downloadBtn.addEventListener('click', () => {
+      if (!state.generated || !sketchIframe.contentWindow) return;
+      if (state.outputType === 'still') {
+        downloadStill();
+      } else {
+        startVideo();
+      }
+    });
+
+    // Holds the active onReady listener so we can deregister it if the
+    // user clicks download again before the previous one completes.
+    let _pendingReadyHandler = null;
+    let _videoProgressInterval = null;
+
+    function cancelPendingDownload() {
+      if (_pendingReadyHandler) {
+        window.removeEventListener('message', _pendingReadyHandler);
+        _pendingReadyHandler = null;
+      }
+      if (_videoProgressInterval) {
+        clearInterval(_videoProgressInterval);
+        _videoProgressInterval = null;
+      }
+    }
+
+    function downloadStill() {
+      // If paused AND no zoom active, capture the frozen frame immediately.
+      // Zoom always requires a reload so the iframe has the correct ZOOM_SCALE set.
+      if (state.paused && state.zoomScale === 0 && sketchIframe.contentWindow) {
+        setStatus('saving still...');
+        downloadBtn.disabled = true;
+        try {
+          sketchIframe.contentWindow.enicollDownloadStill();
+          setStatus('still saved.', 'success');
+        } catch(err) {
+          setStatus('download error: ' + err.message, 'error');
+        }
+        downloadBtn.disabled = false;
+        return;
+      }
+
+      cancelPendingDownload();
+      setStatus('loading at current settings...');
+      downloadBtn.disabled = true;
+      loadSketchIframe();
+
+      _pendingReadyHandler = function onReady(e) {
+        if (!e.data || e.data.type !== 'sketch:ready') return;
+        window.removeEventListener('message', _pendingReadyHandler);
+        _pendingReadyHandler = null;
+        setTimeout(() => {
+          try {
+            sketchIframe.contentWindow.enicollDownloadStill();
+            setStatus('still saved.', 'success');
+          } catch(err) {
+            setStatus('download error: ' + err.message, 'error');
+          }
+          downloadBtn.disabled = false;
+        }, 1200);
+      };
+      window.addEventListener('message', _pendingReadyHandler);
+    }
+
+    function startVideo() {
+      if (!state.generated) return;
+      cancelPendingDownload();
+      setStatus('loading at current settings...');
+      videoProgress.classList.add('visible');
+      videoProgressFill.style.width = '0%';
+      downloadBtn.disabled = true;
+      loadSketchIframe();
+
+      const dur = parseInt(durationInput.value) || 10;
+
+      _pendingReadyHandler = function onReady(e) {
+        if (!e.data || e.data.type !== 'sketch:ready') return;
+        window.removeEventListener('message', _pendingReadyHandler);
+        _pendingReadyHandler = null;
+
+        setTimeout(() => {
+          setStatus('recording...');
+          try {
+            sketchIframe.contentWindow.enicollStartVideo();
+          } catch(err) {
+            sketchIframe.contentWindow.dispatchEvent(
+              new KeyboardEvent('keydown', { key: 'v', bubbles: true })
+            );
+          }
+
+          let elapsed = 0;
+          _videoProgressInterval = setInterval(() => {
+            elapsed += 0.25;
+            videoProgressFill.style.width = Math.min((elapsed / dur) * 90, 90) + '%';
+            if (elapsed >= dur + 5) {
+              clearInterval(_videoProgressInterval);
+              _videoProgressInterval = null;
+            }
+          }, 250);
+        }, 2000);
+      };
+      window.addEventListener('message', _pendingReadyHandler);
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // N KEY — syncs with the noise radio on the page
+    // ─────────────────────────────────────────────────────────
+    document.addEventListener('keydown', e => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'n' || e.key === 'N') {
+        state.noiseEnabled = !state.noiseEnabled;
+        // Sync the radio buttons to match
+        document.getElementById(state.noiseEnabled ? 'noise-on' : 'noise-off').checked = true;
+        // Forward into the live iframe so the currently-visible preview updates
+        try {
+          sketchIframe.contentWindow.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 'N', bubbles: true })
+          );
+        } catch(err) { /* cross-origin guard */ }
+        setStatus(state.noiseEnabled ? 'noise on' : 'noise off', 'success');
+      }
+    });
+
+    // ─────────────────────────────────────────────────────────
+    // INIT
+    // ─────────────────────────────────────────────────────────
+    updateAspectRatio();
+
+  </script>
+
+</body>
+</html>
