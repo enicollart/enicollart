@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Geophylla - Tools</title>
-  <meta name="description" content="Generate high-resolution stills and videos from your Geophylla by ENICOLL token.">
+  <meta name="description" content="Generate high-resolution stills and videos from a Geophylla token.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -295,10 +295,10 @@
     /* ── notes ──────────────────────────────────────────────── */
     .gen-notes {
       font-family: var(--font-serif);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
 
       font-weight: 300;
-      opacity: 0.45;
+      opacity: 0.65;
       margin-top: 1.2rem;
       line-height: 1.7;
     }
@@ -331,7 +331,7 @@
 
     <main class="main-content">
 
-      <div class="gen-heading">GEOPHYLLA | TOOLS</div>
+      <div class="gen-heading">geophylla | TOOLS</div>
 
       <div class="gen-layout">
 
@@ -449,7 +449,7 @@
 
           <div class="gen-status" id="status-line"></div>
 
-          <p class="gen-notes">notes: for best noise rendering, generate stills at the highest resolution possible. for hi-res video, disabling noise is recommended to prevent aliasing.</p>
+          <p class="gen-notes">notes: for best noise rendering, generate stills at the highest resolution possible. for video, disabling noise is recommended to prevent aliasing.</p>
 
         </div>
 
@@ -457,7 +457,7 @@
         <div class="gen-preview-col">
           <div class="gen-preview-label">preview</div>
           <div class="gen-canvas-wrap" id="canvas-wrap">
-            <div class="gen-canvas-empty" id="canvas-empty">generate to preview</div>
+            <div class="gen-canvas-empty" id="canvas-empty">load a token or roll a random output to preview</div>
             <iframe
               id="sketch-iframe"
               style="display:none; position:absolute; inset:0; width:100%; height:100%; border:none; background:#000;"
