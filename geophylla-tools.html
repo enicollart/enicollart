@@ -12,7 +12,7 @@
   <link rel="icon" href="images/favicon.ico">
 
   <style>
-    /* ── headings ───────────────────────────────────────────── */
+   
     .gen-heading {
       font-family: var(--font-serif);
       font-size: 1.4rem;
@@ -21,7 +21,7 @@
       margin-bottom: 2rem;
     }
 
-    /* ── top layout: controls left, canvas preview right ───── */
+    
     .gen-layout {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -29,7 +29,7 @@
       align-items: start;
     }
 
-    /* ── form rows ──────────────────────────────────────────── */
+    
     .gen-row {
       display: flex;
       flex-direction: column;
@@ -52,7 +52,7 @@
       align-items: center;
     }
 
-    /* inputs & selects */
+    
     input[type="text"],
     input[type="number"],
     select {
@@ -85,7 +85,7 @@
       padding-right: 1.2rem;
     }
 
-    /* custom dimension pair */
+    
     .gen-dim-custom {
       display: none;
       gap: 0.4rem;
@@ -104,7 +104,7 @@
       flex-shrink: 0;
     }
 
-    /* radio groups */
+   
     .gen-radio-group {
       display: flex;
       gap: 1.4rem;
@@ -130,7 +130,7 @@
       cursor: pointer;
     }
 
-    /* duration field */
+    
     .gen-duration-row {
       display: none;
     }
@@ -158,7 +158,7 @@
       opacity: 0.45;
     }
 
-    /* zoom submenu */
+   
     .gen-zoom-sub {
       display: none;
       flex-direction: column;
@@ -178,7 +178,7 @@
       opacity: 0.35;
     }
 
-    /* action buttons */
+   
     .gen-actions {
       display: flex;
       gap: 1rem;
@@ -219,7 +219,7 @@
       color: var(--white, #fff);
     }
 
-    /* status line */
+   
     .gen-status {
       font-family: var(--font-mono);
       font-size: 0.6rem;
@@ -232,7 +232,7 @@
     .gen-status.error { opacity: 1; color: #a00; }
     .gen-status.success { opacity: 0.7; }
 
-    /* ── right side: live canvas preview ────────────────────── */
+    
     .gen-preview-col {
       position: sticky;
       top: 2rem;
@@ -274,7 +274,7 @@
       text-align: center;
     }
 
-    /* progress bar for video */
+    
     .gen-progress {
       display: none;
       height: 1px;
@@ -292,7 +292,7 @@
       transition: width 0.3s linear;
     }
 
-    /* ── notes ──────────────────────────────────────────────── */
+    
     .gen-notes {
       font-family: var(--font-serif);
       font-size: 0.95rem;
@@ -303,7 +303,7 @@
       line-height: 1.7;
     }
 
-    /* ── responsive ──────────────────────────────────────────── */
+  
     @media (max-width: 900px) {
       .gen-layout {
         grid-template-columns: 1fr;
@@ -319,7 +319,7 @@
 </head>
 <body>
 
-  <!-- Mobile nav -->
+ 
   <div class="mobile-nav">
     <div class="hamburger" id="hamburger-btn">menu</div>
     <div class="mobile-menu" id="mobile-menu"></div>
@@ -335,10 +335,10 @@
 
       <div class="gen-layout">
 
-        <!-- ── LEFT: controls ──────────────────────────────── -->
+
         <div class="gen-controls">
 
-          <!-- token id -->
+  
           <div class="gen-row">
             <div class="gen-label">token id - enter as 1000XXX i.e. if mint number is 111 your token id is 1000111 </div>
             <div class="gen-token-fields">
@@ -355,7 +355,7 @@
             </div>
           </div>
 
-          <!-- dimensions -->
+         
           <div class="gen-row">
             <div class="gen-label">dimensions</div>
             <select id="dim-select">
@@ -374,7 +374,7 @@
             </div>
           </div>
 
-          <!-- mode: normal / zoom -->
+          
           <div class="gen-row">
             <div class="gen-label">mode</div>
             <div class="gen-radio-group">
@@ -402,7 +402,7 @@
 
           </div>
 
-          <!-- noise -->
+          
           <div class="gen-row">
             <div class="gen-label">noise</div>
             <div class="gen-radio-group">
@@ -415,7 +415,7 @@
             </div>
           </div>
 
-          <!-- output: still / video -->
+          
           <div class="gen-row" id="output-row">
             <div class="gen-label">output</div>
             <div class="gen-radio-group">
@@ -428,7 +428,7 @@
             </div>
           </div>
 
-          <!-- video duration (hidden unless video selected) -->
+          
           <div class="gen-duration-row" id="duration-row">
             <div class="gen-label">duration</div>
             <div class="gen-duration-inner">
@@ -437,7 +437,7 @@
             </div>
           </div>
 
-          <!-- actions -->
+          
           <div class="gen-actions">
             <button class="gen-btn" id="pause-btn" disabled>pause</button>
             <button class="gen-btn gen-btn-primary" id="download-btn" disabled>download</button>
@@ -453,7 +453,7 @@
 
         </div>
 
-        <!-- ── RIGHT: live canvas preview ─────────────────── -->
+        
         <div class="gen-preview-col">
           <div class="gen-preview-label">preview</div>
           <div class="gen-canvas-wrap" id="canvas-wrap">
@@ -465,27 +465,25 @@
           </div>
         </div>
 
-      </div><!-- /.gen-layout -->
+      </div>
 
 
 
 
     </main>
-  </div><!-- /.site-wrapper -->
+  </div>
 
 
 
   <script src="shared.js"></script>
 
-  <!-- ethers.js for on-chain token hash lookup -->
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.1/ethers.umd.min.js"></script>
 
 
 
   <script>
-    // ─────────────────────────────────────────────────────────
-    // CONFIG
-    // ─────────────────────────────────────────────────────────
+
     const CONTRACT_ADDRESS = '0x02f518c529a0002e505000795d00c500eb00534a';
     const CONTRACT_ABI = [
       {
@@ -497,29 +495,28 @@
       },
     ];
 
-    // Public RPC fallbacks — no API key required
+    
     const RPC_URLS = [
-      'https://cloudflare-eth.com',
+      'https://rpc.ankr.com/eth',
+      'https://eth.drpc.org',
+      'https://1rpc.io/eth',
       'https://eth.llamarpc.com',
-      'https://ethereum.publicnode.com'
+      'https://ethereum.publicnode.com',
+      'https://cloudflare-eth.com',
     ];
 
-    // ─────────────────────────────────────────────────────────
-    // STATE
-    // ─────────────────────────────────────────────────────────
+  
     const state = {
       tokenId      : null,
       hash         : null,
-      noiseEnabled : true,   // synced with noise radio + N key
-      zoomScale    : 0,      // 0 = normal, 2/3/4 = multiplier (200/300/400%)
+      noiseEnabled : true,   
+      zoomScale    : 0,      
       outputType   : 'still',
       paused       : false,
       generated    : false,
     };
 
-    // ─────────────────────────────────────────────────────────
-    // DOM REFS
-    // ─────────────────────────────────────────────────────────
+
     const tokenInput       = document.getElementById('token-id-input');
     const rollBtn          = document.getElementById('roll-btn');
     const dimSelect        = document.getElementById('dim-select');
@@ -539,17 +536,13 @@
     const videoProgressFill= document.getElementById('video-progress-fill');
     const sketchIframe     = document.getElementById('sketch-iframe');
 
-    // ─────────────────────────────────────────────────────────
-    // STATUS HELPERS
-    // ─────────────────────────────────────────────────────────
+
     function setStatus(msg, type = '') {
       statusLine.textContent = msg;
       statusLine.className   = 'gen-status' + (type ? ' ' + type : '');
     }
 
-    // ─────────────────────────────────────────────────────────
-    // DIMENSION HANDLING
-    // ─────────────────────────────────────────────────────────
+
     function parseDimensions() {
       const val = dimSelect.value;
       if (val === 'custom') {
@@ -571,10 +564,7 @@
     dimW.addEventListener('input', updateAspectRatio);
     dimH.addEventListener('input', updateAspectRatio);
 
-    // ─────────────────────────────────────────────────────────
-    // MODE: normal / zoom — zoom level chosen in sub-menu
-    // state.zoomScale: 0 = normal, 2/3/4 = multiplier (200/300/400%)
-    // ─────────────────────────────────────────────────────────
+
     const zoomSub = document.getElementById('zoom-sub');
 
     function getZoomScale() {
@@ -603,25 +593,21 @@
       radio.addEventListener('change', () => applyZoomState(radio.value === 'zoom'));
     });
 
-    // Zoom level sub-radios update scale while zoom is active
+
     document.querySelectorAll('input[name="zoom-level"]').forEach(radio => {
       radio.addEventListener('change', () => {
         if (state.zoomScale > 0) state.zoomScale = parseInt(radio.value) / 100;
       });
     });
 
-    // ─────────────────────────────────────────────────────────
-    // NOISE: radio controls (N key syncs with these)
-    // ─────────────────────────────────────────────────────────
+
     document.querySelectorAll('input[name="noise"]').forEach(radio => {
       radio.addEventListener('change', () => {
         state.noiseEnabled = (radio.value === 'on');
       });
     });
 
-    // ─────────────────────────────────────────────────────────
-    // OUTPUT: still / video
-    // ─────────────────────────────────────────────────────────
+
     document.querySelectorAll('input[name="output"]').forEach(radio => {
       radio.addEventListener('change', () => {
         state.outputType = radio.value;
@@ -630,9 +616,7 @@
       });
     });
 
-    // ─────────────────────────────────────────────────────────
-    // CONTRACT: read token hash
-    // ─────────────────────────────────────────────────────────
+
     async function fetchTokenHash(tokenId) {
       let lastErr;
       for (const url of RPC_URLS) {
@@ -650,9 +634,7 @@
       throw lastErr || new Error('all RPC providers failed');
     }
 
-    // ─────────────────────────────────────────────────────────
-    // RANDOM ROLL — generate a random hash, no contract needed
-    // ─────────────────────────────────────────────────────────
+
     function randomHash() {
       const bytes = new Uint8Array(32);
       crypto.getRandomValues(bytes);
@@ -669,7 +651,7 @@
       setStatus(`random seed — ${state.hash.slice(0, 12)}...`, 'success');
     });
 
-    // Load button — same as pressing Enter in the token id field
+
     document.getElementById('load-btn').addEventListener('click', async () => {
       const rawId = tokenInput.value.trim();
       if (!rawId) { return; }
@@ -691,7 +673,7 @@
       }
     });
 
-    // Enter on token input → generate
+
     tokenInput.addEventListener('keydown', async e => {
       if (e.key !== 'Enter') return;
       e.preventDefault();
@@ -716,15 +698,13 @@
       }
     });
 
-    // ─────────────────────────────────────────────────────────
-    // IFRAME — load / reload the sketch with current state
-    // ─────────────────────────────────────────────────────────
+
     function buildIframeSrc() {
       const { width, height } = parseDimensions();
       const dur   = parseInt(durationInput.value) || 10;
       const hash  = state.hash || randomHash();
       const id    = state.tokenId !== null ? state.tokenId : 0;
-      // Re-read zoom scale at download time in case sub-radio changed
+
       const zoomVal = state.zoomScale > 0 ? getZoomScale() : 0;
       const params = new URLSearchParams({
         hash,
@@ -742,10 +722,10 @@
       canvasEmpty.style.display = 'none';
       sketchIframe.style.display = 'block';
       sketchIframe.src = buildIframeSrc();
-      // Reset pause state when reloading
+
       state.paused = false;
       pauseBtn.textContent = 'pause';
-      pauseBtn.disabled = true; // re-enabled by sketch:ready
+      pauseBtn.disabled = true; 
       setStatus('rendering...', '');
     }
 
@@ -763,12 +743,7 @@
 
     pauseBtn.addEventListener('click', togglePause);
 
-    // ─────────────────────────────────────────────────────────
 
-
-    // ─────────────────────────────────────────────────────────
-    // MESSAGES FROM IFRAME
-    // ─────────────────────────────────────────────────────────
     window.addEventListener('message', e => {
       if (!e.data || !e.data.type) return;
       if (e.data.type === 'sketch:ready') {
@@ -786,9 +761,7 @@
       }
     });
 
-    // ─────────────────────────────────────────────────────────
-    // DOWNLOAD
-    // ─────────────────────────────────────────────────────────
+
     downloadBtn.addEventListener('click', () => {
       if (!state.generated || !sketchIframe.contentWindow) return;
       if (state.outputType === 'still') {
@@ -798,8 +771,7 @@
       }
     });
 
-    // Holds the active onReady listener so we can deregister it if the
-    // user clicks download again before the previous one completes.
+
     let _pendingReadyHandler = null;
     let _videoProgressInterval = null;
 
@@ -815,8 +787,7 @@
     }
 
     function downloadStill() {
-      // If paused AND no zoom active, capture the frozen frame immediately.
-      // Zoom always requires a reload so the iframe has the correct ZOOM_SCALE set.
+
       if (state.paused && state.zoomScale === 0 && sketchIframe.contentWindow) {
         setStatus('saving still...');
         downloadBtn.disabled = true;
@@ -892,9 +863,7 @@
       window.addEventListener('message', _pendingReadyHandler);
     }
 
-    // ─────────────────────────────────────────────────────────
-    // N KEY — syncs with the noise radio on the page
-    // ─────────────────────────────────────────────────────────
+
     document.addEventListener('keydown', e => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       if (e.key === 'n' || e.key === 'N') {
@@ -911,9 +880,7 @@
       }
     });
 
-    // ─────────────────────────────────────────────────────────
-    // INIT
-    // ─────────────────────────────────────────────────────────
+
     updateAspectRatio();
 
   </script>
