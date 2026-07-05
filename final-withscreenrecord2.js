@@ -1185,8 +1185,7 @@ function compositeFrame(outCanvas) {
       console.log('Video saved as ' + _ext + ' (' + (blob.size / 1024 / 1024).toFixed(1) + 'MB)');
     };
 
-    // Resize renderer for hi-res capture (this will affect the live canvas,
-    // but _animate is paused so the user only sees a frozen frame while recording)
+
     renderer.setPixelRatio(1);
     renderer.setSize(CAPTURE_W, CAPTURE_H);
     setCaptureCamera();
