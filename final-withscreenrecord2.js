@@ -1191,7 +1191,6 @@ function compositeFrame(outCanvas) {
     renderer.setSize(CAPTURE_W, CAPTURE_H);
     setCaptureCamera();
 
-    recorder.start();
     const totalFrames = VIDEO_DURATION * VIDEO_FPS;
     let frame = 0;
 
@@ -1223,7 +1222,21 @@ function compositeFrame(outCanvas) {
       frame++;
       requestAnimationFrame(captureFrame);
     }
-    captureFrame();
+    // Render warmup frames so Three.js fully settles at the new
+    // resolution and camera projection before any frames hit the stream.
+    const WARMUP_FRAMES = 8;
+    let warmup = WARMUP_FRAMES;
+
+    function warmupThenRecord() {
+      renderer.render(scene, camera);
+      if (--warmup > 0) {
+        requestAnimationFrame(warmupThenRecord);
+      } else {
+        recorder.start();
+        captureFrame();
+      }
+    }
+    warmupThenRecord();
   }
 
   window.addEventListener('keydown', e => {
