@@ -1046,18 +1046,18 @@ function _animate() {
 }
 _animate();
 
-// Returns true if now paused, false if now playing
 window.enicollTogglePause = () => {
   _animPaused = !_animPaused;
-  if (!_animPaused) _animate(); // restart loop on resume
+  if (!_animPaused) _animate();
   return _animPaused;
 };
 
 // --- DEV TOOLS: Screenshot (S) and Video Record (V) ---
+// Remove this entire block before Art Blocks submission
 (function devCapture() {
   const CAPTURE_W      = window.CAPTURE_W      || 4000;
   const CAPTURE_H      = window.CAPTURE_H      || 5000;
-  const VIDEO_DURATION = window.VIDEO_DURATION || 5;
+  const VIDEO_DURATION = window.VIDEO_DURATION || 10;
   const VIDEO_FPS = 60;
   const VIDEO_BITRATE = 12000000;
   window.addEventListener('keydown', e => {
@@ -1078,7 +1078,6 @@ function compositeFrame(outCanvas) {
     ctx.fillRect(0, 0, cw, ch);
     ctx.filter = 'contrast(1.45)';
     if (window.ZOOM_SCALE && window.ZOOM_SCALE > 0) {
-      // Centre crop at chosen zoom level — noise is drawn after stays 1:1
       const s  = window.ZOOM_SCALE;
       const sw = cw * s, sh = ch * s;
       ctx.drawImage(renderer.domElement, -(sw - cw) / 2, -(sh - ch) / 2, sw, sh);
@@ -1147,25 +1146,23 @@ function compositeFrame(outCanvas) {
   function recordVideo() {
     if (recording) return;
     recording = true;
-    console.log('Recording ' + VIDEO_DURATION + 's video...');
+
+    // Stop the live animation loop — captureFrame owns all scene updates
+    _animPaused = true;
 
     const captureCanvas = document.createElement('canvas');
-    captureCanvas.width = CAPTURE_W;
+    captureCanvas.width  = CAPTURE_W;
     captureCanvas.height = CAPTURE_H;
 
-    const stream = captureCanvas.captureStream(VIDEO_FPS);
-
-    // Prefer MP4 (Safari); fall back to WebM
+    // Detect best supported codec
     const _mimeTypes = [
-      'video/mp4;codecs=avc1',
-      'video/mp4',
-      'video/webm;codecs=vp9',
-      'video/webm;codecs=vp8',
-      'video/webm',
+      'video/mp4;codecs=avc1', 'video/mp4',
+      'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm',
     ];
     const _mimeType = _mimeTypes.find(t => MediaRecorder.isTypeSupported(t)) || 'video/webm';
     const _ext = _mimeType.startsWith('video/mp4') ? 'mp4' : 'webm';
 
+    const stream = captureCanvas.captureStream(VIDEO_FPS);
     const recorder = new MediaRecorder(stream, {
       mimeType: _mimeType,
       videoBitsPerSecond: VIDEO_BITRATE,
@@ -1182,9 +1179,14 @@ function compositeFrame(outCanvas) {
       recording = false;
 
       restoreCamera();
+      // Resume live animation
+      _animPaused = false;
+      _animate();
       console.log('Video saved as ' + _ext + ' (' + (blob.size / 1024 / 1024).toFixed(1) + 'MB)');
     };
 
+    // Resize renderer for hi-res capture (this will affect the live canvas,
+    // but _animate is paused so the user only sees a frozen frame while recording)
     renderer.setPixelRatio(1);
     renderer.setSize(CAPTURE_W, CAPTURE_H);
     setCaptureCamera();
@@ -1198,7 +1200,8 @@ function compositeFrame(outCanvas) {
         recorder.stop();
         return;
       }
-      const t = performance.now() * 0.001;
+      // captureFrame is now the only thing advancing the scene
+      const t = frame / VIDEO_FPS; // deterministic time, not performance.now()
       layerGroups.forEach((g, i) => {
         const speed = BASE_SPEED * (1 + i * 0.04);
         g.rotation.z += g.userData.spinDir * speed;
@@ -1228,11 +1231,9 @@ function compositeFrame(outCanvas) {
     if (e.key === 'v' || e.key === 'V') recordVideo();
   });
 
-  // Expose for the generate interface
   window.enicollDownloadStill = takeScreenshot;
   window.enicollStartVideo    = recordVideo;
-
-  console.log('Dev capture ready: S = screenshot, V = record, window.enicollDownloadStill/enicollStartVideo exposed');
+  console.log('Dev capture ready: S = screenshot (2160x2160 PNG), V = record (10s WebM)');
 })();
 
 window.addEventListener('resize', () => {
