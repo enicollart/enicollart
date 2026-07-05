@@ -1191,40 +1191,58 @@ function compositeFrame(outCanvas) {
     renderer.setSize(CAPTURE_W, CAPTURE_H);
     setCaptureCamera();
 
-    const totalFrames = VIDEO_DURATION * VIDEO_FPS;
+    const totalFrames   = VIDEO_DURATION * VIDEO_FPS;
+    const frameDuration = 1000 / VIDEO_FPS;
     let frame = 0;
+    let lastCaptureTime = null;
 
-    function captureFrame() {
+    // Timestamp-throttled rAF: only commit a frame when frameDuration ms
+    // have elapsed. This keeps output at exactly VIDEO_FPS even when a
+    // high-res render takes longer than 16ms -- no skipped frames.
+    function captureFrame(now) {
       if (frame >= totalFrames) {
         recorder.stop();
         return;
       }
-      // captureFrame is now the only thing advancing the scene
-      const t = frame / VIDEO_FPS; // deterministic time, not performance.now()
-      layerGroups.forEach((g, i) => {
-        const speed = BASE_SPEED * (1 + i * 0.04);
-        g.rotation.z += g.userData.spinDir * speed;
-      });
-      if (stamenAnim) {
-        if (stamenAnim.type === 'messy') {
-          const pulse = Math.sin(t * 0.6) * 0.12;
-          stamenAnim.sticks.forEach(s => {
-            const len = s.baseScale * (1 + (s.parity === 0 ? pulse : -pulse));
-            s.mesh.scale.y = len;
-            s.mesh.position.x = len / 2;
+
+      if (lastCaptureTime === null) lastCaptureTime = now;
+      const elapsed = now - lastCaptureTime;
+
+      if (elapsed >= frameDuration) {
+        // Catch up if multiple frame durations passed (cap at 4 to avoid spiral)
+        const steps = Math.min(Math.round(elapsed / frameDuration), 4);
+        lastCaptureTime += steps * frameDuration;
+
+        for (let s = 0; s < steps; s++) {
+          const t = (frame + s) / VIDEO_FPS;
+          layerGroups.forEach((g, i) => {
+            const speed = BASE_SPEED * (1 + i * 0.04);
+            g.rotation.z += g.userData.spinDir * speed;
           });
-        } else if (stamenAnim.type === 'twirls') {
-          stamenAnim.group.rotation.z += 0.001;
+          if (stamenAnim) {
+            if (stamenAnim.type === 'messy') {
+              const pulse = Math.sin(t * 0.6) * 0.12;
+              stamenAnim.sticks.forEach(s2 => {
+                const len = s2.baseScale * (1 + (s2.parity === 0 ? pulse : -pulse));
+                s2.mesh.scale.y = len;
+                s2.mesh.position.x = len / 2;
+              });
+            } else if (stamenAnim.type === 'twirls') {
+              stamenAnim.group.rotation.z += 0.001;
+            }
+          }
         }
+
+        renderer.render(scene, camera);
+        compositeFrame(captureCanvas);
+        frame++;
       }
-      renderer.render(scene, camera);
-      compositeFrame(captureCanvas);
-      frame++;
+
       requestAnimationFrame(captureFrame);
     }
     // Render warmup frames so Three.js fully settles at the new
     // resolution and camera projection before any frames hit the stream.
-    const WARMUP_FRAMES = 8;
+    const WARMUP_FRAMES = 30;
     let warmup = WARMUP_FRAMES;
 
     function warmupThenRecord() {
