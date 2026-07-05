@@ -1185,17 +1185,17 @@ function compositeFrame(outCanvas) {
       console.log('Video saved as ' + _ext + ' (' + (blob.size / 1024 / 1024).toFixed(1) + 'MB)');
     };
 
-
+    // Resize renderer for hi-res capture (this will affect the live canvas,
+    // but _animate is paused so the user only sees a frozen frame while recording)
     renderer.setPixelRatio(1);
     renderer.setSize(CAPTURE_W, CAPTURE_H);
     setCaptureCamera();
 
-    const totalFrames   = VIDEO_DURATION * VIDEO_FPS;
-    const frameDuration = 1000 / VIDEO_FPS;
+    const totalFrames = VIDEO_DURATION * VIDEO_FPS;
     let frame = 0;
 
     // Warmup: render N frames before starting the recorder so Three.js
-    // fully settles at the capture resolution.
+    // fully settles at the capture resolution and camera.
     const WARMUP_FRAMES = 30;
     let warmup = WARMUP_FRAMES;
 
@@ -1205,40 +1205,38 @@ function compositeFrame(outCanvas) {
         requestAnimationFrame(warmupThenRecord);
       } else {
         recorder.start();
-        // setInterval for deterministic offline capture: fires at a fixed rate
-        // independent of display refresh. Frame count stays accurate even if
-        // a heavy composite takes longer than frameDuration.
-        const captureInterval = setInterval(() => {
-          if (frame >= totalFrames) {
-            clearInterval(captureInterval);
-            recorder.stop();
-            return;
-          }
-
-          const t = frame / VIDEO_FPS;
-          layerGroups.forEach((g, i) => {
-            const speed = BASE_SPEED * (1 + i * 0.04);
-            g.rotation.z += g.userData.spinDir * speed;
-          });
-          if (stamenAnim) {
-            if (stamenAnim.type === 'messy') {
-              const pulse = Math.sin(t * 0.6) * 0.12;
-              stamenAnim.sticks.forEach(s => {
-                const len = s.baseScale * (1 + (s.parity === 0 ? pulse : -pulse));
-                s.mesh.scale.y = len;
-                s.mesh.position.x = len / 2;
-              });
-            } else if (stamenAnim.type === 'twirls') {
-              stamenAnim.group.rotation.z += 0.001;
-            }
-          }
-
-          renderer.render(scene, camera);
-          compositeFrame(captureCanvas);
-          frame++;
-        }, frameDuration);
+        requestAnimationFrame(captureFrame);
       }
     }
+
+    function captureFrame() {
+      if (frame >= totalFrames) {
+        recorder.stop();
+        return;
+      }
+      const t = frame / VIDEO_FPS;
+      layerGroups.forEach((g, i) => {
+        const speed = BASE_SPEED * (1 + i * 0.04);
+        g.rotation.z += g.userData.spinDir * speed;
+      });
+      if (stamenAnim) {
+        if (stamenAnim.type === 'messy') {
+          const pulse = Math.sin(t * 0.6) * 0.12;
+          stamenAnim.sticks.forEach(s => {
+            const len = s.baseScale * (1 + (s.parity === 0 ? pulse : -pulse));
+            s.mesh.scale.y = len;
+            s.mesh.position.x = len / 2;
+          });
+        } else if (stamenAnim.type === 'twirls') {
+          stamenAnim.group.rotation.z += 0.001;
+        }
+      }
+      renderer.render(scene, camera);
+      compositeFrame(captureCanvas);
+      frame++;
+      requestAnimationFrame(captureFrame);
+    }
+
     warmupThenRecord();
   }
 
