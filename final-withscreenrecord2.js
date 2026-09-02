@@ -1194,27 +1194,13 @@ function compositeFrame(outCanvas) {
     const totalFrames = VIDEO_DURATION * VIDEO_FPS;
     let frame = 0;
 
-    // Warmup: render N frames before starting the recorder so Three.js
-    // fully settles at the capture resolution and camera.
-    const WARMUP_FRAMES = 30;
-    let warmup = WARMUP_FRAMES;
-
-    function warmupThenRecord() {
-      renderer.render(scene, camera);
-      if (--warmup > 0) {
-        requestAnimationFrame(warmupThenRecord);
-      } else {
-        recorder.start();
-        requestAnimationFrame(captureFrame);
-      }
-    }
-
     function captureFrame() {
       if (frame >= totalFrames) {
         recorder.stop();
         return;
       }
-      const t = frame / VIDEO_FPS;
+      // captureFrame is now the only thing advancing the scene
+      const t = frame / VIDEO_FPS; // deterministic time, not performance.now()
       layerGroups.forEach((g, i) => {
         const speed = BASE_SPEED * (1 + i * 0.04);
         g.rotation.z += g.userData.spinDir * speed;
@@ -1236,7 +1222,20 @@ function compositeFrame(outCanvas) {
       frame++;
       requestAnimationFrame(captureFrame);
     }
+    // Render warmup frames so Three.js fully settles at the new
+    // resolution and camera projection before any frames hit the stream.
+    const WARMUP_FRAMES = 8;
+    let warmup = WARMUP_FRAMES;
 
+    function warmupThenRecord() {
+      renderer.render(scene, camera);
+      if (--warmup > 0) {
+        requestAnimationFrame(warmupThenRecord);
+      } else {
+        recorder.start();
+        captureFrame();
+      }
+    }
     warmupThenRecord();
   }
 
