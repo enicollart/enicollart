@@ -189,6 +189,53 @@ let gridRefreshRound=0,gridUniqueSeen=new Set(),gridCompletedPasses=0,lastPassCo
 window.geophyllaStatus=()=>({surface,mode,gridRefreshRound,gridUniqueSeen:gridUniqueSeen.size,gridCompletedPasses,lastPassCount,expectedTotal:COLLECTION,cachedGridFlowers:slots.filter(s=>s?.group).length,gridCacheEnabled:qs.get('reuseGrid')!=='0'});
 let frameRequest=0,runId=0,intervalHandle=null,gridEndTimer=null,featureEndTimer=null,cubeTimer=null,wallFadeTimer=null;
 let gridBuildInProgress=false,gridFadeInProgress=false,activeFeatureCycle=null;
+let gridRevealFrame=0;
+const GRID_REVEAL_FADE_MS=180;
+function hideGridTiles(){
+ for(const slot of slots){
+  if(!slot?.node)continue;
+  slot.node.style.transition='none';
+  slot.node.style.opacity='0';
+  slot.node.style.visibility='hidden';
+ }
+}
+function finishGridReveal(){
+ if(gridRevealFrame){cancelAnimationFrame(gridRevealFrame);gridRevealFrame=0}
+ for(const slot of slots){
+  if(!slot?.node)continue;
+  slot.node.style.transition='';
+  slot.node.style.opacity='';
+  slot.node.style.visibility='';
+ }
+}
+function beginGridReveal(cycle){
+ let next=0;
+ const order=slots.map((slot,i)=>({slot,i})).sort((a,b)=>{
+  const ay=Number(a.slot.node.style.top.replace('px',''))||0;
+  const by=Number(b.slot.node.style.top.replace('px',''))||0;
+  const ax=Number(a.slot.node.style.left.replace('px',''))||0;
+  const bx=Number(b.slot.node.style.left.replace('px',''))||0;
+  return ay-by||ax-bx||a.i-b.i;
+ });
+ const step=WALL_DISSOLVE_MS/order.length;
+ let start=null;
+ const tick=(now)=>{
+  if(cycle!==runId||!gridFadeInProgress){gridRevealFrame=0;return}
+  if(start===null)start=now;
+  const due=Math.min(order.length,Math.floor((now-start)/step)+1);
+  let count=0;
+  while(next<due&&count<2){
+   const node=order[next++].slot.node;
+   node.style.visibility='visible';
+   node.style.transition=`opacity ${GRID_REVEAL_FADE_MS}ms ease-out`;
+   node.style.opacity='1';
+   count++;
+  }
+  gridRevealFrame=next<order.length?requestAnimationFrame(tick):0;
+ };
+ gridRevealFrame=requestAnimationFrame(tick);
+}
+let retainedGridGeometry=null;
 const CUBE_DISSOLVE_MS=3000;
 let cubeCurrentId=null,cubeOutgoing=null,cubeFadeStart=0;
 let featureOutgoing=[],featureFadeStart=0,featureMinute=null,featureRefreshTimer=null;
@@ -341,6 +388,7 @@ function clearGridTiles(){
 }
 function reset(preserveGrid=false){
  gridFadeInProgress=false;
+ finishGridReveal();
  ++runId;clearTimeout(resizeTimer);resetTimers();clearTimeout(wallFadeTimer);wallFadeTimer=null;
  cancelAnimationFrame(frameRequest);frameRequest=0;
  clearCubeDissolve();clearFeatureDissolve();cubeCurrentId=null;featureMinute=null;
@@ -502,11 +550,21 @@ async function enterGrid(){
  const fadeFromFeature=mode==='feature'&&featured.length;
  if(fadeFromFeature)gridFadeInProgress=true;
  const cycle=++runId;
+ if(gridRevealFrame){cancelAnimationFrame(gridRevealFrame);gridRevealFrame=0}
  clearTimeout(resizeTimer);resetTimers();clearTimeout(wallFadeTimer);wallFadeTimer=null;
  clearCubeDissolve();clearFeatureDissolve();cubeCurrentId=null;featureMinute=null;
  const oldFeatureRects=rects;
- mode='loading';computeLayout();
- const preparedGridRects=rects;
+ const reuseGrid=fadeFromFeature && qs.get('reuseGrid')!=='0' &&
+  slots.length===VISIBLE && slots.every(s=>s?.group && s.id!==null);
+ const reuseGridGeometry=reuseGrid && retainedGridGeometry &&
+  retainedGridGeometry.width===innerWidth && retainedGridGeometry.height===innerHeight;
+ let preparedGridRects;
+ if(reuseGridGeometry){
+  preparedGridRects=retainedGridGeometry.rects;
+ }else{
+  mode='loading';computeLayout();
+  preparedGridRects=rects;
+ }
  if(fadeFromFeature){mode='feature';rects=oldFeatureRects}
  grid.style.display='block';grid.style.transition='none';
  if(fadeFromFeature){
@@ -517,17 +575,17 @@ async function enterGrid(){
   clearGridTiles();
   mode='loading';canvas.style.display='none';canvas.style.opacity='1';grid.style.opacity='1';
  }
- const reuseGrid=fadeFromFeature && qs.get('reuseGrid')!=='0' &&
-  slots.length===VISIBLE && slots.every(s=>s?.group && s.id!==null);
  const retainedIds=reuseGrid?slots.map(s=>s.id):[];
  seen=new Set(retainedIds);gridUniqueSeen=new Set(retainedIds);
  gridRefreshRound=0;lastPassCount=0;
  unseen=shuffle(Array.from({length:COLLECTION},(_,i)=>i).filter(i=>!seen.has(i)));
  if(reuseGrid){
+  if(fadeFromFeature&&qs.get('staggerGrid')!=='0'&&slots.some(slot=>slot.node.style.visibility!=='hidden'))hideGridTiles();
   console.info('Geophylla: reusing 60 independent-layer grid works for smooth return.');
  }else{
   if(slots.length)clearGridTiles();
   slots=Array.from({length:VISIBLE},(_,i)=>allocateSlot(i,preparedGridRects[i]));
+  if(fadeFromFeature&&qs.get('staggerGrid')!=='0')hideGridTiles();
   const occupied=new Set();const startIds=[];
   for(let i=0;i<VISIBLE;i++){const id=pick(occupied);occupied.add(id);startIds.push(id)}
   const prep=fadeFromFeature?getPrepRenderer():sharedRenderer;
@@ -548,18 +606,21 @@ async function enterGrid(){
  if(fadeFromFeature){
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
    if(cycle!==runId)return;
-   grid.style.transition=`opacity ${WALL_DISSOLVE_MS}ms ease-in-out`;
+   const stagger=qs.get('staggerGrid')!=='0';
+   grid.style.transition=stagger?'none':`opacity ${WALL_DISSOLVE_MS}ms ease-in-out`;
    canvas.style.transition=`opacity ${WALL_DISSOLVE_MS}ms ease-in-out`;
    grid.style.opacity='1';canvas.style.opacity='0';
+   if(stagger)beginGridReveal(cycle);
    wallFadeTimer=setTimeout(()=>{
     if(cycle!==runId)return;
+    if(stagger)finishGridReveal();
     cancelAnimationFrame(frameRequest);frameRequest=0;
     for(const art of featured)disposeArt(art);featured=[];
     canvas.style.display='none';canvas.style.transition='none';canvas.style.opacity='1';
     grid.style.transition='none';grid.style.opacity='1';
     rects=preparedGridRects;
     mode='grid';gridStart=performance.now();
-    computeLayout();
+    if(!reuseGridGeometry)computeLayout();
     wallFadeTimer=null;gridFadeInProgress=false;
     startGridTimers(cycle);
     clearTimeout(resizeTimer);
@@ -699,6 +760,7 @@ function refreshRandomFeature(){
 
 function enterFeature(){
  if(mode==='grid'){
+  retainedGridGeometry={width:vw,height:vh,rects:rects.map(r=>({...r}))};
   lastPassCount=gridUniqueSeen.size;
   if(lastPassCount<COLLECTION)console.warn('Only',lastPassCount,'of 256 artworks displayed in this grid pass.');
  }
@@ -732,6 +794,7 @@ function enterFeature(){
    wallFadeTimer=setTimeout(()=>{
     if(runId!==cycle||mode!=='feature')return;
     grid.style.display='block';grid.style.transition='none';grid.style.opacity='0';
+    if(qs.get('staggerGrid')!=='0')hideGridTiles();
     canvas.style.transition='none';canvas.style.opacity='1';wallFadeTimer=null;
    },WALL_DISSOLVE_MS+100);
   }));
