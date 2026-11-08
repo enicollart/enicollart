@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!doctype html>
+<html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>geophylla — ENICOLL</title>
   <meta name="description" content="Geophylla is a generative artwork series released on Art Blocks Studio by Emily Nicoll.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&amp;family=DM+Mono:wght@300;400&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
   <link rel="icon" href="images/favicon.ico">
   <style>
@@ -116,18 +115,144 @@
       .geo-body { max-width: 100%; }
     }
   </style>
+<style>
+    .view-toggle {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+
+
+    .toggle-btn {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      cursor: pointer;
+      padding: 0.3em 0;
+      border-bottom: 1px solid transparent;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      transition: color 0.15s;
+    }
+
+
+    .toggle-btn.active {
+      color: var(--black);
+      border-bottom-color: var(--black);
+    }
+
+
+    .toggle-btn:hover { color: var(--black); }
+
+
+    .toggle-sep {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--light);
+    }
+    #project-view[hidden], #project-grid[hidden], #project-details[hidden] { display: none; }
+    .project-grid-heading { font: 400 1.4rem var(--font-serif); margin: 0 0 0.75rem; }
+    .project-grid-note { font: 400 0.72rem/1.6 var(--font-mono); color: var(--mid); margin: 0 0 1.25rem; }
+    .project-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--tile-min)), 1fr)); gap: 1.15rem 0.9rem; }
+    .project-tile { display: block; min-width: 0; color: var(--black); text-decoration: none; }
+    .project-preview { display: block; position: relative; overflow: hidden; aspect-ratio: 1; background: rgba(14,14,14,0.05); }
+    .project-preview img, .project-preview iframe { display: block; width: 100%; height: 100%; border: 0; }
+    .project-preview img { object-fit: contain; }
+    .project-unavailable { display: grid; height: 100%; place-items: center; padding: 0.4rem; text-align: center; font: 400 0.65rem var(--font-mono); color: var(--mid); }
+    .project-preview iframe { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+    .project-preview iframe.ready { opacity: 1; }
+    .project-caption { display: block; padding-top: 0.42rem; font: 400 0.7rem var(--font-mono); color: var(--mid); }
+    .project-tile:hover { opacity: 1; }
+    .project-tile:hover .project-caption { color: var(--black); }
+    @media (max-width: 600px) { .project-tiles { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0.85rem 0.65rem; } }
+
+</style>
 </head>
-<body>
+<body><a class="mobile-name" href="index.html">Emily Nicoll</a>
 
   <div class="mobile-nav">
     <div class="hamburger" id="hamburger-btn">menu</div>
-    <div class="mobile-menu" id="mobile-menu"></div>
+    <div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-label">music + art</div>
+  <a href="album-art.html">album art</a>
+  <a href="music-videos.html">music videos</a>
+  <a href="pacific-spirit.html">pacific spirit</a>
+  <a href="physicals.html">physicals</a>
+  <div class="mobile-menu-divider"></div>
+  <div class="mobile-menu-label">digital works</div>
+  <a href="geophylla.html">geophylla</a>
+  <a href="whimsies.html">whimsies</a>
+  <a href="hypnotics.html">hypnotics</a>
+  <a href="spinning-flowers.html">spinning flowers</a>
+  <a href="still-image-series.html">still image series'</a>
+  <a href="animations.html">animations</a>
+  <a href="resonance-reverie.html">resonance &amp; reverie</a>
+  <a href="pellucid-petals.html">pellucid petals</a>
+  <a href="trellis.html">trellis (algo)</a>
+  <div class="mobile-menu-divider"></div>
+  <div class="mobile-menu-label">audio</div>
+  <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
+  <a href="mixes.html">mixes</a>
+  <div class="mobile-menu-divider"></div>
+  <a href="information.html">information</a>
+</div>
   </div>
 
   <div class="site-wrapper">
-    <nav class="left-nav"></nav>
+    <nav class="left-nav">
+  <a href="index.html" class="nav-name">Emily Nicoll</a>
+  <div class="nav-section">
+    <span class="nav-label">music + art</span>
+    <a href="album-art.html">album art</a>
+    <a href="music-videos.html">music videos</a>
+    <a href="pacific-spirit.html">pacific spirit</a>
+    <a href="physicals.html">physicals</a>
+  </div>
+  <div class="nav-divider"></div>
+  <div class="nav-section">
+    <span class="nav-label">digital works</span>
+    <a href="geophylla.html">geophylla</a>
+    <a href="whimsies.html">whimsies</a>
+    <a href="hypnotics.html">hypnotics</a>
+    <a href="spinning-flowers.html">spinning flowers</a>
+    <a href="still-image-series.html">still image series'</a>
+    <a href="animations.html">animations</a>
+    <a href="resonance-reverie.html">resonance &amp; reverie</a>
+    <a href="pellucid-petals.html">pellucid petals</a>
+    <a href="trellis.html">trellis (algo)</a>
+  </div>
+  <div class="nav-divider"></div>
+  <div class="nav-section">
+  <span class="nav-label">audio</span>
+    <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+    <a href="mixes.html">mixes</a>
+    </div>
+    <div class="nav-divider"></div>
+  <div class="nav-section">
+ 
+    <a href="information.html">information</a>
+   
+  </div>
+</nav>
 
     <main class="main-content">
+      <div class="view-toggle" id="project-view" role="group" aria-label="Project view" hidden>
+        <button class="toggle-btn" id="project-grid-button" type="button" aria-controls="project-grid" aria-pressed="false">grid</button>
+        <span class="toggle-sep" aria-hidden="true">/</span>
+        <button class="toggle-btn active" id="project-details-button" type="button" aria-controls="project-details" aria-pressed="true">details</button>
+      </div>
+      <section id="project-grid" aria-labelledby="project-grid-heading" hidden>
+        <h1 class="project-grid-heading" id="project-grid-heading">geophylla</h1>
+        <p class="project-grid-note">256 outputs · Select a piece to view it on Art Blocks.</p>
+        <div class="project-tiles" style="--tile-min: 180px"></div>
+      </section>
+      <div id="project-details">
 
       <div class="geo-header">
         <div class="geo-title">geophylla</div>
@@ -200,6 +325,7 @@
       <!-- Sample outputs (images) -->
       <div class="geo-samples geo-samples-wide" id="geo-image-samples"></div>
 
+    </div>
     </main>
   </div>
 
@@ -294,5 +420,126 @@
     }
   </script>
   <script src="shared.js"></script>
+
+
+<script>
+(() => {
+  const project = "Geophylla";
+  const imageRevisions = [
+    1777925562, 1778688296, 1778688181, 1778688211, 1778688246, 1778688261, 1778688251, 1778688247, 1778688237, 1778688246, 1778688238, 1778688280, 1778688274, 1778688269, 1778688304, 1778688304,
+    1778688321, 1778688266, 1778688275, 1778688308, 1778688312, 1778688256, 1778688328, 1778688330, 1778688320, 1778688304, 1778688322, 1778688280, 1778688291, 1778688317, 1778688276, 1778688297,
+    1778688291, 1778688310, 1778688302, 1778688280, 1778688278, 1778688273, 1778688268, 1778688291, 1778688317, 1778688271, 1778688296, 1778688287, 1778688303, 1778688302, 1778688283, 1778688289,
+    1778688263, 1778688276, 1778688321, 1778688264, 1778688277, 1778688379, 1778688326, 1778688308, 1778688342, 1778688371, 1778688389, 1778688382, 1778688313, 1778688433, 1778688361, 1778688414,
+    1778688356, 1778688363, 1778688309, 1778688397, 1778688381, 1778688422, 1778688392, 1778688313, 1778688362, 1778688386, 1778688347, 1778688333, 1778688331, 1778688406, 1778688350, 1778688364,
+    1778688429, 1778688380, 1778688366, 1778688431, 1778688334, 1778688433, 1778688333, 1778688377, 1778688370, 1778688343, 1778688387, 1778688377, 1778688344, 1778688396, 1778688422, 1778688343,
+    1778688329, 1778688422, 1778688398, 1778688385, 1778688361, 1778688469, 1778688376, 1778688350, 1778688422, 1778688375, 1778688396, 1778688455, 1778688362, 1778688370, 1778688410, 1778688422,
+    1778688373, 1778688383, 1778688370, 1778688418, 1778688398, 1778688427, 1778688379, 1778688422, 1778688438, 1778688251, 1778688269, 1778688255, 1778688271, 1778688260, 1778688299, 1778688317,
+    1778688281, 1778688285, 1778688276, 1778688285, 1778688289, 1778688301, 1778688288, 1778688274, 1778688315, 1778688261, 1778688305, 1778688321, 1778688273, 1778688333, 1778688265, 1778688311,
+    1778688255, 1778688372, 1778688321, 1778688327, 1778688305, 1778688289, 1778688289, 1778688282, 1778688302, 1778688341, 1778688256, 1778688289, 1778688340, 1778688270, 1778688298, 1778688269,
+    1778688330, 1778688344, 1778688284, 1778688315, 1778688262, 1778688317, 1778688273, 1778688303, 1778688260, 1778688260, 1778688293, 1778688349, 1778688392, 1778688305, 1778688345, 1778688414,
+    1778688445, 1778688330, 1778688355, 1778688393, 1778688330, 1778688431, 1778688409, 1778688386, 1778688311, 1778688302, 1778688334, 1778688308, 1778688310, 1778688398, 1778688418, 1778688371,
+    1778688384, 1778688414, 1778688367, 1778688416, 1778688315, 1778688353, 1778688419, 1778688319, 1778688382, 1778688435, 1778688358, 1778688437, 1778688377, 1778688367, 1778688344, 1778688380,
+    1778688386, 1778688359, 1778688362, 1778688388, 1778688463, 1778688436, 1778688333, 1778688414, 1778688422, 1778688335, 1778688349, 1778688406, 1778688403, 1778688415, 1778688375, 1778688405,
+    1778688390, 1778688423, 1778688456, 1778688416, 1778688364, 1778688395, 1778688381, 1778688364, 1778688377, 1778688382, 1778688389, 1778688399, 1778688379, 1778688421, 1778688427, 1778688386,
+    1778688410, 1778688386, 1778688412, 1778688388, 1778688384, 1778688393, 1778688452, 1778688449, 1778688415, 1778688398, 1778688442, 1778688422, 1778688401, 1778688440, 1778688415, 1778688444
+  ];
+  const editions = Array.from({length: 256}, (_, number) => {
+    const token = '1/0x02f518c529a0002e505000795d00c500eb00534a/' + (1000000 + number);
+    return [number, 'https://media-proxy.artblocks.io/' + token + '.png?t=' + imageRevisions[number], 'https://www.artblocks.io/token/' + token, 'https://generator.artblocks.io/' + token];
+  });
+  const grid = document.getElementById('project-grid');
+  const details = document.getElementById('project-details');
+  const controls = document.getElementById('project-view');
+  const gridButton = document.getElementById('project-grid-button');
+  const detailsButton = document.getElementById('project-details-button');
+  const motion = matchMedia('(any-hover: hover) and (prefers-reduced-motion: no-preference)');
+  let timer, player;
+  let pausedVideos = [];
+
+  function stopPreview() {
+    clearTimeout(timer);
+    player?.remove();
+    player = undefined;
+  }
+
+  function addTiles() {
+    const tiles = document.createDocumentFragment();
+    for (const [number, image, url, live] of editions) {
+      const caption = '#' + number;
+      const tile = document.createElement('a');
+      tile.className = 'project-tile';
+      tile.href = url;
+      tile.setAttribute('aria-label', project + ' ' + caption);
+      const preview = document.createElement('span');
+      preview.className = 'project-preview';
+      const still = document.createElement('img');
+      still.loading = 'lazy';
+      still.decoding = 'async';
+      still.alt = '';
+      const thumbnail = width => 'https://res.cloudinary.com/art-blocks/image/fetch/f_auto,c_limit,w_' + width + ',q_auto/' + encodeURIComponent(image);
+      still.addEventListener('error', () => {
+        if (still.src === thumbnail(256)) {
+          still.src = thumbnail(640);
+        } else {
+          still.remove();
+          const unavailable = document.createElement('span');
+          unavailable.className = 'project-unavailable';
+          unavailable.textContent = 'Preview unavailable';
+          preview.append(unavailable);
+        }
+      });
+      still.src = thumbnail(256);
+      const label = document.createElement('span');
+      label.className = 'project-caption';
+      label.textContent = caption;
+      preview.append(still);
+      tile.append(preview, label);
+      tiles.append(tile);
+      if (!live) continue;
+      tile.addEventListener('pointerenter', event => {
+        if (event.pointerType !== 'mouse' || !motion.matches) return;
+        stopPreview();
+        timer = setTimeout(() => {
+          const frame = document.createElement('iframe');
+          frame.title = project + ' ' + caption + ' live preview';
+          frame.tabIndex = -1;
+          frame.setAttribute('aria-hidden', 'true');
+          frame.setAttribute('sandbox', 'allow-scripts');
+          frame.addEventListener('load', () => frame.classList.add('ready'), {once: true});
+          frame.src = live;
+          player = frame;
+          preview.append(frame);
+        }, 300);
+      });
+      tile.addEventListener('pointerleave', stopPreview);
+    }
+    grid.querySelector('.project-tiles').append(tiles);
+  }
+
+  function setView(showGrid) {
+    if (showGrid === !grid.hidden) return;
+    stopPreview();
+    if (showGrid) {
+      if (!grid.querySelector('.project-tile')) addTiles();
+      pausedVideos = [...details.querySelectorAll('video')].filter(video => !video.paused);
+      pausedVideos.forEach(video => video.pause());
+    } else {
+      pausedVideos.forEach(video => video.play().catch(() => {}));
+      pausedVideos = [];
+    }
+    grid.hidden = !showGrid;
+    details.hidden = showGrid;
+    gridButton.classList.toggle('active', showGrid);
+    detailsButton.classList.toggle('active', !showGrid);
+    gridButton.setAttribute('aria-pressed', String(showGrid));
+    detailsButton.setAttribute('aria-pressed', String(!showGrid));
+  }
+
+  gridButton.addEventListener('click', () => setView(true));
+  detailsButton.addEventListener('click', () => setView(false));
+  motion.addEventListener('change', stopPreview);
+  controls.hidden = false;
+})();
+</script>
 </body>
 </html>

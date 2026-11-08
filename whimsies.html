@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!doctype html>
+<html lang="en"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>whimsies — ENICOLL</title>
   <meta name="description" content="a collection of digital oddities by emily nicoll - her first artificial intelligence art series.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&amp;family=DM+Mono:wght@300;400&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
   <link rel="icon" href="images/favicon.ico">
   <style>
@@ -155,22 +154,146 @@
       .w-grid-item .cap { font-size: 8px; }
     }
   </style>
+<style>
+    .view-toggle {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+
+
+    .toggle-btn {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      cursor: pointer;
+      padding: 0.3em 0;
+      border-bottom: 1px solid transparent;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      transition: color 0.15s;
+    }
+
+
+    .toggle-btn.active {
+      color: var(--black);
+      border-bottom-color: var(--black);
+    }
+
+
+    .toggle-btn:hover { color: var(--black); }
+
+
+    .toggle-sep {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--light);
+    }
+    #project-view[hidden], #project-grid[hidden], #project-details[hidden] { display: none; }
+    .project-grid-heading { font: 400 1.4rem var(--font-serif); margin: 0 0 0.75rem; }
+    .project-grid-note { font: 400 0.72rem/1.6 var(--font-mono); color: var(--mid); margin: 0 0 1.25rem; }
+    .project-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--tile-min)), 1fr)); gap: 1.15rem 0.9rem; }
+    .project-tile { display: block; min-width: 0; color: var(--black); text-decoration: none; }
+    .project-preview { display: block; position: relative; overflow: hidden; aspect-ratio: 1; background: rgba(14,14,14,0.05); }
+    .project-preview img, .project-preview iframe { display: block; width: 100%; height: 100%; border: 0; }
+    .project-preview img { object-fit: contain; }
+    .project-preview iframe { position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+    .project-preview iframe.ready { opacity: 1; }
+    .project-caption { display: block; padding-top: 0.42rem; font: 400 0.7rem var(--font-mono); color: var(--mid); }
+    .project-tile:hover .project-caption { color: var(--black); }
+    @media (max-width: 600px) { .project-tiles { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0.85rem 0.65rem; } }
+
+</style>
 </head>
-<body>
+<body><a class="mobile-name" href="index.html">Emily Nicoll</a>
 
   <!-- Mobile nav -->
   <div class="mobile-nav">
     <div class="hamburger" id="hamburger-btn">menu</div>
-    <div class="mobile-menu" id="mobile-menu"></div>
+    <div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-label">music + art</div>
+  <a href="album-art.html">album art</a>
+  <a href="music-videos.html">music videos</a>
+  <a href="pacific-spirit.html">pacific spirit</a>
+  <a href="physicals.html">physicals</a>
+  <div class="mobile-menu-divider"></div>
+  <div class="mobile-menu-label">digital works</div>
+  <a href="geophylla.html">geophylla</a>
+  <a href="whimsies.html">whimsies</a>
+  <a href="hypnotics.html">hypnotics</a>
+  <a href="spinning-flowers.html">spinning flowers</a>
+  <a href="still-image-series.html">still image series'</a>
+  <a href="animations.html">animations</a>
+  <a href="resonance-reverie.html">resonance &amp; reverie</a>
+  <a href="pellucid-petals.html">pellucid petals</a>
+  <a href="trellis.html">trellis (algo)</a>
+  <div class="mobile-menu-divider"></div>
+  <div class="mobile-menu-label">audio</div>
+  <a href="https://aquaregiarecords.com/" target="_blank">aquaregia ↗</a>
+  <a href="mixes.html">mixes</a>
+  <div class="mobile-menu-divider"></div>
+  <a href="information.html">information</a>
+</div>
   </div>
 
   <div class="site-wrapper">
 
     <!-- Left nav -->
-    <nav class="left-nav"></nav>
+    <nav class="left-nav">
+  <a href="index.html" class="nav-name">Emily Nicoll</a>
+  <div class="nav-section">
+    <span class="nav-label">music + art</span>
+    <a href="album-art.html">album art</a>
+    <a href="music-videos.html">music videos</a>
+    <a href="pacific-spirit.html">pacific spirit</a>
+    <a href="physicals.html">physicals</a>
+  </div>
+  <div class="nav-divider"></div>
+  <div class="nav-section">
+    <span class="nav-label">digital works</span>
+    <a href="geophylla.html">geophylla</a>
+    <a href="whimsies.html">whimsies</a>
+    <a href="hypnotics.html">hypnotics</a>
+    <a href="spinning-flowers.html">spinning flowers</a>
+    <a href="still-image-series.html">still image series'</a>
+    <a href="animations.html">animations</a>
+    <a href="resonance-reverie.html">resonance &amp; reverie</a>
+    <a href="pellucid-petals.html">pellucid petals</a>
+    <a href="trellis.html">trellis (algo)</a>
+  </div>
+  <div class="nav-divider"></div>
+  <div class="nav-section">
+  <span class="nav-label">audio</span>
+    <a href="https://aquaregiarecords.com/" target="_blank" class="nav-ext-link">aquaregia</a>
+    <a href="mixes.html">mixes</a>
+    </div>
+    <div class="nav-divider"></div>
+  <div class="nav-section">
+ 
+    <a href="information.html">information</a>
+   
+  </div>
+</nav>
 
     <!-- Content -->
     <main class="main-content">
+      <div class="view-toggle" id="project-view" role="group" aria-label="Project view" hidden>
+        <button class="toggle-btn" id="project-grid-button" type="button" aria-controls="project-grid" aria-pressed="false">grid</button>
+        <span class="toggle-sep" aria-hidden="true">/</span>
+        <button class="toggle-btn active" id="project-details-button" type="button" aria-controls="project-details" aria-pressed="true">details</button>
+      </div>
+      <section id="project-grid" aria-labelledby="project-grid-heading" hidden>
+        <h1 class="project-grid-heading" id="project-grid-heading">whimsies</h1>
+        <p class="project-grid-note">52 minted works · Select a piece to view its token record on Shape.</p>
+        <div class="project-tiles" style="--tile-min: 142px"></div>
+      </section>
+      <div id="project-details">
 
       <div class="w-title">whimsies</div>
       <div class="w-subtitle">collection of 1/1/505 by ENICOLL</div>
@@ -220,8 +343,7 @@
 
       <div style="display:flex; justify-content:center; margin: 1.4rem 0;">
         <div style="width: 30%; aspect-ratio: 16/9;">
-          <iframe src="https://www.youtube.com/embed/CpUPIfbf-1I"
-                  style="width:100%; height:100%; border:none;" allowfullscreen></iframe>
+          <iframe src="https://www.youtube.com/embed/CpUPIfbf-1I" style="width:100%; height:100%; border:none;" allowfullscreen=""></iframe>
         </div>
       </div>
 
@@ -256,9 +378,7 @@
       </div>
 
       <div style="display:flex; justify-content:center; margin: 1.4rem 0;">
-        <iframe style="border: 0; width: 350px; height: 470px;"
-                src="https://bandcamp.com/EmbeddedPlayer/track=362384455/size=large/bgcol=f5f2ec/linkcol=333333/tracklist=false/transparent=true/"
-                seamless></iframe>
+        <iframe style="border: 0; width: 350px; height: 470px;" src="https://bandcamp.com/EmbeddedPlayer/track=362384455/size=large/bgcol=f5f2ec/linkcol=333333/tracklist=false/transparent=true/" seamless=""></iframe>
       </div>
 
       <div class="w-body">
@@ -280,21 +400,21 @@
         Follow <a href="https://x.com/ENICOLL" target="_blank">@ENICOLL</a> on Twitter to stay informed.
       </div>
 
-      <a href="https://highlight.xyz/mint/shape:0xB33F463369c1C53B2fD9260877565d5624CCDDd9"
-         target="_blank" class="w-button">Highlight ↗</a>
+      <a href="https://highlight.xyz/mint/shape:0xB33F463369c1C53B2fD9260877565d5624CCDDd9" target="_blank" class="w-button">Highlight ↗</a>
 
       <div class="w-h3">Recommended Listening</div>
 
       <div class="w-bandcamp">
-        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=876612971/size=small/bgcol=f5f2ec/linkcol=333333/track=2706029329/transparent=true/" seamless></iframe>
-        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3359033119/size=small/bgcol=f5f2ec/linkcol=333333/track=3792964918/transparent=true/" seamless></iframe>
-        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=573364447/size=small/bgcol=f5f2ec/linkcol=333333/track=890093440/transparent=true/" seamless></iframe>
-        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3627530141/size=small/bgcol=f5f2ec/linkcol=333333/track=3873629251/transparent=true/" seamless></iframe>
-        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1249254701/size=small/bgcol=f5f2ec/linkcol=333333/track=2127828752/transparent=true/" seamless></iframe>
-        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1820579051/size=small/bgcol=f5f2ec/linkcol=333333/track=740251195/transparent=true/" seamless></iframe>
-        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=48728478/size=small/bgcol=f5f2ec/linkcol=333333/track=712342699/transparent=true/" seamless></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=876612971/size=small/bgcol=f5f2ec/linkcol=333333/track=2706029329/transparent=true/" seamless=""></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3359033119/size=small/bgcol=f5f2ec/linkcol=333333/track=3792964918/transparent=true/" seamless=""></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=573364447/size=small/bgcol=f5f2ec/linkcol=333333/track=890093440/transparent=true/" seamless=""></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=3627530141/size=small/bgcol=f5f2ec/linkcol=333333/track=3873629251/transparent=true/" seamless=""></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1249254701/size=small/bgcol=f5f2ec/linkcol=333333/track=2127828752/transparent=true/" seamless=""></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=1820579051/size=small/bgcol=f5f2ec/linkcol=333333/track=740251195/transparent=true/" seamless=""></iframe>
+        <iframe src="https://bandcamp.com/EmbeddedPlayer/album=48728478/size=small/bgcol=f5f2ec/linkcol=333333/track=712342699/transparent=true/" seamless=""></iframe>
       </div>
 
+    </div>
     </main>
   </div>
 
@@ -340,5 +460,94 @@
       }
     });
   </script>
+
+
+<script>
+(() => {
+  const project = "Whimsies";
+  const editions = [[1,"https://arweave.net/xbwEwYb1FTYBDMrfK3xs5o5UdUJYM6vW4VpgrtvmcFo","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/29"],[11,"https://arweave.net/NET_4KRFXTXQcfPmsPMzdkc9oFe1PF-aCaTTC5nKKGY","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/32"],[28,"https://arweave.net/Fabvi_QrHpX1pOcyzpqpQHHGW99qEc2b7k1a8qppT5c","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/31"],[31,"https://arweave.net/auwONhv_xDJ9MkUu_ioJoOd_HQAVBQQE6cYUuJTwfxE","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/44"],[34,"https://arweave.net/IcKEN6IUzxDibwKCSmkXfYmnzrZHodIUuvTY89q_fJA","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/24"],[39,"https://arweave.net/4cy5jaQbwhGZjZn7s40uLnXPDzUUSyaayQy20XC1X5E","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/40"],[46,"https://arweave.net/qKFsal-5BR9II3FTFrjoO5wjPsptOipxZJAQwXSG8kc","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/6"],[49,"https://arweave.net/QWNfoYk4lcWXMMw4oZymXrz1ONacsvuXpw3pI_OKG9c","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/25"],[69,"https://arweave.net/hQOrODntXtDeAECj-FnFr7s3XbqIvaREZvpD871PoTY","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/16"],[97,"https://arweave.net/cUAE-3f3E3EeqZMpf8lgV64QWtMocyF_bk7Hg2Z8YRs","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/33"],[119,"https://arweave.net/K7l0Iaplrfif_qjm3Qst_QVX1naFUyVKSsEHm9z1N2A","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/46"],[136,"https://arweave.net/-XdtArxhZpCD7JNyJd97O2_8LCdGaVrCHRVNOFJiX44","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/21"],[159,"https://arweave.net/sVPMyIjbh6fTlKYIcDbvZX54Sux-jfB16Y2_XQUPlYo","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/34"],[166,"https://arweave.net/Nx6M0aN-ZasM4SKVFZn2xQ7RBlm-rko3iEFsBQqMnRc","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/2"],[173,"https://arweave.net/zYQE26vQ9BrLKFDOSMBrR0anp6s6rvlHsDcrzLb-Ja8","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/42"],[175,"https://arweave.net/jpFcjHDL6ymQCY0AGs1-Y1vJbpnDj2mo0WbmZ_bQUfo","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/50"],[202,"https://arweave.net/Gt-uTJucTLz47x3lvzHQQl7u6wUAstV1kClJnHuJ4ek","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/43"],[206,"https://arweave.net/U9TywzoKbuzm3IPqujKlz-CBdpPS2el6uG8SyrFksBA","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/22"],[240,"https://arweave.net/LWWlGSwhP_xmkDbcAmKOjuyVqwXwJLKFy3oKF1QJ2kg","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/9"],[246,"https://arweave.net/PRuTjQ2OB0kYVelssBgDY23sPSHMe0eeXUUH4_OFFQQ","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/38"],[271,"https://arweave.net/tUOpPNrNLBzcN-6OcccdkBSFNQlcxaYiCAIxTJxIZ_M","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/11"],[276,"https://arweave.net/bskQogtVYTITlYEK4vWG23r0RBJO3WwG5zCJQcpOyHo","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/15"],[277,"https://arweave.net/L9SA3qLFwCbsSswSKU7F8JIuyWehp2cWnaORZ4vPbWk","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/30"],[294,"https://arweave.net/1wFj8OSVN-cXbU8f3SPTACRX2tv8Y2f_ZF1B3lbfGN4","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/12"],[297,"https://arweave.net/ZIq__ZM0OeBDJzd5vdVULHOm8TryXs_Jhhi3r8r4hxo","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/51"],[310,"https://arweave.net/65A7Fg2ay4Jr4T0oHMN8Gc8bdDCQR7ytBkSKfEbOXS4","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/48"],[321,"https://arweave.net/-qLN_2iJ3H3u9b-bDZXyZv5_RJsk0r0_7NKi4pFLTBM","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/7"],[333,"https://arweave.net/XCcgk2MMx725dxIojw0PESH0ZtsofKc9tmIdz6QAMBY","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/47"],[346,"https://arweave.net/7mIsXTcgUn1peLiYHx6-AfFe_12-dgVMDaeQodF1ml0","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/19"],[348,"https://arweave.net/rMceSWDfM_UBX77Oy7qVb32eDNjn_j9IvOtDbZZni98","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/26"],[349,"https://arweave.net/K9oySz43FfN52j4NiMyF9PauI6iZFtWLBefqXQlru_8","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/27"],[365,"https://arweave.net/b5foECZGbjXKP3OTY-a4iwQlJ68G3u9rtwXYi75w4cs","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/18"],[371,"https://arweave.net/efnL13LTV8nEvtDE-SbR3R2ls2BK5OCLAJRp52i_8vA","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/14"],[377,"https://arweave.net/iWKlYnZqVYTAObw7dOtwvoIiohFAQTROK6roOhoNLyM","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/23"],[387,"https://arweave.net/SKkNEUwVkTqmXokEqMkafz5p3u39svC38j1DNV9GRj4","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/28"],[397,"https://arweave.net/k7nnb8czkSNJw4Fjt8s944pltLEjORdP1UXImmQ0cNA","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/8"],[399,"https://arweave.net/anwLY_jEy13zMEOBTxaMMO-e9mE7OdT2Pb3VU_ZNSJc","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/5"],[408,"https://arweave.net/SGvzqa2NMoi_FmDOycStemMB3qqbjVdVpHMv5K3o14w","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/45"],[410,"https://arweave.net/Ns6Upo4nCPg4mpgZR7rJhJT402-WDaYSsxjeAtAfIHA","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/1"],[412,"https://arweave.net/mAp7Chzrqb06QBU9iNb622BQggj2kgOOyCkz93vF0Q0","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/3"],[416,"https://arweave.net/mZZ4NdWNtGJTacFucHE_jV9HOC__4Fj7b2ODY5sC4F4","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/39"],[425,"https://arweave.net/7RH6qstMHYOACYCM1VNJwYViibmMqwx7993miP4vZPY","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/10"],[429,"https://arweave.net/1SEmUa-arzizM6MVAbQE_jHRWleFkFMx8NUmhU4llc4","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/37"],[434,"https://arweave.net/T2Hxfn77uLtqXLsHxmtme9MWvZ4M5nHSDUU8bWYTM_Y","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/20"],[442,"https://arweave.net/gUbgjlNLpYKCOTVGFmIhqYoJt88Z2BkZPmxQObJlfgw","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/4"],[445,"https://arweave.net/hotkRV1Q6KsCTgCXfyA0T1xENmADnfWN5Z-3yLvSn4M","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/36"],[461,"https://arweave.net/8R0R6lXZKqyCP5p9avfuIx3ebnWoynQtsYbE1qhmGsg","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/49"],[476,"https://arweave.net/N1OxsgJ0MHkWDsh0K0FNYtrym01FsPjj3SFUDNqe0F8","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/35"],[481,"https://highlight-creator-assets.highlight.xyz/main/base-dir/465c906a-d9ab-4e7a-833b-b5caf8efb97f/images/whimsies-378.jpg","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/52"],[496,"https://arweave.net/FeUOJ_iRLAW9yRaHib9jqrnPYbiVBm8iEMGzhgT8Jx4","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/13"],[502,"https://arweave.net/sYNUfiAnvPtFA1_rKrynCg2zq-PKom7-LWiGNLnlsbA","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/41"],[504,"https://arweave.net/2BS32526plK5PZQPmn-Tehp9TD8m-8Tha6v-eyxSgfo","https://shapescan.xyz/token/0xB33F463369c1C53B2fD9260877565d5624CCDDd9/instance/17"]];
+  const grid = document.getElementById('project-grid');
+  const details = document.getElementById('project-details');
+  const controls = document.getElementById('project-view');
+  const gridButton = document.getElementById('project-grid-button');
+  const detailsButton = document.getElementById('project-details-button');
+  const motion = matchMedia('(any-hover: hover) and (prefers-reduced-motion: no-preference)');
+  let timer, player;
+  let pausedVideos = [];
+
+  function stopPreview() {
+    clearTimeout(timer);
+    player?.remove();
+    player = undefined;
+  }
+
+  function addTiles() {
+    const tiles = document.createDocumentFragment();
+    for (const [number, image, url, live] of editions) {
+      const caption = '#' + number;
+      const tile = document.createElement('a');
+      tile.className = 'project-tile';
+      tile.href = url;
+      tile.setAttribute('aria-label', project + ' ' + caption);
+      const preview = document.createElement('span');
+      preview.className = 'project-preview';
+      const still = document.createElement('img');
+      still.loading = 'lazy';
+      still.decoding = 'async';
+      still.alt = '';
+      still.addEventListener('error', () => { still.src = image; }, {once: true});
+      still.src = 'https://wsrv.nl/?w=384&h=384&fit=inside&output=webp&q=80&url=' + encodeURIComponent(image);
+      const label = document.createElement('span');
+      label.className = 'project-caption';
+      label.textContent = caption;
+      preview.append(still);
+      tile.append(preview, label);
+      tiles.append(tile);
+      if (!live) continue;
+      tile.addEventListener('pointerenter', event => {
+        if (event.pointerType !== 'mouse' || !motion.matches) return;
+        stopPreview();
+        timer = setTimeout(() => {
+          const frame = document.createElement('iframe');
+          frame.title = project + ' ' + caption + ' live preview';
+          frame.tabIndex = -1;
+          frame.setAttribute('aria-hidden', 'true');
+          frame.setAttribute('sandbox', 'allow-scripts');
+          frame.addEventListener('load', () => frame.classList.add('ready'), {once: true});
+          frame.src = live;
+          player = frame;
+          preview.append(frame);
+        }, 300);
+      });
+      tile.addEventListener('pointerleave', stopPreview);
+    }
+    grid.querySelector('.project-tiles').append(tiles);
+  }
+
+  function setView(showGrid) {
+    if (showGrid === !grid.hidden) return;
+    stopPreview();
+    if (showGrid) {
+      if (!grid.querySelector('.project-tile')) addTiles();
+      pausedVideos = [...details.querySelectorAll('video')].filter(video => !video.paused);
+      pausedVideos.forEach(video => video.pause());
+    } else {
+      pausedVideos.forEach(video => video.play().catch(() => {}));
+      pausedVideos = [];
+    }
+    grid.hidden = !showGrid;
+    details.hidden = showGrid;
+    gridButton.classList.toggle('active', showGrid);
+    detailsButton.classList.toggle('active', !showGrid);
+    gridButton.setAttribute('aria-pressed', String(showGrid));
+    detailsButton.setAttribute('aria-pressed', String(!showGrid));
+  }
+
+  gridButton.addEventListener('click', () => setView(true));
+  detailsButton.addEventListener('click', () => setView(false));
+  motion.addEventListener('change', stopPreview);
+  controls.hidden = false;
+})();
+</script>
 </body>
 </html>
